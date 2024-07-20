@@ -116,7 +116,7 @@ export default function MentorChat() {
 
     // Get comments
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}`,
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}&per_page=100`,
             {
                 headers: {
                     Authorization: `Bearer ${userDetails.token}`
@@ -135,7 +135,7 @@ export default function MentorChat() {
             
             if (userDetails?.id === mentorChat?.acf?.mentors_id || userDetails?.id === mentorChat?.acf?.mentee_id) {
 
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${mentorChat.id}`)
+                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${mentorChat.id}&per_page=100`)
                 .then((response) => {
                     localStorage.setItem(`sideBarChat${index}`, JSON.stringify(response.data))
                     console.log(response.data);
@@ -332,7 +332,11 @@ if (userDetails !== null) {
                                                 </div>
                                                 <img className='send-chat-extra-icon' src={Attachment} />
                                                 {/* <img className='send-chat-extra-icon send-chat-extra-icon-emoji' src={WinkIcon} /> */}
-                                                <EmojiPicker reactionsDefaultOpen={true} width={700} onEmojiClick={(emojiData, event) => { setComment(`${comment}${emojiData?.emoji}`)}} />
+                                                <div className='test'>
+                                                    <div className="emoji-picker">
+                                                        <EmojiPicker className="emoji-picker-picker" reactionsDefaultOpen={true} width={700} onEmojiClick={(emojiData, event) => { setComment(`${comment}${emojiData?.emoji}`)}} />
+                                                    </div>
+                                                </div>
                                             </form>
                                         </div>
                                         <div className='col-2'></div>

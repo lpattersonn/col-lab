@@ -270,3 +270,26 @@
 .search-chats-container {
     transition: 350ms ease-out;
 }
+
+// Emoji
+
+.test {
+    width: 550px !important;
+    position: relative;
+    .emoji-picker {
+        position: absolute !important;
+        top: 0;
+        bottom: 0;
+        aside.epr-main.EmojiPickerReact.epr_mw4zr1.epr_q53mwh.epr_7hyle2.epr_-x928hz.epr_-rvl3je.epr_-khp9xq.epr_-to8mm.epr_-4ueg5a.epr_iddbfm.epr_vy4vae.epr_6daqyu.epr_-6npj90.epr-reactions.epr_-ho3wkq.epr_wowgl1.epr_aubndr.epr_-ufcete.epr_gv5p49 {
+            position: absolute !important;
+            /* top: 0; */
+            width: 100%;
+            bottom: -25px;
+        }
+        aside.epr-main.EmojiPickerReact.epr_mw4zr1.epr_q53mwh.epr_7hyle2.epr_-x928hz.epr_-rvl3je.epr_-khp9xq.epr_-to8mm.epr_-4ueg5a.epr_iddbfm.epr_vy4vae.epr_6daqyu.epr_-6npj90.emoji-picker-picker {
+            position: absolute !important;
+            max-width: 349px;
+            bottom: -25px;
+        }
+    }
+}
