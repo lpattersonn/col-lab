@@ -10,6 +10,8 @@ import Attachment from '../Images/attachment_office_paperclip_supplies_icon.svg'
 import Schedule from '../Images/calendar.svg';
 import EmojiPicker from 'emoji-picker-react';
 import SlidingPane from "react-sliding-pane";
+import { Theme } from 'emoji-picker-react';
+import { EmojiStyle } from 'emoji-picker-react';
 import "react-sliding-pane/dist/react-sliding-pane.css";
 
 export default function MentorChat() {
@@ -292,6 +294,17 @@ if (userDetails !== null) {
                                     <div className='row d-flex align-items-center'>
                                         <div className="col-auto">
                                             <div className="chat-instructions">
+                                                <img className='send-chat-extra-icon send-chat-extra-icon-schedule' src={Schedule} onClick={() => {
+                                                    if (calenderModal === 'hide') {
+                                                        setCalenderModal('show');
+                                                    } else {
+                                                        setCalenderModal('hide');
+                                                    }
+                                                }} />
+                                            </div>
+                                        </div>
+                                        <div className="col-auto">
+                                            <div className="chat-instructions">
                                                 <button className="btn btn-outline-info btn-lg" onClick={() => setState({ isPaneOpen: true })}>
                                                     See Chat Guidelines
                                                 </button>
@@ -308,13 +321,7 @@ if (userDetails !== null) {
                                         <div className='col-2'></div>
                                         <div className='col-8'>                                            
                                             <form className="d-flex flex-direction-row align-items-center" onSubmit={handleClick}>
-                                                <img className='send-chat-extra-icon send-chat-extra-icon-schedule' src={Schedule} onClick={() => {
-                                                    if (calenderModal === 'hide') {
-                                                        setCalenderModal('show');
-                                                    } else {
-                                                        setCalenderModal('hide');
-                                                    }
-                                                }} />
+                              
                                                 <div className='send-chat'>                                                
                                                     <div className='send-chat-input'>
                                                         <input className="form-control form-control-lg chat-input" type="text" value={comment} onChange={(e) => {setComment(e.target.value)}} aria-label="Type a message" placeholder='Type a message' />
@@ -325,7 +332,7 @@ if (userDetails !== null) {
                                                 </div>
                                                 <img className='send-chat-extra-icon' src={Attachment} />
                                                 {/* <img className='send-chat-extra-icon send-chat-extra-icon-emoji' src={WinkIcon} /> */}
-                                                <EmojiPicker reactionsDefaultOpen={true} onEmojiClick={(emojiData, event) => { setComment(`${comment}${emojiData?.emoji}`)}} />
+                                                <EmojiPicker reactionsDefaultOpen={true} width={700} onEmojiClick={(emojiData, event) => { setComment(`${comment}${emojiData?.emoji}`)}} />
                                             </form>
                                         </div>
                                         <div className='col-2'></div>
