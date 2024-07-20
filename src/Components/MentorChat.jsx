@@ -26,6 +26,7 @@ export default function MentorChat() {
     const [ comment, setComment ] =  useState('')
     const [ searchBarStatus, setSearchBarStatus ] =  useState('hide')
     const [ calenderModal, setCalenderModal ] = useState('hide');
+    const [ emojiPicker, setEmojiPciker ] = useState(true);
     const [state, setState] = useState({
         isPaneOpen: false,
         isPaneOpenLeft: false,
@@ -334,7 +335,10 @@ if (userDetails !== null) {
                                                 {/* <img className='send-chat-extra-icon send-chat-extra-icon-emoji' src={WinkIcon} /> */}
                                                 <div className='test'>
                                                     <div className="emoji-picker">
-                                                        <EmojiPicker className="emoji-picker-picker" reactionsDefaultOpen={true} width={700} onEmojiClick={(emojiData, event) => { setComment(`${comment}${emojiData?.emoji}`)}} />
+                                                        <EmojiPicker className="emoji-picker-picker" reactionsDefaultOpen={emojiPicker} width={700} onEmojiClick={(emojiData, event) => { 
+                                                            setComment(`${comment}${emojiData?.emoji}`);
+                                                            setEmojiPciker(false);
+                                                            }} />
                                                     </div>
                                                 </div>
                                             </form>
