@@ -26,13 +26,12 @@ export default function MentorChat() {
     const [ comment, setComment ] =  useState('')
     const [ searchBarStatus, setSearchBarStatus ] =  useState('hide')
     const [ calenderModal, setCalenderModal ] = useState('hide');
-    const [ emojiPicker, setEmojiPciker ] = useState(true);
-    const [state, setState] = useState({
+    const [ emojiPicker, setEmojiPicker ] = useState(true);
+    const [ state, setState ] = useState({
         isPaneOpen: false,
         isPaneOpenLeft: false,
       });
     const Navigate = useNavigate();
-    
 
     // Set user information
     useEffect(() => {
@@ -46,7 +45,6 @@ export default function MentorChat() {
         ).then((res) => {
             setMentorChatDetails(res.data)
         }).catch((err) => {
-            console.log(err)
             Navigate('/mentorship-opportunities')
         })
     }, [param1])
@@ -65,7 +63,6 @@ export default function MentorChat() {
         }).catch((err) => {
         })
     }, [])
-    
 
     // Set mentor information
     useEffect(() => {
@@ -79,7 +76,6 @@ export default function MentorChat() {
         ).then((res) => {
             setMentor(res.data)
         }).catch((err) => {
-            console.log(err)
         })
     }, [mentorChatDetails])
 
@@ -95,7 +91,6 @@ export default function MentorChat() {
         ).then((res) => {
             setMentee(res.data)
         }).catch((err) => {
-            console.log(err)
         })
     }, [mentorChatDetails])
 
@@ -111,7 +106,6 @@ export default function MentorChat() {
         ).then((res) => {
             setUser(res.data)
         }).catch((err) => {
-            console.log(err)
         })
     }, [userDetails])
 
@@ -128,7 +122,6 @@ export default function MentorChat() {
             setComments(response.data);
         })
         .catch((err) => {
-            console.log(err);
         })
     })
  
@@ -139,10 +132,8 @@ export default function MentorChat() {
                 axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${mentorChat.id}&per_page=100`)
                 .then((response) => {
                     localStorage.setItem(`sideBarChat${index}`, JSON.stringify(response.data))
-                    console.log(response.data);
                 })
                 .catch((err) => {
-                    console.log(err);
                 })
 
                 let array = JSON.parse(localStorage.getItem(`sideBarChat${index}`));
@@ -336,8 +327,9 @@ if (userDetails !== null) {
                                                 <div className='test'>
                                                     <div className="emoji-picker">
                                                         <EmojiPicker className="emoji-picker-picker" reactionsDefaultOpen={emojiPicker} width={700} onEmojiClick={(emojiData, event) => { 
-                                                            setComment(`${comment}${emojiData?.emoji}`);
-                                                            setEmojiPciker(false);
+                                                            setComment(prevInput => prevInput + emojiData?.emoji);
+                                                            setEmojiPicker(true);
+                                                            console.log(emojiPicker);
                                                             }} />
                                                     </div>
                                                 </div>
