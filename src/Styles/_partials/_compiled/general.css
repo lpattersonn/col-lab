@@ -324,3 +324,11 @@ a {
 .grey:hover {
   color: inherit !important;
 }
+
+.overflow-hidden {
+  overflow-y: hidden;
+}
+
+.overflow-scroll {
+  overflow-y: auto;
+}

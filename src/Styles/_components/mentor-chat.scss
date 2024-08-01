@@ -47,6 +47,7 @@
     display: flex;
     flex-direction: column-reverse;
     background-color: #fafafa;
+    position: relative;
 }
 .mentors-chat-item-keyboard {
     border-top: 1px solid #d0cccc;
@@ -252,14 +253,39 @@
     height: 4rem;
 }
 
+.modal-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: 100%;
+    width: 100%;
+}
 .calender-schedule-modal {
     max-width: 50rem;
     position: absolute;
     height: fit-content;
-    top: -350%;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
+    margin: auto;
+    z-index: 10;
+    .card {
+        .card-body {
+            padding: 2rem;
+        }
+    }
+}
+.modal-container-background {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 9;
+    background-color: #000;
+    opacity: .7;
 }
 
 .instructions {

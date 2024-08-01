@@ -10,6 +10,7 @@ import Attachment from '../Images/attachment_office_paperclip_supplies_icon.svg'
 import Schedule from '../Images/calendar.svg';
 import EmojiPicker from 'emoji-picker-react';
 import SlidingPane from "react-sliding-pane";
+import BookAMentor from "./BookAMentor.jsx";
 import { Theme } from 'emoji-picker-react';
 import { EmojiStyle } from 'emoji-picker-react';
 import "react-sliding-pane/dist/react-sliding-pane.css";
@@ -27,6 +28,7 @@ export default function MentorChat() {
     const [ searchBarStatus, setSearchBarStatus ] =  useState('hide')
     const [ calenderModal, setCalenderModal ] = useState('hide');
     const [ emojiPicker, setEmojiPicker ] = useState(true);
+    const [overFLow, setOverFlow] = useState(false);
     const [ state, setState ] = useState({
         isPaneOpen: false,
         isPaneOpenLeft: false,
@@ -289,8 +291,10 @@ if (userDetails !== null) {
                                                 <img className='send-chat-extra-icon send-chat-extra-icon-schedule' src={Schedule} onClick={() => {
                                                     if (calenderModal === 'hide') {
                                                         setCalenderModal('show');
+                                                        setOverFlow(true)
                                                     } else {
                                                         setCalenderModal('hide');
+                                                        setOverFlow(false)
                                                     }
                                                 }} />
                                             </div>
@@ -305,8 +309,9 @@ if (userDetails !== null) {
                                     </div>
                                 </div>
                                     <hr className="mb-0"></hr>
-                                <div className='mentors-chat-item-body'>
+                                <div className={`mentors-chat-item-body ${overFLow === false ? 'overflow-scroll' : 'overflow-hidden'}`}>
                                     {conversation}
+                                    <BookAMentor prop1={calenderModal} />
                                 </div>
                                 <div className='mentors-chat-item-keyboard'>
                                     <div className='row d-flex align-items-center'>
@@ -336,37 +341,6 @@ if (userDetails !== null) {
                                             </form>
                                         </div>
                                         <div className='col-2'></div>
-                                    </div>
-
-                                    <div className={"calender-schedule-modal"+' '+"p-3"+' '+`${calenderModal}`}>
-                                        <div className='card'>
-                                            <div className='card-body'>
-                                                <form>
-                                                    <div className='row mb-3'>
-                                                        <div className='col-12'>
-                                                            <input className="form-control" type="date" aria-label="event-date" />
-                                                        </div>
-                                                    </div>
-                                                    <div className='row mb-3'>
-                                                        <div className='col-12'>
-                                                            <p className='small m-0'>Number of hours</p>
-                                                            <input className="form-control" type="number" aria-label="event-duration" />
-                                                        </div>
-                                                    </div>
-                                                    <div className='row mb-3'>
-                                                        <div className='col-12'>
-                                                            <p className='small m-0'>Notes</p>
-                                                            <textarea row="3" className="form-control" aria-label="event-message" />
-                                                        </div>
-                                                    </div>
-                                                    <div className='row'>
-                                                        <div className='col-12'>
-                                                            <input className='btn btn-primary' type="submit" aria-label="submit" />
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
