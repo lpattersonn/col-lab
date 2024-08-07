@@ -12,8 +12,11 @@ const [mentorRequest, setMentorRequest] = useState({
 
 const handleSubmit = (e) => {
     e.preventDefault();
-    axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
-        {   
+    axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+        { 
+        title: `Mentor chat between ${userDetails.firstName} and ${prop.prop2}`,
+        content: `Mentor chat between ${userDetails.firstName} and ${prop.prop2}`,
+        status: 'publish',
             'acf' : {
                 'mentor_request_date': mentorRequest.mentor_request_date,
                 'mentor_request_time:': mentorRequest.mentor_request_time,
@@ -52,25 +55,25 @@ return (
                         <h4>Mentor Request Form</h4>
                         <div className='row mb-3'>
                             <div className='col-12'>
-                                <label for="mentor_request_date" className='small m-0'>Please indicate your proposed meeting date</label>
+                                <label htmlFor="mentor_request_date" className='small m-0'>Please indicate your proposed meeting date</label>
                                 <input className="form-control" value={mentorRequest.mentor_request_date} name="mentor_request_date" type="date" aria-label="event-date" onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
                             <div className='col-12'>
-                                <label for="mentor_request_time" className='small m-0'>Please indicate your proposed meeting time</label>
+                                <label htmlFor="mentor_request_time" className='small m-0'>Please indicate your proposed meeting time</label>
                                 <input className="form-control" value={mentorRequest.mentor_request_time} name="mentor_request_time" type="time" aria-label="event-time" onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
                             <div className='col-12'>
-                                <label for="mentor_request_hours" className='small m-0'>Number of hours</label>
+                                <label htmlFor="mentor_request_hours" className='small m-0'>Number of hours</label>
                                 <input className="form-control" value={mentorRequest.mentor_request_hours} name="mentor_request_hours" type="number" aria-label="event-duration" onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
                             <div className='col-12'>
-                                <label for="mentor_request_notes" className='small m-0'>Notes</label>
+                                <label htmlFor="mentor_request_notes" className='small m-0'>Notes</label>
                                 <textarea row="3" value={mentorRequest.mentor_request_notes} className="form-control" name="mentor_request_notes" aria-label="event-message" onChange={handleChange} />
                             </div>
                         </div>

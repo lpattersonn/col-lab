@@ -61,7 +61,6 @@ export default function Dashboard() {
     .then((response) => {
       localStorage.setItem('userPoints', JSON.stringify(response.data['acf']['user-points']));
       setUsersAccountDetails(response.data);
-      console.log(localStorage.getItem('userPoints'));
     })
     .catch((err) => {
       // Handle error

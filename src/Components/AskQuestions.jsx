@@ -81,7 +81,6 @@ export default function AskQuestions() {
     .then((response) => {
       localStorage.setItem('userPoints', JSON.stringify(response.data['acf']['user-points']));
       setUsersAccountDetails(response.data);
-      console.log(localStorage.getItem('userPoints'));
     })
     .catch((err) => {
       // Handle error
@@ -149,7 +148,6 @@ export default function AskQuestions() {
                     }
                 }
             ).then((response) => {
-                console.log(response)
             })
             setAskQuestionStatus('published');
         } catch (error) {
@@ -270,7 +268,6 @@ function PaginatedItems({ itemsPerPage }) {
   // (This could be items from props; or items loaded in a local state
   // from an API endpoint with useEffect and useState)
   const endOffset = itemOffset + itemsPerPage;
-  console.log(`Loading items from ${itemOffset} to ${endOffset}`);
   
   const currentItems = question.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(question.length / itemsPerPage);
@@ -278,9 +275,6 @@ function PaginatedItems({ itemsPerPage }) {
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % question.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
     setItemOffset(newOffset);
   };
 

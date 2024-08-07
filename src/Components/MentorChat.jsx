@@ -237,6 +237,9 @@ export default function MentorChat() {
             setComment('');
         })
     }
+
+    let nameFormentorRequest =  userDetails.id === mentor?.acf?.mentors_id ? mentor?.acf?.firstName : mentee?.acf?.firstName;
+
 if (userDetails !== null) {
     if (userDetails.id  !== mentorChatDetails?.acf?.mentors_id || userDetails.id  !== mentorChatDetails?.acf?.mentee_id) {
         return (
@@ -311,7 +314,7 @@ if (userDetails !== null) {
                                     <hr className="mb-0"></hr>
                                 <div className={`mentors-chat-item-body ${overFLow === false ? 'overflow-scroll' : 'overflow-hidden'}`}>
                                     {conversation}
-                                    <BookAMentor prop1={calenderModal} />
+                                    <BookAMentor prop1={calenderModal} prop2={nameFormentorRequest} />
                                 </div>
                                 <div className='mentors-chat-item-keyboard'>
                                     <div className='row d-flex align-items-center'>

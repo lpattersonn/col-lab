@@ -85,7 +85,6 @@ export default function CreateJob() {
                 }
             )
             .then((response) => {
-                console.log(response);
                 setJobStatus("publish")
             })
             .catch((error) => {

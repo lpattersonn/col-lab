@@ -53,7 +53,6 @@ export default function Mentor() {
             return;
         }
     })
-    console.log(userDetails)
 
     // Handle Check
     function handelCheckedChange(e) {
