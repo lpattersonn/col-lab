@@ -25,7 +25,7 @@ const handleSubmit = (e) => {
                 'mentor_request_notes': mentorRequest.mentor_request_notes,
                 'mentor_id': prop.mentor_id,
                 'mentee_id': prop.mentee_id,
-                'mentor_chat_id': prop.mentee_id,
+                'mentor_chat_id': prop.chat_id,
             }
         },
         {
@@ -83,7 +83,7 @@ return (
                             </div>
                         </div>
                         {requestSubmitted === 'submitted' && 
-                        <div class="alert alert-success" role="alert">
+                        <div className="alert alert-success" role="alert">
                             <p className="small">Success! A mentor request has been submitted.</p>
                         </div>
                         }
