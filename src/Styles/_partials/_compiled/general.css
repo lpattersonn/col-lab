@@ -12,6 +12,7 @@ main {
   font-size: 1.6rem !important;
   font-family: "Roboto", sans-serif !important;
   height: fit-content !important;
+  font-weight: 600 !important;
 }
 
 .btn-main {

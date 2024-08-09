@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 
 export default function BookAMentor(prop) {
@@ -10,6 +10,24 @@ const [mentorRequest, setMentorRequest] = useState({
     mentor_request_notes: ''
 })
 const [requestSubmitted, setRequestSubmitted] = useState('not submitted');
+const [currentRequest, setCurrentRequest] = useState({});
+
+useEffect(() => {
+    axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+        {
+            headers: {
+                Authorization: `Bearer ${userDetails.token}`
+            }
+        }
+    ).then(function(response) {
+        let oldestRequest = response?.data?.filter((request) => {
+            return Number(request?.acf?.mentor_chat_id) === Number(prop?.chat_id);
+        })
+        setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
+    })
+}, []);
+
+console.log(currentRequest);
 
 const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,13 +37,13 @@ const handleSubmit = (e) => {
         content: `Mentor chat between ${userDetails.firstName} and ${prop.prop2}`,
         status: 'publish',
             'acf' : {
-                'mentor_request_date': mentorRequest.mentor_request_date,
-                'mentor_request_time:': mentorRequest.mentor_request_time,
-                'mentor_request_hours': mentorRequest.mentor_request_hours,
-                'mentor_request_notes': mentorRequest.mentor_request_notes,
-                'mentor_id': prop.mentor_id,
-                'mentee_id': prop.mentee_id,
-                'mentor_chat_id': prop.chat_id,
+                'mentor_request_date': mentorRequest?.mentor_request_date,
+                'mentor_request_time:': mentorRequest?.mentor_request_time,
+                'mentor_request_hours': mentorRequest?.mentor_request_hours,
+                'mentor_request_notes': mentorRequest?.mentor_request_notes,
+                'mentor_id': prop?.mentor_id,
+                'mentee_id': prop?.mentee_id,
+                'mentor_chat_id': prop?.chat_id,
             }
         },
         {
@@ -50,10 +68,17 @@ function handleChange(e) {
     })
 }
 
+function readableDate(arg) {
+    var date = new Date(arg);
+    var options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    return date.toLocaleDateString('en-US', options);
+}
+
 return (
     <div className={`modal-container ${prop.prop1}`}>
         <div className="modal-container-background"></div>
-        <div className={"calender-schedule-modal"+' '+"p-3"+' '+`${prop.prop1}`}>
+        { userDetails.id === prop.mentee_id ?
+        <div className="calender-schedule-modal p-3">
             <div className='card'>
                 <div className='card-body'>
                     <form onSubmit={handleSubmit}>
@@ -95,7 +120,25 @@ return (
                     </form>
                 </div>
             </div>
+        </div> : 
+        <div className="calender-schedule-modal p-3">
+            <div className='card'>
+                <div className='card-body'>
+                    <p className="lead">New Request</p>
+                    {/* <p><strong>Mentee Name:</strong> {currentRequest?.author}</p> */}
+                    <p><strong>Date:</strong> {currentRequest?.acf?.mentor_request_date}</p>
+                    <p><strong>Time:</strong> {currentRequest?.acf?.mentor_request_time}</p>
+                    <p><strong>Hours:</strong> {currentRequest?.acf?.mentor_request_hours}</p>
+                    <p><strong>Note:</strong><br/> {currentRequest?.acf?.mentor_request_notes}</p>
+                <div className='row '>
+                    <div className='col-12'>
+                            <input className='btn btn-primary' name="" type="submit" aria-label="submit" value="Accept" />                             
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        }
     </div>
 )
 }
