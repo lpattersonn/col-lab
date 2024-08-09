@@ -106,7 +106,7 @@ export default function Dashboard() {
             <div className='card-body'>
               <div className="questions-details">
                 <div className="questions-details-name">
-                  <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} loading="lazy" />
+                  <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} loading="eager" />
                   <div className="questions-details-name-info">
                     <p><strong>{userName}</strong></p>
                     <div className="questions-details-posted">

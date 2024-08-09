@@ -15,10 +15,10 @@ export default function Mentors() {
     useEffect(() => {
         axios({
           url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`,
-          method: 'GET'
-        //   headers: {
-        //     Authorization: `Bearer ${userDetails.token}`
-        //   }
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${userDetails.token}`
+          }
         })
         .then((response) => {
             const list = response.data.filter(user => user?.acf?.user_is_mentor === 'Yes' && user.id !== userDetails.id);

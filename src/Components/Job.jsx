@@ -35,7 +35,7 @@ export default function CreateJob() {
               }
             },
             {
-                    headers: {
+                headers: {
                     Authorization: `Bearer ${userDetails.token}`
                 }
             } 

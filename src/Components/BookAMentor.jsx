@@ -9,6 +9,7 @@ const [mentorRequest, setMentorRequest] = useState({
     mentor_request_hours: '',
     mentor_request_notes: ''
 })
+const [requestSubmitted, setRequestSubmitted] = useState('not submitted');
 
 const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,6 +23,9 @@ const handleSubmit = (e) => {
                 'mentor_request_time:': mentorRequest.mentor_request_time,
                 'mentor_request_hours': mentorRequest.mentor_request_hours,
                 'mentor_request_notes': mentorRequest.mentor_request_notes,
+                'mentor_id': prop.mentor_id,
+                'mentee_id': prop.mentee_id,
+                'mentor_chat_id': prop.mentee_id,
             }
         },
         {
@@ -31,6 +35,7 @@ const handleSubmit = (e) => {
         }
     ).then(function(response) {
         console.log(response);
+        setRequestSubmitted('submitted');
     })
 }
 
@@ -56,30 +61,35 @@ return (
                         <div className='row mb-3'>
                             <div className='col-12'>
                                 <label htmlFor="mentor_request_date" className='small m-0'>Please indicate your proposed meeting date</label>
-                                <input className="form-control" value={mentorRequest.mentor_request_date} name="mentor_request_date" type="date" aria-label="event-date" onChange={handleChange} />
+                                <input className="form-control" value={mentorRequest.mentor_request_date} name="mentor_request_date" type="date" aria-label="event-date" disabled={requestSubmitted === 'submitted' ? true : false } onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
                             <div className='col-12'>
                                 <label htmlFor="mentor_request_time" className='small m-0'>Please indicate your proposed meeting time</label>
-                                <input className="form-control" value={mentorRequest.mentor_request_time} name="mentor_request_time" type="time" aria-label="event-time" onChange={handleChange} />
+                                <input className="form-control" value={mentorRequest.mentor_request_time} name="mentor_request_time" type="time" aria-label="event-time" disabled={requestSubmitted === 'submitted' ? true : false } onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
                             <div className='col-12'>
                                 <label htmlFor="mentor_request_hours" className='small m-0'>Number of hours</label>
-                                <input className="form-control" value={mentorRequest.mentor_request_hours} name="mentor_request_hours" type="number" aria-label="event-duration" onChange={handleChange} />
+                                <input className="form-control" value={mentorRequest.mentor_request_hours} name="mentor_request_hours" type="number" aria-label="event-duration" disabled={requestSubmitted === 'submitted' ? true : false } onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
                             <div className='col-12'>
                                 <label htmlFor="mentor_request_notes" className='small m-0'>Notes</label>
-                                <textarea row="3" value={mentorRequest.mentor_request_notes} className="form-control" name="mentor_request_notes" aria-label="event-message" onChange={handleChange} />
+                                <textarea row="3" value={mentorRequest.mentor_request_notes} className="form-control" name="mentor_request_notes" aria-label="event-message" disabled={requestSubmitted === 'submitted' ? true : false } onChange={handleChange} />
                             </div>
                         </div>
+                        {requestSubmitted === 'submitted' && 
+                        <div class="alert alert-success" role="alert">
+                            <p className="small">Success! A mentor request has been submitted.</p>
+                        </div>
+                        }
                         <div className='row'>
                             <div className='col-12'>
-                                <input className='btn btn-primary' name="" type="submit" aria-label="submit" />
+                                <input className='btn btn-primary' name="" type="submit" aria-label="submit" />                             
                             </div>
                         </div>
                     </form>

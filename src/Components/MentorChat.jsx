@@ -11,8 +11,6 @@ import Schedule from '../Images/calendar.svg';
 import EmojiPicker from 'emoji-picker-react';
 import SlidingPane from "react-sliding-pane";
 import BookAMentor from "./BookAMentor.jsx";
-import { Theme } from 'emoji-picker-react';
-import { EmojiStyle } from 'emoji-picker-react';
 import "react-sliding-pane/dist/react-sliding-pane.css";
 
 export default function MentorChat() {
@@ -314,7 +312,7 @@ if (userDetails !== null) {
                                     <hr className="mb-0"></hr>
                                 <div className={`mentors-chat-item-body ${overFLow === false ? 'overflow-scroll' : 'overflow-hidden'}`}>
                                     {conversation}
-                                    <BookAMentor prop1={calenderModal} prop2={nameFormentorRequest} />
+                                    <BookAMentor prop1={calenderModal} prop2={mentor.name} mentor_id={mentor.id} mentee_id={mentee.id} />
                                 </div>
                                 <div className='mentors-chat-item-keyboard'>
                                     <div className='row d-flex align-items-center'>
