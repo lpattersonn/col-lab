@@ -72,7 +72,7 @@ export default function AskQuestions() {
   useEffect(() => {
     let userDetails = JSON.parse(localStorage.getItem("userDetails"));
     axios({
-      url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`,
+      url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
       method: 'POST',
       headers: {
         Authorization: `Bearer ${userDetails.token}`

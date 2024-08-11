@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
+import {readableDate} from "../helper.js";
 
 export default function BookAMentor(prop) {
 const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -11,6 +12,7 @@ const [mentorRequest, setMentorRequest] = useState({
 })
 const [requestSubmitted, setRequestSubmitted] = useState('not submitted');
 const [currentRequest, setCurrentRequest] = useState({});
+const [mentorAgree, setMentorAgree] = useState("Not chosen");
 
 useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
@@ -22,12 +24,12 @@ useEffect(() => {
     ).then(function(response) {
         let oldestRequest = response?.data?.filter((request) => {
             return Number(request?.acf?.mentor_chat_id) === Number(prop?.chat_id);
+        }).filter((requestTwo) => {
+            return requestTwo?.acf?.mentor_agree === "Not chosen";
         })
         setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
     })
 }, []);
-
-console.log(currentRequest);
 
 const handleSubmit = (e) => {
     e.preventDefault();
@@ -68,11 +70,24 @@ function handleChange(e) {
     })
 }
 
-function readableDate(arg) {
-    var date = new Date(arg);
-    var options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    return date.toLocaleDateString('en-US', options);
+// Handle mentor request submit
+const mentorRequestSubmit = () => {
+    axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/${currentRequest.id}`,
+        {
+            "acf": {
+                "mentor_agree": mentorAgree,
+            }
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${userDetails.token}`,
+            }   
+        }
+    ).then((response) => {
+        console.log(response);
+    })
 }
+
 
 return (
     <div className={`modal-container ${prop.prop1}`}>
@@ -112,7 +127,7 @@ return (
                             <p className="small">Success! A mentor request has been submitted.</p>
                         </div>
                         }
-                        <div className='row'>
+                        <div className='row mt-3'>
                             <div className='col-12'>
                                 <input className='btn btn-primary' name="" type="submit" aria-label="submit" />                             
                             </div>
@@ -124,17 +139,32 @@ return (
         <div className="calender-schedule-modal p-3">
             <div className='card'>
                 <div className='card-body'>
-                    <p className="lead">New Request</p>
-                    {/* <p><strong>Mentee Name:</strong> {currentRequest?.author}</p> */}
-                    <p><strong>Date:</strong> {currentRequest?.acf?.mentor_request_date}</p>
+                    { currentRequest?.id !== undefined ?
+                    <><p className="lead">New Request</p>
+                    <p><strong>Date:</strong> {readableDate(currentRequest?.acf?.mentor_request_date)}</p>
                     <p><strong>Time:</strong> {currentRequest?.acf?.mentor_request_time}</p>
                     <p><strong>Hours:</strong> {currentRequest?.acf?.mentor_request_hours}</p>
                     <p><strong>Note:</strong><br/> {currentRequest?.acf?.mentor_request_notes}</p>
-                <div className='row '>
-                    <div className='col-12'>
-                            <input className='btn btn-primary' name="" type="submit" aria-label="submit" value="Accept" />                             
+                    <div className='row mt-3'>
+                        <div className='col-auto'>
+                            <button className='btn btn-primary' onClick={() => {
+                                setMentorAgree('Agree');
+                                console.log(mentorAgree);
+                                mentorRequestSubmit();
+                                }} name="Accept request" aria-label="Accept">Accept</button>                             
+                        </div>
+                        <div className='col-auto'>
+                             <button className='btn btn-danger' onClick={() => {
+                                setMentorAgree('Not Agree');
+                                console.log(mentorAgree);
+                                mentorRequestSubmit();
+                                }} name="Reject Request" aria-label="Reject">Reject</button>                             
                         </div>
                     </div>
+                    </>
+                     :
+                    <p className="lead text-center">No requests at this time.</p>
+                    }
                 </div>
             </div>
         </div>

@@ -39,7 +39,7 @@ export default function MentorSignup() {
       // Api for current user
   useEffect(() => {
     axios({
-      url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`,
+      url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
       method: 'GET',
       headers: {
         Authorization: `Bearer ${userDetails.token}`
@@ -70,7 +70,7 @@ export default function MentorSignup() {
     try {
         // Upload image if file exists
             const response = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`,
+              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
                 {   
                     'acf' : {
                         'user_is_mentor': 'Yes',

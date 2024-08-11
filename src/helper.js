@@ -43,3 +43,22 @@ export function scienceBrnaches() {
     "Physics"
 ]);
 };
+
+// Convert date format 20240809 to human readable string
+export function readableDate(arg) {
+  // Extract year, month, and day from the string
+  const year = arg?.substring(0, 4);
+  const month = arg?.substring(4, 6);
+  const day = arg?.substring(6, 8);
+  
+  // Create a new Date object using the extracted values
+  const date = new Date(`${year}-${month}-${day}`);
+  
+  // Define options for the date formatting
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  
+  // Format the date to a human-readable string
+  let humanReadableDate = date.toLocaleDateString('en-US', options);
+      return humanReadableDate;
+  }
+  

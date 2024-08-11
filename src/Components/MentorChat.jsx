@@ -43,7 +43,7 @@ export default function MentorChat() {
                   }
             }
         ).then((res) => {
-            setMentorChatDetails(res.data)
+            setMentorChatDetails(res?.data)
         }).catch((err) => {
             Navigate('/mentorship-opportunities')
         })
@@ -70,7 +70,7 @@ export default function MentorChat() {
                 method: 'GET',
                 url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${mentorChatDetails?.acf?.mentors_id}`,
                 headers: {
-                    Authorization: `Bearer ${userDetails.token}`
+                    Authorization: `Bearer ${userDetails?.token}`
                   }
             }
         ).then((res) => {
@@ -85,7 +85,7 @@ export default function MentorChat() {
             method: 'GET',
             url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${mentorChatDetails?.acf?.mentee_id}`,
             headers: {
-                Authorization: `Bearer ${userDetails.token}`
+                Authorization: `Bearer ${userDetails?.token}`
               }
         }
         ).then((res) => {
@@ -111,7 +111,7 @@ export default function MentorChat() {
 
     // Get comments
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}&per_page=100`,
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}`,
             {
                 headers: {
                     Authorization: `Bearer ${userDetails.token}`
@@ -129,7 +129,7 @@ export default function MentorChat() {
             
             if (userDetails?.id === mentorChat?.acf?.mentors_id || userDetails?.id === mentorChat?.acf?.mentee_id) {
 
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${mentorChat.id}&per_page=100`)
+                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${mentorChat.id}`)
                 .then((response) => {
                     localStorage.setItem(`sideBarChat${index}`, JSON.stringify(response.data))
                 })
@@ -335,7 +335,6 @@ if (userDetails !== null) {
                                                         <EmojiPicker className="emoji-picker-picker" reactionsDefaultOpen={emojiPicker} width={700} onEmojiClick={(emojiData, event) => { 
                                                             setComment(prevInput => prevInput + emojiData?.emoji);
                                                             setEmojiPicker(true);
-                                                            console.log(emojiPicker);
                                                             }} />
                                                     </div>
                                                 </div>

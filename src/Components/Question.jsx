@@ -174,7 +174,7 @@ export default function Question() {
               console.log(response.data.status)
           })
           // Update points
-          const updatePoints = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`,
+          const updatePoints = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
            {acf: {
             "user-points": `${2 + JSON.parse(localStorage.getItem('userPoints'))}`
           }

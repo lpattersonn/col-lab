@@ -23,7 +23,6 @@ export default function Mentors() {
         .then((response) => {
             const list = response.data.filter(user => user?.acf?.user_is_mentor === 'Yes' && user.id !== userDetails.id);
             setMentorsList(list);
-            console.log(list)
         })
         .catch((err) => {
           // Handle error
