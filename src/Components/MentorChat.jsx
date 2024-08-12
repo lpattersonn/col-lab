@@ -111,14 +111,14 @@ export default function MentorChat() {
 
     // Get comments
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                  }
-            }
-        )
-        .then((response) => {
+        axios({
+            method: 'GET',
+            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}&per_page=100`,
+            headers: {
+                Authorization: `Bearer ${userDetails.token}`
+              }
+        }
+    ).then((response) => {
             setComments(response.data);
         })
         .catch((err) => {
@@ -128,9 +128,14 @@ export default function MentorChat() {
         const SideBarChats = allMentorChats.map((mentorChat, index) => {
             
             if (userDetails?.id === mentorChat?.acf?.mentors_id || userDetails?.id === mentorChat?.acf?.mentee_id) {
-
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${mentorChat.id}`)
-                .then((response) => {
+                axios({
+                    method: 'GET',
+                    url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${mentorChat.id}&per_page=100`,
+                    headers: {
+                        Authorization: `Bearer ${userDetails.token}`
+                      }
+                }
+            ).then((response) => {
                     localStorage.setItem(`sideBarChat${index}`, JSON.stringify(response.data))
                 })
                 .catch((err) => {

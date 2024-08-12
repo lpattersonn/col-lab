@@ -14,6 +14,7 @@ const [requestSubmitted, setRequestSubmitted] = useState('not submitted');
 const [currentRequest, setCurrentRequest] = useState({});
 const [mentorAgree, setMentorAgree] = useState("Not chosen");
 
+// Get mentor requests
 useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
         {
@@ -31,6 +32,7 @@ useEffect(() => {
     })
 }, []);
 
+// Handle submit
 const handleSubmit = (e) => {
     e.preventDefault();
     axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
@@ -40,7 +42,7 @@ const handleSubmit = (e) => {
         status: 'publish',
             'acf' : {
                 'mentor_request_date': mentorRequest?.mentor_request_date,
-                'mentor_request_time:': mentorRequest?.mentor_request_time,
+                'mentor_request_time:': `${mentorRequest?.mentor_request_time}:00`,
                 'mentor_request_hours': mentorRequest?.mentor_request_hours,
                 'mentor_request_notes': mentorRequest?.mentor_request_notes,
                 'mentor_id': prop?.mentor_id,
@@ -85,9 +87,10 @@ const mentorRequestSubmit = () => {
         }
     ).then((response) => {
         console.log(response);
-    })
-}
+    }).catch((error) => {
 
+    });
+}
 
 return (
     <div className={`modal-container ${prop.prop1}`}>
@@ -145,22 +148,30 @@ return (
                     <p><strong>Time:</strong> {currentRequest?.acf?.mentor_request_time}</p>
                     <p><strong>Hours:</strong> {currentRequest?.acf?.mentor_request_hours}</p>
                     <p><strong>Note:</strong><br/> {currentRequest?.acf?.mentor_request_notes}</p>
-                    <div className='row mt-3'>
-                        <div className='col-auto'>
-                            <button className='btn btn-primary' onClick={() => {
-                                setMentorAgree('Agree');
-                                console.log(mentorAgree);
-                                mentorRequestSubmit();
-                                }} name="Accept request" aria-label="Accept">Accept</button>                             
+                    {mentorAgree != "Not chosen" &&                      
+                        <div className="alert alert-success" role="alert">
+                            <p className="small">{`This is request as been ${mentorAgree === "Agree" ? "accepted" : "rejected"}`}.</p>
                         </div>
-                        <div className='col-auto'>
-                             <button className='btn btn-danger' onClick={() => {
-                                setMentorAgree('Not Agree');
-                                console.log(mentorAgree);
-                                mentorRequestSubmit();
-                                }} name="Reject Request" aria-label="Reject">Reject</button>                             
+                    }
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
+                        mentorRequestSubmit();
+                        }}>
+                        <div className='row mt-3'>
+                            <div className='col-auto'>
+                                <button className='btn btn-primary'  type="submit" onClick={() => {
+                                    setMentorAgree('Agree');
+                                    console.log('Agree');
+                                    }} aria-label="Accept">Accept</button>                             
+                            </div>
+                            <div className='col-auto'>
+                                <button className='btn btn-danger'  type="submit" onClick={() => {
+                                    setMentorAgree('Not Agree');
+                                    console.log('Not Agree');
+                                    }} aria-label="Reject">Reject</button>                             
+                            </div>
                         </div>
-                    </div>
+                    </form>
                     </>
                      :
                     <p className="lead text-center">No requests at this time.</p>

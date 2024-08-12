@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
 import HandShake from '../Images/handshake-svgrepo-com.svg';
-import Gethelp from '../Images/brainstorm-idea-svgrepo-com.svg';
+import LearningCenter from '../Images/brainstorm-idea-svgrepo-com.svg';
 import Teach from '../Images/teach-learn-tell-student-svgrepo-com.svg';
 import Borrow from '../Images/receive-svgrepo-com.svg';
 import Job from '../Images/jobs-open-svgrepo-com.svg';
-import Interview from '../Images/interview-7-svgrepo-com.svg';
+import Ask_Question from '../Images/question-mark.svg';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -13,10 +13,11 @@ import axios from 'axios';
 import defaultImage from '../Images/5402435_account_profile_user_avatar_man_icon.svg';
 
 export default function Dashboard() {
+  let userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const [getHelpQuestions, setGetHelpQuestions] = useState([]);
   const [getUsers, setGetUsers] = useState([]); // Do I Need?
   const [usersAccountDetails, setUsersAccountDetails] = useState({});
-  let userDetails = JSON.parse(localStorage.getItem("userDetails"));
+  const [notifications, setNotifications] = useState(0);
 
   // Api for questions
   useEffect(() => {
@@ -66,6 +67,24 @@ export default function Dashboard() {
       // Handle error
     });
   }, []);
+
+  // Get mentor requests
+useEffect(() => {
+  axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+      {
+          headers: {
+              Authorization: `Bearer ${userDetails.token}`
+          }
+      }
+  ).then(function(response) {
+      let oldestRequest = response?.data?.filter((request) => {
+          return Number(request?.acf?.mentor_id) === Number(userDetails.id) || Number(request?.acf?.mentee_id) === Number(userDetails.id);
+      }).filter((requestTwo) => {
+          return requestTwo?.acf?.mentor_agree === "Not chosen";
+      })
+      setNotifications(oldestRequest?.length);
+  })
+}, []);
 
       const questions = getHelpQuestions.map((question, index) => {
         let userName = "";
@@ -176,7 +195,7 @@ export default function Dashboard() {
                       </div>
                       <div className="link-item">
                         <p>Notifications</p>
-                        <a href="#">0</a>
+                        <Link to="/profile">{notifications}</Link>
                       </div>
                       <div className="link-item">
                         <p>New messages</p>
@@ -204,11 +223,11 @@ export default function Dashboard() {
                   <div className="dashboard-options">
                     <div className='dashboard-options-buttons'>
                       <button className='btn-main'><img className="btn-main-icon" src={HandShake} loading="lazy"/>Find Collaborations</button >
-                      <Link to="/ask-questions" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Gethelp}/>Ask Questions</button></Link>
+                      <Link to="/ask-questions" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Ask_Question}/>Ask Questions</button></Link>
                       <Link to="/mentorship-opportunities" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Teach}/>Mentorships</button></Link>
                       <button className='btn-main'><img className="btn-main-icon" src={Borrow} loading="lazy"/>Borrow Items</button>
                       <Link to="/jobs" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Job}/>Jobs</button></Link>
-                      <button className='btn-main'><img className="btn-main-icon" src={Interview} loading="lazy"/>Mock Interviews</button>
+                      <button className='btn-main'><img className="btn-main-icon" src={LearningCenter} loading="lazy"/>Learning Center</button>
                     </div>
                   </div>
                 </div>
