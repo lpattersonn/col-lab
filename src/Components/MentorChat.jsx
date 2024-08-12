@@ -124,6 +124,10 @@ export default function MentorChat() {
         .catch((err) => {
         })
     })
+
+    const updateParentState = (newValue) => {
+        setCalenderModal(newValue);
+    };
  
         const SideBarChats = allMentorChats.map((mentorChat, index) => {
             
@@ -317,7 +321,7 @@ if (userDetails !== null) {
                                     <hr className="mb-0"></hr>
                                 <div className={`mentors-chat-item-body ${overFLow === false ? 'overflow-scroll' : 'overflow-hidden'}`}>
                                     {conversation}
-                                    <BookAMentor prop1={calenderModal} prop2={mentor.name} mentor_id={mentor.id} mentee_id={mentee.id} chat_id={param1} />
+                                    <BookAMentor prop1={calenderModal} prop2={mentor.name} mentor_id={mentor.id} mentee_id={mentee.id} chat_id={param1} updateParentState={updateParentState} />
                                 </div>
                                 <div className='mentors-chat-item-keyboard'>
                                     <div className='row d-flex align-items-center'>

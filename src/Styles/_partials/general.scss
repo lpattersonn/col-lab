@@ -332,3 +332,8 @@ a {
 .overflow-scroll {
   overflow-y: auto;
 }
+
+.ReactModalPortal {
+  position: relative;
+  z-index: 9999;
+}

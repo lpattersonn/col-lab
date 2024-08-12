@@ -13,6 +13,7 @@ const [mentorRequest, setMentorRequest] = useState({
 const [requestSubmitted, setRequestSubmitted] = useState('not submitted');
 const [currentRequest, setCurrentRequest] = useState({});
 const [mentorAgree, setMentorAgree] = useState("Not chosen");
+const [triggerRerender, setTriggerRerender] = useState(false); 
 
 // Get mentor requests
 useEffect(() => {
@@ -30,7 +31,7 @@ useEffect(() => {
         })
         setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
     })
-}, []);
+}, [mentorAgree, triggerRerender]);
 
 // Handle submit
 const handleSubmit = (e) => {
@@ -87,17 +88,89 @@ const mentorRequestSubmit = () => {
         }
     ).then((response) => {
         console.log(response);
+       
     }).catch((error) => {
 
     });
 }
 
+const toggleTriggerRerender = () => {
+    setTriggerRerender(!triggerRerender);
+};
+
 return (
-    <div className={`modal-container ${prop.prop1}`}>
+    <div className={`modal-container ${prop?.prop1}`}>
         <div className="modal-container-background"></div>
         { userDetails.id === prop.mentee_id ?
         <div className="calender-schedule-modal p-3">
             <div className='card'>
+            <div className="modal-popup-icon">
+                                        <svg
+                                        className="mentor-request-icon"
+                                        onClick={() => {
+                                            let state = "";
+                                            if (prop.prop1 === 'hide') {
+                                                state = 'show';
+                                            } else {
+                                                state = 'hide';
+                                            }
+                                            prop.updateParentState(state);
+                                            setMentorAgree("Not chosen");
+                                            toggleTriggerRerender();
+                                        }}
+                                        width="12.103323mm"
+                                        height="12.105565mm"
+                                        viewBox="0 0 12.103323 12.105565"
+                                        version="1.1"
+                                        id="svg1"
+                                        xmlnsinkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlnssodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlnssvg="http://www.w3.org/2000/svg">
+                                        <sodipodinamedview
+                                            id="namedview1"
+                                            pagecolor="#ffffff"
+                                            bordercolor="#666666"
+                                            borderopacity="1.0"
+                                            inkscapeshowpageshadow="2"
+                                            inkscapepageopacity="0.0"
+                                            inkscapepagecheckerboard="0"
+                                            inkscapedeskcolor="#d1d1d1"
+                                            inkscapedocument-units="mm" />
+                                        <defs
+                                            id="defs1" />
+                                        <g
+                                            inkscapelabel="Layer 1"
+                                            inkscapegroupmode="layer"
+                                            id="layer1"
+                                            transform="translate(-6.9914114,-5.8580254)">
+                                            <g
+                                            id="g3"
+                                            transform="translate(0.35406431,-0.60696738)">
+                                            <rect
+                                                
+                                                id="rect2"
+                                                width="3.4117243"
+                                                height="10.152302"
+                                                x="-1.5839893"
+                                                y="12.740046"
+                                                ry="0.35877365"
+                                                rx="0"
+                                                transform="rotate(-45)" />
+                                            <rect
+                                                
+                                                id="rect2-7"
+                                                width="3.4117243"
+                                                height="10.152302"
+                                                x="16.125717"
+                                                y="-5.1964393"
+                                                ry="0.35877365"
+                                                rx="0"
+                                                transform="rotate(45)" />
+                                            </g>
+                                            </g>
+                                        </svg>
+                                    </div>
                 <div className='card-body'>
                     <form onSubmit={handleSubmit}>
                         <h4>Mentor Request Form</h4>
@@ -141,6 +214,73 @@ return (
         </div> : 
         <div className="calender-schedule-modal p-3">
             <div className='card'>
+            <div className="modal-popup-icon">
+                                        <svg
+                                        className="mentor-request-icon"
+                                        onClick={() => {
+                                            let state = "";
+                                            if (prop.prop1 === 'hide') {
+                                                state = 'show';
+                                            } else {
+                                                state = 'hide';
+                                            }
+                                            prop.updateParentState(state);
+                                            setMentorAgree("Not chosen");
+                                            toggleTriggerRerender();
+                                        }}
+                                        width="12.103323mm"
+                                        height="12.105565mm"
+                                        viewBox="0 0 12.103323 12.105565"
+                                        version="1.1"
+                                        id="svg1"
+                                        xmlnsinkscape="http://www.inkscape.org/namespaces/inkscape"
+                                        xmlnssodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlnssvg="http://www.w3.org/2000/svg">
+                                        <sodipodinamedview
+                                            id="namedview1"
+                                            pagecolor="#ffffff"
+                                            bordercolor="#666666"
+                                            borderopacity="1.0"
+                                            inkscapeshowpageshadow="2"
+                                            inkscapepageopacity="0.0"
+                                            inkscapepagecheckerboard="0"
+                                            inkscapedeskcolor="#d1d1d1"
+                                            inkscapedocument-units="mm" />
+                                        <defs
+                                            id="defs1" />
+                                        <g
+                                            inkscapelabel="Layer 1"
+                                            inkscapegroupmode="layer"
+                                            id="layer1"
+                                            transform="translate(-6.9914114,-5.8580254)">
+                                            <g
+                                            id="g3"
+                                            transform="translate(0.35406431,-0.60696738)">
+                                            <rect
+                                                
+                                                id="rect2"
+                                                width="3.4117243"
+                                                height="10.152302"
+                                                x="-1.5839893"
+                                                y="12.740046"
+                                                ry="0.35877365"
+                                                rx="0"
+                                                transform="rotate(-45)" />
+                                            <rect
+                                                
+                                                id="rect2-7"
+                                                width="3.4117243"
+                                                height="10.152302"
+                                                x="16.125717"
+                                                y="-5.1964393"
+                                                ry="0.35877365"
+                                                rx="0"
+                                                transform="rotate(45)" />
+                                            </g>
+                                            </g>
+                                        </svg>
+                                    </div>
                 <div className='card-body'>
                     { currentRequest?.id !== undefined ?
                     <><p className="lead">New Request</p>
@@ -159,13 +299,13 @@ return (
                         }}>
                         <div className='row mt-3'>
                             <div className='col-auto'>
-                                <button className='btn btn-primary'  type="submit" onClick={() => {
+                                <button className={`btn btn-primary ${mentorAgree != "Not chosen" ? "disabled" : ""}`} type="submit" onClick={() => {
                                     setMentorAgree('Agree');
                                     console.log('Agree');
                                     }} aria-label="Accept">Accept</button>                             
                             </div>
                             <div className='col-auto'>
-                                <button className='btn btn-danger'  type="submit" onClick={() => {
+                                <button className={`btn btn-danger ${mentorAgree != "Not chosen" ? "disabled" : ""}`} type="submit" onClick={() => {
                                     setMentorAgree('Not Agree');
                                     console.log('Not Agree');
                                     }} aria-label="Reject">Reject</button>                             
@@ -174,7 +314,7 @@ return (
                     </form>
                     </>
                      :
-                    <p className="lead text-center">No requests at this time.</p>
+                    <p className="lead text-center">No new requests</p>
                     }
                 </div>
             </div>

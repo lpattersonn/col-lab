@@ -386,6 +386,11 @@ a {
   overflow-y: auto;
 }
 
+.ReactModalPortal {
+  position: relative;
+  z-index: 9999;
+}
+
 /* Button Colours */
 .dashboard {
   display: flex;
@@ -1142,6 +1147,18 @@ textarea[data-info=content] {
   position: absolute !important;
   max-width: 349px;
   bottom: -25px;
+}
+
+.mentor-request-icon {
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+  text-align: right;
+  padding: 5px 5px 0;
+  float: right;
+}
+.mentor-request-icon :hover {
+  filter: invert(13%) sepia(96%) saturate(6849%) hue-rotate(358deg) brightness(92%) contrast(117%);
 }
 
 @media screen and (max-width: 1000px) {
