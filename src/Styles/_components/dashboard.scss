@@ -119,3 +119,15 @@ z-index: 999;
 background-color: #f8f9fc;
 padding:  20px 0 5px 0;
 }
+// Schedule For Calendar
+.scheduled-event {
+  font-weight: 700 !important;
+  border: 1px solid $mercy-color-1 !important;
+  color: black;
+  position: relative;
+}
+
+.react-calendar__tile--active {
+  background: $mercy-color-1 !important;
+  color: white;
+}

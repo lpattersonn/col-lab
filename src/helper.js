@@ -62,3 +62,16 @@ export function readableDate(arg) {
       return humanReadableDate;
   }
   
+  // Convert date format
+  export function dateFormat(date) {
+    const dateObj = new Date(date);
+    
+    // Extract the year, month, and day
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    
+    // Combine them into the desired format
+    const formattedDate = `${year}${month}${day}`;
+    return formattedDate;
+  };

@@ -9,6 +9,7 @@ import Ask_Question from '../Images/question-mark.svg';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Link, useNavigate } from 'react-router-dom';
+import { dateFormat } from "../helper.js";
 import axios from 'axios';
 import defaultImage from '../Images/5402435_account_profile_user_avatar_man_icon.svg';
 
@@ -18,6 +19,7 @@ export default function Dashboard() {
   const [getUsers, setGetUsers] = useState([]); // Do I Need?
   const [usersAccountDetails, setUsersAccountDetails] = useState({});
   const [notifications, setNotifications] = useState(0);
+  const [events, setEvents] = useState([]);
 
   // Api for questions
   useEffect(() => {
@@ -68,23 +70,26 @@ export default function Dashboard() {
     });
   }, []);
 
-  // Get mentor requests
-useEffect(() => {
-  axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
-      {
-          headers: {
-              Authorization: `Bearer ${userDetails.token}`
+    // Get mentor requests
+    useEffect(() => {
+      axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+          {
+              headers: {
+                  Authorization: `Bearer ${userDetails.token}`
+              }
           }
-      }
-  ).then(function(response) {
-      let oldestRequest = response?.data?.filter((request) => {
-          return Number(request?.acf?.mentor_id) === Number(userDetails.id) || Number(request?.acf?.mentee_id) === Number(userDetails.id);
-      }).filter((requestTwo) => {
-          return requestTwo?.acf?.mentor_agree === "Not chosen";
+      ).then((response) => {
+        let relatedResponse = response?.data?.filter((item) => {
+          return item?.acf?.mentor_id === userDetails?.id || item?.acf?.mentee_id === userDetails?.id ;
+        }).filter((item) => {
+          return item?.acf?.mentor_agree === "Agree";
+        });
+        setEvents(relatedResponse);
+        console.log(events);
       })
-      setNotifications(oldestRequest?.length);
-  })
-}, []);
+    }, []);
+
+    console.log(events);
 
       const questions = getHelpQuestions.map((question, index) => {
         let userName = "";
@@ -134,7 +139,7 @@ useEffect(() => {
                         <p>{userJobInsitution}</p>
                       </div>) : ("")
                       }
-                    <p>{days == 0 ? "Posted today" : `${days}d ago`}</p>
+                    <p>{days == 0 ? "Posted today" : `${days}s ago`}</p>
                     </div>
                   </div>
                 </div>
@@ -164,7 +169,6 @@ useEffect(() => {
     <div className="dashboard">
       <div className="container-fluid primary">
         <div className="row">
-          
           <div className="col-lg-12">
             <div className="my-5">
               <h1>Welcome to <i>colLabb</i>, a collaborative network for scientists!</h1>
@@ -211,10 +215,14 @@ useEffect(() => {
                       </div>
                       <div className="dashboard-calender mt-3">
                         <p><strong>Scheduled meetings</strong></p>
-                        <p className="small">*No interviews/meetings scheduled this week</p>
+                        <p className="small"><strong>{`${events.length}`}</strong> interviews/meetings scheduled this month</p>
                       </div>
                       <div className="link-item">
-                        <Calendar firstDayOfWeek={0}/>
+                        <Calendar tileClassName={({date}) => {
+                          let scheduledEvents = events.some((item) => dateFormat(date) === item?.acf?.mentor_request_date)
+                          return scheduledEvents ? "scheduled-event" : null;
+                          
+                        }} firstDayOfWeek={0}/>
                       </div>
                     </div>
                   </div>
