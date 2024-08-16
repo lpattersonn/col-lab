@@ -139,7 +139,7 @@ export default function Dashboard() {
                         <p>{userJobInsitution}</p>
                       </div>) : ("")
                       }
-                    <p>{days == 0 ? "Posted today" : `${days}s ago`}</p>
+                    <p>{days == 0 ? "Posted today" : `${days}d ago`}</p>
                     </div>
                   </div>
                 </div>
