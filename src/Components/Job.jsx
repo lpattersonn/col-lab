@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { TailSpin } from "react-loader-spinner";
 import { faSuitcase, faLanguage, faClock, faMoneyBill, faCalendarDays, faDesktop, faLocationDot, faHouse } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
 
@@ -11,6 +12,7 @@ export default function CreateJob() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const { param1 } = useParams();
     const [ jobDetails, setJobDetails ] = useState(); 
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
       axios({
@@ -22,6 +24,7 @@ export default function CreateJob() {
       })
       .then((response) => {
         setJobDetails(response.data);
+        setLoading(false);
       })
       .catch(err => console.log(err))
     }, []);
@@ -61,6 +64,7 @@ export default function CreateJob() {
   let seeIfchecked = jobDetails?.acf?.jobs_applied_users?.split(' ');
     
   if (userDetails != null) {
+    if (loading === false) {
     return(
         <>
             <Navigation />
@@ -154,6 +158,20 @@ export default function CreateJob() {
             </main>
     </>
         );
+    } else {
+        return (
+          <TailSpin
+          visible={true}
+          height="80"
+          width="80"
+          color="#0f9ed5"
+          ariaLabel="tail-spin-loading"
+          radius="1"
+          wrapperStyle={{position: "absolute", top: 0, left: 0, right: 0, left: 0}}
+          wrapperClass="spinner"
+          />
+        )
+      }
       } else {
         window.location.replace("/");
       }

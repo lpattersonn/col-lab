@@ -10,6 +10,7 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { dateFormat } from "../helper.js";
+import { TailSpin } from "react-loader-spinner";
 import axios from 'axios';
 import defaultImage from '../Images/5402435_account_profile_user_avatar_man_icon.svg';
 
@@ -20,6 +21,7 @@ export default function Dashboard() {
   const [usersAccountDetails, setUsersAccountDetails] = useState({});
   const [notifications, setNotifications] = useState(0);
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Api for questions
   useEffect(() => {
@@ -53,7 +55,6 @@ export default function Dashboard() {
 
   // Api for current user
   useEffect(() => {
-    let userDetails = JSON.parse(localStorage.getItem("userDetails"));
     axios({
       url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
       method: 'POST',
@@ -64,6 +65,7 @@ export default function Dashboard() {
     .then((response) => {
       localStorage.setItem('userPoints', JSON.stringify(response.data['acf']['user-points']));
       setUsersAccountDetails(response.data);
+      setLoading(false);
     })
     .catch((err) => {
       // Handle error
@@ -163,6 +165,7 @@ export default function Dashboard() {
 
 
   if (localStorage.getItem('userDetails') != null) {
+    if (loading === false) {
   return (
     <>
     <Navigation />
@@ -257,6 +260,20 @@ export default function Dashboard() {
     </div>
     </>
   );
+} else {
+  return (
+    <TailSpin
+    visible={true}
+    height="80"
+    width="80"
+    color="#0f9ed5"
+    ariaLabel="tail-spin-loading"
+    radius="1"
+    wrapperStyle={{position: "absolute", top: 0, left: 0, right: 0, left: 0}}
+    wrapperClass="spinner"
+    />
+  )
+}
   } else {
     window.location.replace("/");
   }

@@ -3,6 +3,7 @@ import Navigation from './Navigation';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import { TailSpin } from "react-loader-spinner";
 import ReactPaginate from 'react-paginate';
 import { renderedQuestion } from '../helper';
 import axios from 'axios';
@@ -11,6 +12,7 @@ export default function Mentors() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const [ search, setSearch ] = useState('');
     const [ mentorsList, setMentorsList ] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios({
@@ -23,6 +25,7 @@ export default function Mentors() {
         .then((response) => {
             const list = response.data.filter(user => user?.acf?.user_is_mentor === 'Yes' && user.id !== userDetails.id);
             setMentorsList(list);
+            setLoading(false);
         })
         .catch((err) => {
           // Handle error
@@ -112,6 +115,7 @@ function ActiveItem({ currentItems }) {
 // End paginated active jobs
 
     if (userDetails !== null) {
+        if (loading === false) {
     return (
         <>
             <Navigation />
@@ -147,6 +151,20 @@ function ActiveItem({ currentItems }) {
             </main>
         </>
     )
+} else {
+        return (
+          <TailSpin
+          visible={true}
+          height="80"
+          width="80"
+          color="#0f9ed5"
+          ariaLabel="tail-spin-loading"
+          radius="1"
+          wrapperStyle={{position: "absolute", top: 0, left: 0, right: 0, left: 0}}
+          wrapperClass="spinner"
+          />
+        )
+      }
     } else {
         window.location.replace('/')
     }

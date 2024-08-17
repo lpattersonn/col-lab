@@ -8,6 +8,7 @@ import ReactPaginate from 'react-paginate';
 import { renderedQuestion } from '../helper';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import { scienceBrnaches } from '../helper';
+import { TailSpin } from "react-loader-spinner";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 
@@ -24,7 +25,7 @@ export default function AskQuestions() {
     const [ askQuestionContent, setAskQuestionContent ] = useState('');
     const [usersAccountDetails, setUsersAccountDetails] = useState({});
     const [questionSubject, setQuestionSubject] = useState('General');
-    const [ subject, setSubject ] = useState(); 
+    const [loading, setLoading] = useState(true);
     const [askQuestionApi, setAskQuestionApi] = useState({
         title: '',
         content: '',
@@ -37,6 +38,7 @@ export default function AskQuestions() {
         axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions?per_page=100`)
             .then((response) => {
                 setQuestion(response.data);
+                setLoading(false);
             }).catch((err) => {
                 console.error(err);
             });
@@ -46,6 +48,7 @@ export default function AskQuestions() {
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions?per_page=100`)
             .then((response) => {
+                setLoading(false);
                 setQuestion(response.data);
             }).catch((err) => {
                 console.error(err);
@@ -204,7 +207,7 @@ export default function AskQuestions() {
                                         <div className="row">
                                             <div className='col-lg-3 d-flex align-items-center'>
                                                 <div className='get-help'>
-                                                    <img className="get-help-img mr-3" src={userProfileImg} alt={userProfileImg} loading="lazy"/>
+                                                    <img className="get-help-img mr-3" src={userProfileImg} alt={userProfileImg} loading="eager"/>
                                                     <p><strong>{userName}</strong></p>
                                                 </div>
                                             </div>
@@ -232,7 +235,7 @@ export default function AskQuestions() {
                                         <div className="row">
                                             <div className='col-lg-3 d-flex align-items-center'>
                                                 <div className='get-help'>
-                                                    <img className="get-help-img mr-3" src={userProfileImg} alt={userProfileImg} loading="lazy"/>
+                                                    <img className="get-help-img mr-3" src={userProfileImg} alt={userProfileImg} loading="eager"/>
                                                     <p><strong>{userName}</strong></p>
                                                 </div>
                                             </div>
@@ -297,6 +300,7 @@ function PaginatedItems({ itemsPerPage }) {
 // End pagination
 
     if ( userDetails != null) {
+        if (loading === false) {
         return (
             <>
                 <Navigation />
@@ -465,6 +469,20 @@ function PaginatedItems({ itemsPerPage }) {
                 </div>
             </>
         )
+     } else {
+            return (
+              <TailSpin
+              visible={true}
+              height="80"
+              width="80"
+              color="#0f9ed5"
+              ariaLabel="tail-spin-loading"
+              radius="1"
+              wrapperStyle={{position: "absolute", top: 0, left: 0, right: 0, left: 0}}
+              wrapperClass="spinner"
+              />
+            )
+          }
     } else {
         window.location.replace("/");
       }

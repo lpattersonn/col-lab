@@ -337,3 +337,11 @@ a {
   position: relative;
   z-index: 9999;
 }
+
+// Spinner
+.spinner {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}

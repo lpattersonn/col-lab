@@ -5,6 +5,7 @@ import defaultImage from '../Images/5402435_account_profile_user_avatar_man_icon
 import { Editor } from '@tinymce/tinymce-react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import { TailSpin } from "react-loader-spinner";
 import axios from "axios";
 
 export default function Question() {
@@ -20,9 +21,16 @@ export default function Question() {
   const [ modalClass, setModalClass ] = useState('hide');
   const { param1 } = useParams();
   const [ createComment, setCreateComment ] = useState('');
+  const [loading, setLoading] = useState(true);
     
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions/${param1}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions/${param1}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userDetails.token}`
+            }
+          }
+        )
         .then((response) => {
             setQuestion(response.data);
             localStorage.setItem(`quesiton${param1}`, response.data.title.rendered.substring(0, 15));
@@ -34,7 +42,13 @@ export default function Question() {
     }, [comments])
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}`)
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userDetails.token}`
+            }
+          }
+        )
         .then((response) => {
             setComments(response.data);
         })
@@ -44,9 +58,16 @@ export default function Question() {
     }, [comments])
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`)
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`,
+          {
+            headers: {
+              Authorization: `Bearer ${userDetails.token}`
+            }
+          }
+        )
         .then((response) => {
             setGetUsers(response.data);
+            setLoading(false);
         })
         .catch((err) => {
             console.log(err)
@@ -195,6 +216,7 @@ export default function Question() {
     }
 
   if ( userDetails != null) {
+    if (loading === false) {
 return (
     <>
         <Navigation />
@@ -356,6 +378,20 @@ return (
         </div>
 </>
 )
+} else {
+  return (
+    <TailSpin
+    visible={true}
+    height="80"
+    width="80"
+    color="#0f9ed5"
+    ariaLabel="tail-spin-loading"
+    radius="1"
+    wrapperStyle={{position: "absolute", top: 0, left: 0, right: 0, left: 0}}
+    wrapperClass="spinner"
+    />
+  )
+}
       } else {
         window.location.replace("/");
       }

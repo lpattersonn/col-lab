@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { TailSpin } from "react-loader-spinner";
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
 
@@ -12,6 +13,7 @@ export default function Mentor() {
     const { param1 } = useParams();
     const [ mentorDetails, setMentorDetails ] = useState({}); 
     const [ mentorChats, setMentorChats ] = useState([]); 
+    const [loading, setLoading] = useState(true);
     const Naviagte = useNavigate()
 
     // Get menotr information
@@ -25,6 +27,7 @@ export default function Mentor() {
       })
       .then((response) => {
         setMentorDetails(response.data);
+        setLoading(false);
       })
       .catch(err => console.log(err))
     }, []);
@@ -118,6 +121,7 @@ export default function Mentor() {
   };
 
   if (userDetails != null) {
+    if (loading === false) {
     return(
         <>
             <Navigation />
@@ -179,6 +183,20 @@ export default function Mentor() {
             </main>
     </>
         );
+    } else {
+        return (
+          <TailSpin
+          visible={true}
+          height="80"
+          width="80"
+          color="#0f9ed5"
+          ariaLabel="tail-spin-loading"
+          radius="1"
+          wrapperStyle={{position: "absolute", top: 0, left: 0, right: 0, left: 0}}
+          wrapperClass="spinner"
+          />
+        )
+      }
       } else {
         window.location.replace("/");
       }

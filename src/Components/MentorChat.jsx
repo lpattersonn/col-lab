@@ -10,6 +10,7 @@ import Attachment from '../Images/attachment_office_paperclip_supplies_icon.svg'
 import Schedule from '../Images/calendar.svg';
 import EmojiPicker from 'emoji-picker-react';
 import SlidingPane from "react-sliding-pane";
+import { TailSpin } from "react-loader-spinner";
 import BookAMentor from "./BookAMentor.jsx";
 import "react-sliding-pane/dist/react-sliding-pane.css";
 
@@ -27,6 +28,7 @@ export default function MentorChat() {
     const [ calenderModal, setCalenderModal ] = useState('hide');
     const [ emojiPicker, setEmojiPicker ] = useState(true);
     const [overFLow, setOverFlow] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [ state, setState ] = useState({
         isPaneOpen: false,
         isPaneOpenLeft: false,
@@ -120,6 +122,7 @@ export default function MentorChat() {
         }
     ).then((response) => {
             setComments(response.data);
+            setLoading(false);
         })
         .catch((err) => {
         })
@@ -182,7 +185,7 @@ export default function MentorChat() {
                             <div className={"mentors-chat-item-header"+" "+"chat-item"+" "+`${Number(param1) === mentorChat.id ? "current-chat" : 'no'}`}>
                                 <div className='row d-flex align-items-center flex-row justify-content-center'>
                                     <div className="col-auto">
-                                        <img className='chat-item-header-img' src={ userDetails.id === mentorChat?.acf?.mentors_id ? mentorChat?.acf?.mentee_image : mentorChat?.acf?.mentors_image } alt={user?.name} loading="lazy" /> 
+                                        <img className='chat-item-header-img' src={ userDetails.id === mentorChat?.acf?.mentors_id ? mentorChat?.acf?.mentee_image : mentorChat?.acf?.mentors_image } alt={user?.name} loading="eager" /> 
                                     </div>
                                     <div className="col-9 d-flex align-items-center">
                                         <div className="chat-item-detials">                                
@@ -217,7 +220,7 @@ export default function MentorChat() {
                 </div>
                 <div className='image d-flex align-items-center'>
                     <span className='chat-date date'>{humanReadableTime}</span>
-                    <img className='chat-img' src={ comment?.author_avatar_urls?.['48']} alt={comment?.author_name} loading="lazy" /> 
+                    <img className='chat-img' src={ comment?.author_avatar_urls?.['48']} alt={comment?.author_name} loading="eager" /> 
                 </div>
             </div>
         )
@@ -248,6 +251,7 @@ export default function MentorChat() {
     let nameFormentorRequest =  userDetails.id === mentor?.acf?.mentors_id ? mentor?.acf?.firstName : mentee?.acf?.firstName;
 
 if (userDetails !== null) {
+    if (loading === false) {
     if (userDetails.id  !== mentorChatDetails?.acf?.mentors_id || userDetails.id  !== mentorChatDetails?.acf?.mentee_id) {
         return (
             <>
@@ -259,10 +263,10 @@ if (userDetails !== null) {
                                 <div className='mentors-chat-item-header'>
                                     <div className='row d-flex align-items-center justify-content-between'>
                                         <div className="col-auto">
-                                            <img className='chat-item-header-img' src={user?.avatar_urls?.['48']} alt={user?.name} loading="lazy" /> 
+                                            <img className='chat-item-header-img' src={user?.avatar_urls?.['48']} alt={user?.name} loading="eager" /> 
                                         </div>
                                         <div className="col-auto ml-auto">
-                                            <img className='chat-icons' src={SearchIcon} alt="Home icon" loading="lazy" onClick={() => {
+                                            <img className='chat-icons' src={SearchIcon} alt="Home icon" loading="eager" onClick={() => {
                                                 if (searchBarStatus === 'hide') {
                                                     setSearchBarStatus('show');
                                                 } else {
@@ -286,7 +290,7 @@ if (userDetails !== null) {
                                 <div className='mentors-chat-item-header mentors-chat-item-header-main'>
                                     <div className='row d-flex align-items-center'>
                                         <div className="col-auto">
-                                            <img className='chat-item-header-img' src={userDetails.id === mentee.id ? mentor?.avatar_urls?.['48'] : mentee?.avatar_urls?.['48']} alt={ userDetails.id === mentee.id ? mentor?.name : mentee?.name} /> 
+                                            <img className='chat-item-header-img' src={userDetails.id === mentee.id ? mentor?.avatar_urls?.['48'] : mentee?.avatar_urls?.['48']} alt={ userDetails.id === mentee.id ? mentor?.name : mentee?.name} loading="eager" /> 
                                         </div>
                                         <div className="col-auto d-flex align-items-center">
                                             <div>
@@ -306,7 +310,7 @@ if (userDetails !== null) {
                                                         setCalenderModal('hide');
                                                         setOverFlow(false)
                                                     }
-                                                }} />
+                                                }} loading="eager" />
                                             </div>
                                         </div>
                                         <div className="col-auto">
@@ -334,10 +338,10 @@ if (userDetails !== null) {
                                                         <input className="form-control form-control-lg chat-input" type="text" value={comment} onChange={(e) => {setComment(e.target.value)}} aria-label="Type a message" placeholder='Type a message' />
                                                     </div>
                                                     <button className='send-chat-icon' type="submit">
-                                                        <img className='send-icon' src={SendIcon} alt="Send icon" loading="lazy" />
+                                                        <img className='send-icon' src={SendIcon} alt="Send icon" loading="eager" />
                                                     </button>
                                                 </div>
-                                                <img className='send-chat-extra-icon' src={Attachment} />
+                                                <img className='send-chat-extra-icon' src={Attachment} loading="eager" />
                                                 {/* <img className='send-chat-extra-icon send-chat-extra-icon-emoji' src={WinkIcon} /> */}
                                                 <div className='test'>
                                                     <div className="emoji-picker">
@@ -406,6 +410,20 @@ if (userDetails !== null) {
     } else {
         window.location.replace('/mentorship-opportunities')
     }
+} else {
+    return (
+      <TailSpin
+      visible={true}
+      height="80"
+      width="80"
+      color="#0f9ed5"
+      ariaLabel="tail-spin-loading"
+      radius="1"
+      wrapperStyle={{position: "absolute", top: 0, left: 0, right: 0, left: 0}}
+      wrapperClass="spinner"
+      />
+    )
+  }
 } else {
     window.location.replace('/')
 }
