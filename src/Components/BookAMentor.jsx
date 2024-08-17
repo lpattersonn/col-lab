@@ -32,6 +32,7 @@ useEffect(() => {
         setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
     })
 }, [mentorAgree, triggerRerender]);
+console.log(currentRequest)
 
 // Handle submit
 const handleSubmit = (e) => {
@@ -59,7 +60,9 @@ const handleSubmit = (e) => {
     ).then(function(response) {
         console.log(response);
         setRequestSubmitted('submitted');
-    })
+    }).catch((error) => {
+
+    });
 }
 
 
@@ -97,7 +100,7 @@ const mentorRequestSubmit = () => {
 const toggleTriggerRerender = () => {
     setTriggerRerender(!triggerRerender);
 };
-
+console.log(currentRequest?.acf?.mentor_request_date);
 return (
     <div className={`modal-container ${prop?.prop1}`}>
         <div className="modal-container-background"></div>
@@ -177,7 +180,7 @@ return (
                         <div className='row mb-3'>
                             <div className='col-12'>
                                 <label htmlFor="mentor_request_date" className='small m-0'>Please indicate your proposed meeting date</label>
-                                <input className="form-control" value={mentorRequest.mentor_request_date} name="mentor_request_date" type="date" aria-label="event-date" disabled={requestSubmitted === 'submitted' ? true : false } onChange={handleChange} />
+                                <input className="form-control" value={mentorRequest.mentor_request_date} name="mentor_request_date" type="date" min={new Date().toISOString().split('T')[0]} aria-label="event-date" disabled={requestSubmitted === 'submitted' ? true : false } onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
