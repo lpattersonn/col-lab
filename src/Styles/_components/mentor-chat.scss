@@ -330,3 +330,20 @@
       filter: invert(13%) sepia(96%) saturate(6849%) hue-rotate(358deg) brightness(92%) contrast(117%);
     }
 }
+.chat-instructions {
+    position: relative;
+    .mentor-cotification-count {
+        position: absolute;
+        background-color: red;
+        top: -5px;
+        width: 12px;
+        height: 12px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        font-weight: 700;
+        right: 0;
+    }
+}

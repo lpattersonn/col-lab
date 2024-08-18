@@ -218,7 +218,7 @@ export default function Dashboard() {
                       </div>
                       <div className="dashboard-calender mt-3">
                         <p><strong>Scheduled meetings</strong></p>
-                        <p className="small"><strong>{`${events.length}`}</strong> interviews/meetings scheduled this month</p>
+                        <p className="small"><strong>{`${events.length}`}</strong> interviews/meetings scheduled</p>
                       </div>
                       <div className="link-item">
                         <Calendar tileClassName={({date}) => {

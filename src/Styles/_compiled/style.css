@@ -1180,6 +1180,24 @@ textarea[data-info=content] {
   filter: invert(13%) sepia(96%) saturate(6849%) hue-rotate(358deg) brightness(92%) contrast(117%);
 }
 
+.chat-instructions {
+  position: relative;
+}
+.chat-instructions .mentor-cotification-count {
+  position: absolute;
+  background-color: red;
+  top: -5px;
+  width: 12px;
+  height: 12px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-weight: 700;
+  right: 0;
+}
+
 @media screen and (max-width: 1000px) {
   .container-fluid {
     padding: 0 2rem !important;

@@ -8,6 +8,7 @@ import WinkIcon from '../Images/grinning-face-with-smiling-eyes-emoji-icon.svg';
 import SearchIcon from '../Images/search_icon.svg';
 import Attachment from '../Images/attachment_office_paperclip_supplies_icon.svg';
 import Schedule from '../Images/calendar.svg';
+import Notification from '../Images/bell.svg';
 import EmojiPicker from 'emoji-picker-react';
 import SlidingPane from "react-sliding-pane";
 import { TailSpin } from "react-loader-spinner";
@@ -29,11 +30,28 @@ export default function MentorChat() {
     const [ emojiPicker, setEmojiPicker ] = useState(true);
     const [overFLow, setOverFlow] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [ state, setState ] = useState({
+    const [request, setRequest] = useState("");
+    const [state, setState] = useState({
         isPaneOpen: false,
         isPaneOpenLeft: false,
       });
     const Navigate = useNavigate();
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+            {
+                headers: {
+                    Authorization: `Bearer ${userDetails.token}`
+                }
+            }
+        ).then(function(response) {
+            let oldestRequest = response?.data?.filter((request) => {
+                return Number(request?.acf?.mentor_chat_id) === param1;
+            }).filter((requestTwo) => {
+                return requestTwo?.acf?.mentor_agree === "Not chosen";
+            })
+            setRequest(oldestRequest?.length());
+        }).catch((err) => {})
+    }, []);
 
     // Set user information
     useEffect(() => {
@@ -304,7 +322,8 @@ if (userDetails !== null) {
                                     <div className='row d-flex align-items-center'>
                                         <div className="col-auto">
                                             <div className="chat-instructions">
-                                                <img className='send-chat-extra-icon send-chat-extra-icon-schedule' src={Schedule} onClick={() => {
+                                            {userDetails?.id === mentor?.id && request > 0  ? <div className="mentor-cotification-count">{request}</div> : ""}
+                                                <img className='send-chat-extra-icon send-chat-extra-icon-schedule' src={userDetails?.id != mentor?.id ? Schedule : Notification} onClick={() => {
                                                     if (calenderModal === 'hide') {
                                                         setCalenderModal('show');
                                                         setOverFlow(true)

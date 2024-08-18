@@ -32,7 +32,6 @@ useEffect(() => {
         setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
     }).catch((err) => {})
 }, [mentorAgree, triggerRerender]);
-console.log(currentRequest)
 
 // Handle submit
 const handleSubmit = (e) => {
