@@ -45,7 +45,7 @@ export default function MentorChat() {
             }
         ).then(function(response) {
             let oldestRequest = response?.data?.filter((request) => {
-                return Number(request?.acf?.mentor_chat_id) === param1;
+                return Number(request?.acf?.mentor_chat_id) === Number(param1);
             }).filter((requestTwo) => {
                 return requestTwo?.acf?.mentor_agree === "Not chosen";
             })
