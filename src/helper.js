@@ -11,7 +11,7 @@ export function userFirstName(prop) {
     return axios.get(`${prop}`)
     .then((response) => {
       return response.data;
-    })
+    }).catch((err) => {})
   }
 
 // Highlight search words
@@ -63,15 +63,28 @@ export function readableDate(arg) {
   }
   
   // Convert date format
-  export function dateFormat(date) {
-    const dateObj = new Date(date);
-    
-    // Extract the year, month, and day
-    const year = dateObj.getFullYear();
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    
-    // Combine them into the desired format
-    const formattedDate = `${year}${month}${day}`;
-    return formattedDate;
+  export function dateFormat(dateString) {
+     // Create a Date object from the input string
+     const dateObj = new Date(dateString);
+
+     // Extract the year, month, and day
+     const year = dateObj.getFullYear();
+     const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+     const day = String(dateObj.getDate()).padStart(2, '0');
+ 
+     // Combine them into the desired format
+     const formattedDate = `${year}-${month}-${day}`;
+     return formattedDate;
   };
+
+export function humanReadableDate(args) {
+  const dateString = args;
+  const date = new Date(dateString);
+
+  // Define options for formatting
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+  // Format the date
+  const humanReadableDate = date.toLocaleDateString('en-US', options);
+  return humanReadableDate;
+}

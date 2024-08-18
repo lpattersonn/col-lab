@@ -245,6 +245,8 @@ export default function MentorChat() {
         }
         ).then((res) => {
             setComment('');
+        }).catch((error) => {
+
         })
     }
 

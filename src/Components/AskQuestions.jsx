@@ -151,7 +151,7 @@ export default function AskQuestions() {
                     }
                 }
             ).then((response) => {
-            })
+            }).catch((err) => {})
             setAskQuestionStatus('published');
         } catch (error) {
             console.error('Error submitting question:', error);
@@ -186,7 +186,7 @@ export default function AskQuestions() {
                     .then((response) => {
                     numberOfComments[0].count = response.data.length;
                     localStorage.setItem(`comment_count${index}`, numberOfComments[0].count)
-                    })
+                    }).catch((error) => {})
                 }
         
                 // Parsing comments

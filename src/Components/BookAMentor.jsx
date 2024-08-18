@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {readableDate} from "../helper.js";
+import {humanReadableDate} from "../helper.js";
 
 export default function BookAMentor(prop) {
 const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -30,7 +30,7 @@ useEffect(() => {
             return requestTwo?.acf?.mentor_agree === "Not chosen";
         })
         setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
-    })
+    }).catch((err) => {})
 }, [mentorAgree, triggerRerender]);
 console.log(currentRequest)
 
@@ -287,7 +287,7 @@ return (
                 <div className='card-body'>
                     { currentRequest?.id !== undefined ?
                     <><p className="lead">New Request</p>
-                    <p><strong>Date:</strong> {readableDate(currentRequest?.acf?.mentor_request_date)}</p>
+                    <p><strong>Date:</strong> {humanReadableDate(currentRequest?.acf?.mentor_request_date)}</p>
                     <p><strong>Time:</strong> {currentRequest?.acf?.mentor_request_time}</p>
                     <p><strong>Hours:</strong> {currentRequest?.acf?.mentor_request_hours}</p>
                     <p><strong>Note:</strong><br/> {currentRequest?.acf?.mentor_request_notes}</p>

@@ -113,7 +113,7 @@ export default function Mentor() {
         ).then((response) => {
                 Naviagte(`/mentor-chat/${response?.data?.id}`);
             }
-        )
+        ).catch((err) => {})
 
     } catch (err) {
 

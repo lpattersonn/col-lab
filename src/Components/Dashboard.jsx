@@ -35,7 +35,7 @@ export default function Dashboard() {
     .then((response) => {
       setGetHelpQuestions(response.data);
     })
-    .catch()
+    .catch(err => {})
   }, [])
 
   // Api for users
@@ -50,7 +50,7 @@ export default function Dashboard() {
     .then((response) => {
      setGetUsers(response.data);
     })
-    .catch()
+    .catch(err => {})
   }, [])
 
   // Api for current user
@@ -88,7 +88,7 @@ export default function Dashboard() {
         });
         setEvents(relatedResponse);
         console.log(events);
-      })
+      }).catch((err) => {})
     }, []);
 
     console.log(events);
@@ -114,7 +114,7 @@ export default function Dashboard() {
           .then((response) => {
             numberOfComments[0].count = response.data.length;
             localStorage.setItem(`comment_count${index}`, numberOfComments[0].count)
-          })
+          }).catch((err) => {});
         }
 
         // Parsing comments
@@ -223,6 +223,7 @@ export default function Dashboard() {
                       <div className="link-item">
                         <Calendar tileClassName={({date}) => {
                           let scheduledEvents = events.some((item) => dateFormat(date) === item?.acf?.mentor_request_date)
+                          console.log(date);
                           return scheduledEvents ? "scheduled-event" : null;
                           
                         }} firstDayOfWeek={0}/>
