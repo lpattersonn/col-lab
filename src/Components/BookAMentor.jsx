@@ -119,6 +119,13 @@ return (
                                             prop.updateParentState(state);
                                             setMentorAgree("Not chosen");
                                             toggleTriggerRerender();
+                                            setMentorRequest({
+                                                mentor_request_date: '',
+                                                mentor_request_time: '',
+                                                mentor_request_hours: '',
+                                                mentor_request_notes: ''
+                                            });
+                                            setRequestSubmitted('not submitted');
                                         }}
                                         width="12.103323mm"
                                         height="12.105565mm"
@@ -207,7 +214,7 @@ return (
                         }
                         <div className='row mt-3'>
                             <div className='col-12'>
-                                <input className='btn btn-primary' name="" type="submit" aria-label="submit" />                             
+                                <input className={`btn btn-primary ${requestSubmitted === 'submitted' ? "disabled" : ""}`} name="" type="submit" aria-label="submit" />                             
                             </div>
                         </div>
                     </form>
