@@ -57,7 +57,6 @@ const handleSubmit = (e) => {
             }
         }
     ).then(function(response) {
-        console.log(response);
         setRequestSubmitted('submitted');
     }).catch((error) => {
 
@@ -89,7 +88,6 @@ const mentorRequestSubmit = () => {
             }   
         }
     ).then((response) => {
-        console.log(response);
        
     }).catch((error) => {
 
@@ -99,7 +97,6 @@ const mentorRequestSubmit = () => {
 const toggleTriggerRerender = () => {
     setTriggerRerender(!triggerRerender);
 };
-console.log(currentRequest?.acf?.mentor_request_date);
 return (
     <div className={`modal-container ${prop?.prop1}`}>
         <div className="modal-container-background"></div>
@@ -310,12 +307,14 @@ return (
                             <div className='col-auto'>
                                 <button className={`btn btn-primary ${mentorAgree != "Not chosen" ? "disabled" : ""}`} type="submit" onClick={() => {
                                     setMentorAgree('Agree');
+                        
                                     console.log('Agree');
                                     }} aria-label="Accept">Accept</button>                             
                             </div>
                             <div className='col-auto'>
                                 <button className={`btn btn-danger ${mentorAgree != "Not chosen" ? "disabled" : ""}`} type="submit" onClick={() => {
                                     setMentorAgree('Not Agree');
+                        
                                     console.log('Not Agree');
                                     }} aria-label="Reject">Reject</button>                             
                             </div>

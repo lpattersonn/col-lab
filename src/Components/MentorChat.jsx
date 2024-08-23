@@ -36,6 +36,7 @@ export default function MentorChat() {
         isPaneOpenLeft: false,
       });
     const Navigate = useNavigate();
+
     useEffect(() => {
         axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
             {
@@ -44,12 +45,9 @@ export default function MentorChat() {
                 }
             }
         ).then(function(response) {
-            let oldestRequest = response?.data?.filter((request) => {
-                return Number(request?.acf?.mentor_chat_id) === Number(param1);
-            }).filter((requestTwo) => {
-                return requestTwo?.acf?.mentor_agree === "Not chosen";
-            })
-            setRequest(oldestRequest?.length());
+            let oldestRequest = response?.data
+            setRequest(oldestRequest.length());
+            console.log(response);
         }).catch((err) => {})
     }, []);
 
@@ -79,7 +77,7 @@ export default function MentorChat() {
                   }
             }
         ).then((res) => {
-            setAllMentorChats(res.data)
+            setAllMentorChats(res.data);
         }).catch((err) => {
         })
     }, [])
@@ -322,7 +320,7 @@ if (userDetails !== null) {
                                     <div className='row d-flex align-items-center'>
                                         <div className="col-auto">
                                             <div className="chat-instructions">
-                                            {userDetails?.id === mentor?.id && request > 0  ? <div className="mentor-cotification-count">{request}</div> : ""}
+                                            {userDetails?.id === mentor?.id  ? <div className="mentor-cotification-count">{request}</div> : ""}
                                                 <img className='send-chat-extra-icon send-chat-extra-icon-schedule' src={userDetails?.id != mentor?.id ? Schedule : Notification} onClick={() => {
                                                     if (calenderModal === 'hide') {
                                                         setCalenderModal('show');
