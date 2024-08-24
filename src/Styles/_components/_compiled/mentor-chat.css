@@ -355,13 +355,16 @@
   position: absolute;
   background-color: red;
   top: -5px;
-  width: 12px;
-  height: 12px;
+  width: fit-content;
+  height: fit-content;
   color: white;
   display: flex;
+  min-width: 18px;
+  min-height: 18px;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
   font-weight: 700;
   right: 0;
+  padding: 0 5px;
 }

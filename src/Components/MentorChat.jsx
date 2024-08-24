@@ -44,12 +44,15 @@ export default function MentorChat() {
                     Authorization: `Bearer ${userDetails.token}`
                 }
             }
-        ).then(function(response) {
-            let oldestRequest = response?.data
-            setRequest(oldestRequest.length());
-            console.log(response);
+        ).then((response) => {
+            let objects = response?.data?.filter((item) => {
+                return item?.acf?.mentor_agree === "Not chosen";
+            })?.filter((item) => {
+                return item?.acf?.mentor_chat_id == Number(param1);
+            })
+            setRequest(objects?.length)
         }).catch((err) => {})
-    }, []);
+    }, [calenderModal]);
 
     // Set user information
     useEffect(() => {
@@ -114,13 +117,13 @@ export default function MentorChat() {
 
     // Set user information
     useEffect(() => {
-            axios({
-                method: 'GET',
-                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
-                headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                  }
-            }
+        axios({
+            method: 'GET',
+            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
+            headers: {
+                Authorization: `Bearer ${userDetails.token}`
+                }
+        }
         ).then((res) => {
             setUser(res.data)
         }).catch((err) => {
@@ -262,7 +265,6 @@ export default function MentorChat() {
         ).then((res) => {
             setComment('');
         }).catch((error) => {
-
         })
     }
 
@@ -320,7 +322,7 @@ if (userDetails !== null) {
                                     <div className='row d-flex align-items-center'>
                                         <div className="col-auto">
                                             <div className="chat-instructions">
-                                            {userDetails?.id === mentor?.id  ? <div className="mentor-cotification-count">{request}</div> : ""}
+                                            {userDetails?.id === mentor?.id && request > 0 ? <div className="mentor-cotification-count">{request}</div> : ""}
                                                 <img className='send-chat-extra-icon send-chat-extra-icon-schedule' src={userDetails?.id != mentor?.id ? Schedule : Notification} onClick={() => {
                                                     if (calenderModal === 'hide') {
                                                         setCalenderModal('show');
@@ -351,7 +353,6 @@ if (userDetails !== null) {
                                         <div className='col-2'></div>
                                         <div className='col-8'>                                            
                                             <form className="d-flex flex-direction-row align-items-center" onSubmit={handleClick}>
-                              
                                                 <div className='send-chat'>                                                
                                                     <div className='send-chat-input'>
                                                         <input className="form-control form-control-lg chat-input" type="text" value={comment} onChange={(e) => {setComment(e.target.value)}} aria-label="Type a message" placeholder='Type a message' />

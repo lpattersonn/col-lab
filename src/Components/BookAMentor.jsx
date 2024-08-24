@@ -31,7 +31,7 @@ useEffect(() => {
         })
         setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
     }).catch((err) => {})
-}, [mentorAgree, triggerRerender]);
+}, [triggerRerender]);
 
 // Handle submit
 const handleSubmit = (e) => {
@@ -307,14 +307,12 @@ return (
                             <div className='col-auto'>
                                 <button className={`btn btn-primary ${mentorAgree != "Not chosen" ? "disabled" : ""}`} type="submit" onClick={() => {
                                     setMentorAgree('Agree');
-                        
                                     console.log('Agree');
                                     }} aria-label="Accept">Accept</button>                             
                             </div>
                             <div className='col-auto'>
                                 <button className={`btn btn-danger ${mentorAgree != "Not chosen" ? "disabled" : ""}`} type="submit" onClick={() => {
                                     setMentorAgree('Not Agree');
-                        
                                     console.log('Not Agree');
                                     }} aria-label="Reject">Reject</button>                             
                             </div>
