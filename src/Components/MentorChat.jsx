@@ -52,7 +52,7 @@ export default function MentorChat() {
             })
             setRequest(objects?.length)
         }).catch((err) => {})
-    }, [calenderModal]);
+    }, );
 
     // Set user information
     useEffect(() => {
