@@ -31,7 +31,27 @@ useEffect(() => {
         })
         setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
     }).catch((err) => {})
-}, [triggerRerender]);
+}, [prop.request]);
+
+// console.log(currentRequest);
+
+// Get mentor requests
+// useEffect(() => {
+//     axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+//         {
+//             headers: {
+//                 Authorization: `Bearer ${userDetails.token}`
+//             }
+//         }
+//     ).then(function(response) {
+//         let oldestRequest = response?.data?.filter((request) => {
+//             return Number(request?.acf?.mentor_chat_id) === Number(prop?.chat_id);
+//         }).filter((requestTwo) => {
+//             return requestTwo?.acf?.mentor_agree === "Not chosen";
+//         })
+//         setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
+//     }).catch((err) => {})
+// }, [currentRequest, triggerRerender, requestSubmitted, prop.prop1]);
 
 // Handle submit
 const handleSubmit = (e) => {
@@ -43,7 +63,7 @@ const handleSubmit = (e) => {
         status: 'publish',
             'acf' : {
                 'mentor_request_date': mentorRequest?.mentor_request_date,
-                'mentor_request_time:': `${mentorRequest?.mentor_request_time}:00`,
+                'mentor_request_time': `${mentorRequest?.mentor_request_time}:00`,
                 'mentor_request_hours': mentorRequest?.mentor_request_hours,
                 'mentor_request_notes': mentorRequest?.mentor_request_notes,
                 'mentor_id': prop?.mentor_id,
@@ -88,20 +108,36 @@ const mentorRequestSubmit = () => {
             }   
         }
     ).then((response) => {
-       
+       console.log(response)
     }).catch((error) => {
 
     });
 }
 
 const toggleTriggerRerender = () => {
-    setTriggerRerender(!triggerRerender);
+    // setTriggerRerender(prev => !prev);
+    axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+        {
+            headers: {
+                Authorization: `Bearer ${userDetails.token}`
+            }
+        }
+    ).then(function(response) {
+        let oldestRequest = response?.data?.filter((request) => {
+            return Number(request?.acf?.mentor_chat_id) === Number(prop?.chat_id);
+        }).filter((requestTwo) => {
+            return requestTwo?.acf?.mentor_agree === "Not chosen";
+        })
+        setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
+        prop.updateCount(oldestRequest?.length())
+        console.log("request changed")
+    }).catch((err) => {})
 };
 return (
     <div className={`modal-container ${prop?.prop1}`}>
         <div className="modal-container-background"></div>
         { userDetails.id === prop.mentee_id ?
-        <div className="calender-schedule-modal p-3">
+        <div className="calender-schedule-modal p-3" key="mentee">
             <div className='card'>
             <div className="modal-popup-icon">
                                         <svg
@@ -116,6 +152,7 @@ return (
                                             prop.updateParentState(state);
                                             setMentorAgree("Not chosen");
                                             toggleTriggerRerender();
+                                            console.log(triggerRerender)
                                             setMentorRequest({
                                                 mentor_request_date: '',
                                                 mentor_request_time: '',
@@ -218,7 +255,7 @@ return (
                 </div>
             </div>
         </div> : 
-        <div className="calender-schedule-modal p-3">
+        <div className="calender-schedule-modal p-3" key={currentRequest?.id}>
             <div className='card'>
             <div className="modal-popup-icon">
                                         <svg

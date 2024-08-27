@@ -30,7 +30,7 @@ export default function MentorChat() {
     const [ emojiPicker, setEmojiPicker ] = useState(true);
     const [overFLow, setOverFlow] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [request, setRequest] = useState("");
+    const [request, setRequest] = useState(0);
     const [state, setState] = useState({
         isPaneOpen: false,
         isPaneOpenLeft: false,
@@ -52,7 +52,7 @@ export default function MentorChat() {
             })
             setRequest(objects?.length)
         }).catch((err) => {})
-    }, );
+    });
 
     // Set user information
     useEffect(() => {
@@ -149,6 +149,10 @@ export default function MentorChat() {
 
     const updateParentState = (newValue) => {
         setCalenderModal(newValue);
+    };
+ 
+    const updateCount = (arg) => {
+            setRequest(arg);
     };
  
         const SideBarChats = allMentorChats.map((mentorChat, index) => {
@@ -346,7 +350,7 @@ if (userDetails !== null) {
                                     <hr className="mb-0"></hr>
                                 <div className={`mentors-chat-item-body ${overFLow === false ? 'overflow-scroll' : 'overflow-hidden'}`}>
                                     {conversation}
-                                    <BookAMentor prop1={calenderModal} prop2={mentor.name} mentor_id={mentor.id} mentee_id={mentee.id} chat_id={param1} updateParentState={updateParentState} />
+                                    <BookAMentor prop1={calenderModal} prop2={mentor.name} mentor_id={mentor.id} mentee_id={mentee.id} chat_id={param1} updateParentState={updateParentState} request={request} updateCount={updateCount} />
                                 </div>
                                 <div className='mentors-chat-item-keyboard'>
                                     <div className='row d-flex align-items-center'>
