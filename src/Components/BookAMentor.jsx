@@ -31,27 +31,7 @@ useEffect(() => {
         })
         setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
     }).catch((err) => {})
-}, [prop.request]);
-
-// console.log(currentRequest);
-
-// Get mentor requests
-// useEffect(() => {
-//     axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
-//         {
-//             headers: {
-//                 Authorization: `Bearer ${userDetails.token}`
-//             }
-//         }
-//     ).then(function(response) {
-//         let oldestRequest = response?.data?.filter((request) => {
-//             return Number(request?.acf?.mentor_chat_id) === Number(prop?.chat_id);
-//         }).filter((requestTwo) => {
-//             return requestTwo?.acf?.mentor_agree === "Not chosen";
-//         })
-//         setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
-//     }).catch((err) => {})
-// }, [currentRequest, triggerRerender, requestSubmitted, prop.prop1]);
+}, [triggerRerender]);
 
 // Handle submit
 const handleSubmit = (e) => {
@@ -96,7 +76,7 @@ function handleChange(e) {
 
 // Handle mentor request submit
 const mentorRequestSubmit = () => {
-    axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/${currentRequest.id}`,
+    axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/${currentRequest?.id}`,
         {
             "acf": {
                 "mentor_agree": mentorAgree,
@@ -108,31 +88,36 @@ const mentorRequestSubmit = () => {
             }   
         }
     ).then((response) => {
-       console.log(response)
+        console.log("submitted")
     }).catch((error) => {
 
     });
 }
 
-const toggleTriggerRerender = () => {
-    // setTriggerRerender(prev => !prev);
-    axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
-        {
-            headers: {
-                Authorization: `Bearer ${userDetails.token}`
-            }
+useEffect(() => {
+    const fetchMentorRequests = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`, {
+                headers: {
+                    Authorization: `Bearer ${userDetails.token}`
+                }
+            });
+            const oldestRequest = response.data
+                .filter(request => Number(request?.acf?.mentor_chat_id) === Number(prop?.chat_id))
+                .filter(requestTwo => requestTwo?.acf?.mentor_agree === "Not chosen");
+            setCurrentRequest(oldestRequest[oldestRequest.length - 1] || {});
+        } catch (error) {
+            console.error("Error fetching mentor requests:", error);
         }
-    ).then(function(response) {
-        let oldestRequest = response?.data?.filter((request) => {
-            return Number(request?.acf?.mentor_chat_id) === Number(prop?.chat_id);
-        }).filter((requestTwo) => {
-            return requestTwo?.acf?.mentor_agree === "Not chosen";
-        })
-        setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
-        prop.updateCount(oldestRequest?.length())
-        console.log("request changed")
-    }).catch((err) => {})
+    };
+
+    fetchMentorRequests();
+}, [triggerRerender]); // Dependencies
+
+const toggleTriggerRerender = () => {
+    setTriggerRerender(prev => !prev);
 };
+
 return (
     <div className={`modal-container ${prop?.prop1}`}>
         <div className="modal-container-background"></div>
