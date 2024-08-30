@@ -14,6 +14,7 @@ const [requestSubmitted, setRequestSubmitted] = useState('not submitted');
 const [currentRequest, setCurrentRequest] = useState({});
 const [mentorAgree, setMentorAgree] = useState("Not chosen");
 const [triggerRerender, setTriggerRerender] = useState(false); 
+const [existingRequest, setExistingRequest] = useState(0);
 
 // Get mentor requests
 useEffect(() => {
@@ -24,14 +25,22 @@ useEffect(() => {
             }
         }
     ).then(function(response) {
-        let oldestRequest = response?.data?.filter((request) => {
+        // Get requests for mentor
+        let newestRequest = response?.data?.filter((request) => {
             return Number(request?.acf?.mentor_chat_id) === Number(prop?.chat_id);
         }).filter((requestTwo) => {
             return requestTwo?.acf?.mentor_agree === "Not chosen";
         })
-        setCurrentRequest(oldestRequest[oldestRequest.length - 1]);
+        setCurrentRequest(newestRequest[0]);
+
+        // Check if an open request exists for mentee
+        let existingRequest = response?.data?.filter((request) => {
+            return request?.acf?.mentee_id === Number(userDetails?.id) && request?.acf?.mentor_agree === "Not chosen";
+        })
+        setExistingRequest(existingRequest?.length);
+
     }).catch((err) => {})
-}, [triggerRerender]);
+}, [triggerRerender, prop.prop1, mentorAgree]);
 
 // Handle submit
 const handleSubmit = (e) => {
@@ -205,25 +214,25 @@ return (
                         <div className='row mb-3'>
                             <div className='col-12'>
                                 <label htmlFor="mentor_request_date" className='small m-0'>Please indicate your proposed meeting date</label>
-                                <input className="form-control" value={mentorRequest.mentor_request_date} name="mentor_request_date" type="date" min={new Date().toISOString().split('T')[0]} aria-label="event-date" disabled={requestSubmitted === 'submitted' ? true : false } onChange={handleChange} />
+                                <input className="form-control" value={mentorRequest.mentor_request_date} name="mentor_request_date" type="date" min={new Date().toISOString().split('T')[0]} aria-label="event-date" disabled={requestSubmitted === 'submitted' || existingRequest > 0 ? true : false } onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
                             <div className='col-12'>
                                 <label htmlFor="mentor_request_time" className='small m-0'>Please indicate your proposed meeting time</label>
-                                <input className="form-control" value={mentorRequest.mentor_request_time} name="mentor_request_time" type="time" aria-label="event-time" disabled={requestSubmitted === 'submitted' ? true : false } onChange={handleChange} />
+                                <input className="form-control" value={mentorRequest.mentor_request_time} name="mentor_request_time" type="time" aria-label="event-time" disabled={requestSubmitted === 'submitted' || existingRequest > 0 ? true : false } onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
                             <div className='col-12'>
                                 <label htmlFor="mentor_request_hours" className='small m-0'>Number of hours</label>
-                                <input className="form-control" value={mentorRequest.mentor_request_hours} name="mentor_request_hours" type="number" aria-label="event-duration" disabled={requestSubmitted === 'submitted' ? true : false } onChange={handleChange} />
+                                <input className="form-control" value={mentorRequest.mentor_request_hours} name="mentor_request_hours" type="number" aria-label="event-duration" disabled={requestSubmitted === 'submitted' || existingRequest > 0 ? true : false } onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
                             <div className='col-12'>
                                 <label htmlFor="mentor_request_notes" className='small m-0'>Notes</label>
-                                <textarea row="3" value={mentorRequest.mentor_request_notes} className="form-control" name="mentor_request_notes" aria-label="event-message" disabled={requestSubmitted === 'submitted' ? true : false } onChange={handleChange} />
+                                <textarea row="3" value={mentorRequest.mentor_request_notes} className="form-control" name="mentor_request_notes" aria-label="event-message" disabled={requestSubmitted === 'submitted' || existingRequest > 0 ? true : false } onChange={handleChange} />
                             </div>
                         </div>
                         {requestSubmitted === 'submitted' && 
@@ -231,9 +240,14 @@ return (
                             <p className="small">Success! A mentor request has been submitted.</p>
                         </div>
                         }
+                        {existingRequest > 0 && 
+                        <div className="alert alert-warning" role="alert">
+                            <p className="small">You currently have a pending request with this mentor.</p>
+                        </div>
+                        }
                         <div className='row mt-3'>
                             <div className='col-12'>
-                                <input className={`btn btn-primary ${requestSubmitted === 'submitted' ? "disabled" : ""}`} name="" type="submit" aria-label="submit" />                             
+                                <input className={`btn btn-primary ${requestSubmitted === 'submitted' || existingRequest > 0 ? "disabled" : ""}`} name="" type="submit" aria-label="submit" />                             
                             </div>
                         </div>
                     </form>
