@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
+import defaultImage from "../Images/5402435_account_profile_user_avatar_man_icon.svg"
 import ReactPaginate from 'react-paginate';
 import { renderedQuestion } from '../helper';
 import axios from 'axios';
@@ -11,21 +12,21 @@ import axios from 'axios';
 export default function Collaborations() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const [ search, setSearch ] = useState('');
-    const [ mentorsList, setMentorsList ] = useState([]);
+    const [ collaborations, setCollaborations ] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios({
-          url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`,
+          url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations`,
           method: 'GET',
           headers: {
             Authorization: `Bearer ${userDetails.token}`
           }
         })
         .then((response) => {
-            const list = response.data.filter(user => user?.acf?.user_is_mentor === 'Yes' && user.id !== userDetails.id);
-            setMentorsList(list);
+            setCollaborations(response?.data);
             setLoading(false);
+            console.log(response);
         })
         .catch((err) => {
           // Handle error
@@ -37,38 +38,74 @@ export default function Collaborations() {
 function ActiveItem({ currentItems }) {
     return (
       <>
-        {currentItems.map((mentor, index) => {
-        if (mentor?.acf?.user_is_mentor === 'Yes' && mentor.id !== userDetails.id) {
-            if (search.length > 0 && mentor?.name.toLowerCase().includes(`${search.toLowerCase()}`) || mentor?.acf['user_mentor_services_offered'].toLowerCase().includes(search.toLowerCase()) || mentor?.acf['user_mentor_current_position'].toLowerCase().includes(search.toLowerCase()) || mentor?.acf['user_mentor_current_company'].toLowerCase().includes(search.toLowerCase())) {     
+        {currentItems.map((collaboration, index) => {
+          
+                   let posted = Date.now() - new Date(collaboration.date);
+                   let days = Math.floor(posted/(86400 * 1000));
+
+                   function getAuthor() {
+                let userProfileImg = {};
+                   axios({
+                    url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${collaboration?.author}`,
+                    method: 'POST',
+                    headers: {
+                      Authorization: `Bearer ${userDetails.token}`
+                    }
+                  })
+                  .then((response) => {
+                    userProfileImg = response?.data;
+                    return userProfileImg;
+                  })
+                  .catch((err) => {
+                    // Handle error
+                  });
+                }
+
+                getAuthor();
+
+
+            // if (search.length > 0 && mentor?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || mentor?.acf['user_mentor_services_offered']?.toLowerCase().includes(search?.toLowerCase()) || mentor?.acf['user_mentor_current_position']?.toLowerCase().includes(search?.toLowerCase()) || mentor?.acf['user_mentor_current_company']?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
-                    <div className='col-lg-4 mb-5' key={index}>
-                        <Link to={`/mentor/${mentor.id}`}>
-                            <div className='card mentor'>
-                                <div className='card-body'>
-                                    <div className="questions-details-name">
-                                    <img className="questions-details-name-img" src={mentor?.avatar_urls['48']} loading='lazy' />
-                                    <div className="questions-details-name-info">
-                                        <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(mentor.name, search) : mentor.name } } /></strong>
-                                        <div className="questions-details-posted">
-                                        <span className='small'>{mentor?.acf['user-city']}{mentor?.acf['user-country-of-residence'].length > 0 ? ',' : ''} {mentor?.acf['user-country-of-residence']}</span>
+                    <div className='col-12 mb-4' key={index}>
+                        {/* <Link to={`/mentor/${mentor.id}`}> */}
+                        <div className="card get-help-item mb-4">
+                            {/* { seeIfchecked.includes(userDetails?.id?.toString()) ?
+                            (<div className="checked-mark">
+                                <FontAwesomeIcon icon={faSquareCheck} />
+                             </div>) : ''
+            } */}
+                            <div className="card-body job">
+                                <div className="row align-items-baseline">
+                                    <div className='col-lg-2 d-flex align-items-center'>
+                                        <div className='get-help'>
+                                            <img src="" alt='' />
                                         </div>
                                     </div>
+                                    <div className='col-lg-3 d-flex align-items-center'>
+                                        <div className='get-help'>
+                                            <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.title?.rendered, search) : collaboration?.title?.rendered}} /></strong>
+                                        </div>
                                     </div>
-                                    <hr></hr>
-                                    <div className='mentor-main-details'>
-                                        <div className='mb-3'><FontAwesomeIcon icon={faSuitcase} /> <strong><div className='small inline' dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(mentor?.acf['user_mentor_current_position'], search) : mentor?.acf['user_mentor_current_position'] } } /> at <div className='small inline' dangerouslySetInnerHTML={{ __html: search?.length > 0 ? renderedQuestion(mentor?.acf['user_mentor_current_company'], search) : mentor?.acf['user_mentor_current_company'] } } /></strong></div>
-                                        <p className='small'><FontAwesomeIcon icon={faPen} /> {mentor?.acf['user_mentor_bio'].slice(0, 200)}{mentor?.acf['user_mentor_bio'].length > 200 ? '...' : ''}</p>
-                                        <div className='mb-3'><strong>Offering:</strong> <div className='small inline' dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(mentor?.acf['user_mentor_services_offered']?.slice(0, 200), search) : mentor?.acf['user_mentor_services_offered']?.slice(0, 200) } } />{mentor?.acf['user_mentor_services_offered'].length > 100 ? '...' : ''}</div>
-                                        <p className='small'><FontAwesomeIcon icon={faCoins} /> {mentor?.acf['user_mentor_currency']} {mentor?.acf['user_mentor_rate_of_pay']}/hour</p>
+                                    <div className='col-lg-2 d-flex align-items-end'>
+                                        <strong><i>{collaboration?.acf?.collaborations_pay}</i></strong>
+                                    </div>
+                                    <div className='col-lg-2 d-flex align-items-center'>
+                                    {collaboration?.acf?.collaborations_location}
+                                    </div>
+                                    <div className='col-lg-1 d-flex align-items-center justify-content-end'>
+                                        {days == 0 ? "Posted today" : `${days}d ago`}
+                                    </div>
+                                    <div className='col-lg-2 d-flex align-items-center justify-content-end'>
+                                        0 responses
                                     </div>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
+                        {/* </Link> */}
                     </div>
                 )
-            }
+            // }
          }
-        }
     )}
       </>
     );
@@ -85,12 +122,12 @@ function ActiveItem({ currentItems }) {
     const endOffset = itemOffset + itemsPerPage;
 
     
-    const currentItems = mentorsList.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(mentorsList.length / itemsPerPage);
+    const currentItems = collaborations.slice(itemOffset, endOffset);
+    const pageCount = Math.ceil(collaborations.length / itemsPerPage);
   
     // Invoke when user click to request another page.
     const handlePageClick = (event) => {
-      const newOffset = (event.selected * itemsPerPage) % mentorsList.length;
+      const newOffset = (event.selected * itemsPerPage) % collaborations.length;
 
       setItemOffset(newOffset);
     };
@@ -119,17 +156,22 @@ function ActiveItem({ currentItems }) {
     return (
         <>
             <Navigation />
-            <main className='mentors'>
+            <main className='collaborations'>
                 <div className='container primary'>
                     <div className='get-help-details'>
                         <div className="row mb-5">
                             <div className="col-6 d-flex align-item-center">
-                                <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">>></span><span className="small d-flex align-items-center">Mentorship Opportunities</span>
+                                <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">>></span><span className="small d-flex align-items-center">Collaborations</span>
+                            </div>
+                        </div>
+                        <div className="row mb-5">
+                            <div className="col-lg-12">
+                                <p class="lead"><strong>Move your research along using our collaboration platform!</strong></p>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-4">
-                                <p><strong>Meet our <i>collabb</i> Mentors</strong></p>
+                                <p><strong>Browse all collaboration opportunities</strong></p>
                             </div>
                             <div className="col-lg-4">
                                 <input type="search" name="search" className="form-control" placeholder='Start typing to search' value={search} onChange={(e) => {
@@ -137,7 +179,7 @@ function ActiveItem({ currentItems }) {
                                 }} />
                             </div>
                             <div className="col-lg-4 text-end">
-                                <Link to="/mentor-signup" className="btn btn-outline-info btn-lg">Apply To Become a Mentor</Link>
+                                <Link to="/mentor-signup" className="btn btn-outline-info btn-lg">Request collaboration</Link>
                             </div>
                         </div>
                     </div>
