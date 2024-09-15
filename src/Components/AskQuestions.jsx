@@ -177,7 +177,7 @@ export default function AskQuestions() {
                 for (let name of users) {
                     if ( name.id == question.author) {
                     userName = name.name;
-                    userProfileImg = name['avatar_urls']['24'];
+                    userProfileImg = name['avatar_urls']['48'];
                     }
                 }
         

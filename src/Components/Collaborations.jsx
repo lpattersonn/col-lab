@@ -14,6 +14,7 @@ export default function Collaborations() {
     const [ search, setSearch ] = useState('');
     const [ collaborations, setCollaborations ] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
         axios({
@@ -32,6 +33,22 @@ export default function Collaborations() {
           // Handle error
         });
       }, []);
+
+         // Return users
+    useEffect(() => {
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
+            {
+                headers: {
+                    Authorization: `Bearer ${userDetails.token}`
+                  }
+            }
+        )
+            .then((response) => {
+                setUsers(response.data);
+            }).catch((err) => {
+                console.error(err);
+            });
+    }, []);
     
     // Start paginated active jobs
 
@@ -43,25 +60,16 @@ function ActiveItem({ currentItems }) {
                    let posted = Date.now() - new Date(collaboration.date);
                    let days = Math.floor(posted/(86400 * 1000));
 
-                   function getAuthor() {
-                let userProfileImg = {};
-                   axios({
-                    url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${collaboration?.author}`,
-                    method: 'POST',
-                    headers: {
-                      Authorization: `Bearer ${userDetails.token}`
-                    }
-                  })
-                  .then((response) => {
-                    userProfileImg = response?.data;
-                    return userProfileImg;
-                  })
-                  .catch((err) => {
-                    // Handle error
-                  });
-                }
+                   let userProfile = "";
+           
+                   for (let name of users) {
+                       if ( name.id == collaboration.author) {
+                        userProfile = name;
+                        console.log(userProfile);
+                       }
+                   }
 
-                getAuthor();
+                   console.log(userProfile)
 
 
             // if (search.length > 0 && mentor?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || mentor?.acf['user_mentor_services_offered']?.toLowerCase().includes(search?.toLowerCase()) || mentor?.acf['user_mentor_current_position']?.toLowerCase().includes(search?.toLowerCase()) || mentor?.acf['user_mentor_current_company']?.toLowerCase().includes(search?.toLowerCase())) {     
@@ -75,10 +83,24 @@ function ActiveItem({ currentItems }) {
                              </div>) : ''
             } */}
                             <div className="card-body job">
-                                <div className="row align-items-baseline">
+                                <div className="row align-items-start">
                                     <div className='col-lg-2 d-flex align-items-center'>
-                                        <div className='get-help'>
-                                            <img src="" alt='' />
+                                        <div className='collaboration-image'>
+                                            <div className="questions-details">
+                                                <div className="questions-details-name">
+                                                    <img className="questions-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
+                                                    <div className="questions-details-name-info">
+                                                        <p><strong>{userProfile.name}</strong></p>
+                                                        <div className="questions-details-posted">
+                                                            {userProfile?.acf?.['user-job-Insitution'] ?
+                                                            (<div>
+                                                                <p>{userProfile?.acf?.['user-job-Insitution']}</p>
+                                                            </div>) : ("")
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className='col-lg-3 d-flex align-items-center'>
