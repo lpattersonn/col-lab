@@ -15,6 +15,7 @@ import MentorSignup from './Components/MentorSignup';
 import Mentor from './Components/Mentor';
 import MentorChat from './Components/MentorChat';
 import Collaborations from './Components/Collaborations';
+import CollaborationRequest from './Components/CollaborationRequest';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/mentor/:param1" element={<Mentor/>} />
         <Route path="/mentor-chat/:param1" element={<MentorChat/>} />
         <Route path="/collaborations" element={<Collaborations/>} />
+        <Route path="/collaboration-request" element={<CollaborationRequest />} />
       </Routes>
    </Router>
   );

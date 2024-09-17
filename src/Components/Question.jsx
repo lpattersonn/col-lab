@@ -230,22 +230,22 @@ return (
                 <div className="col-12">
                     <div className="question mx-auto">
                         <div className="question-item">
-                        <div className="questions-details">
-                            <div className="questions-details-name">
-                            <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} alt={userProfileImg ? userProfileImg : defaultImage} loading="lazy" />
-                            <div className="questions-details-name-info">
-                                <p><strong>{userName}</strong></p>
-                                <div className="questions-details-posted">
-                                {userJobInsitution ?
-                                (<div>
-                                    <p>{userJobInsitution}</p>
-                                </div>) : ("")
-                                }
-                                <p>{days == 0 ? "Posted today" : `${days}d ago`}</p>
+                          <div className="questions-details">
+                              <div className="questions-details-name">
+                                <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} alt={userProfileImg ? userProfileImg : defaultImage} loading="lazy" />
+                                <div className="questions-details-name-info">
+                                    <p><strong>{userName}</strong></p>
+                                    <div className="questions-details-posted">
+                                      {userJobInsitution ?
+                                      (<div>
+                                          <p>{userJobInsitution}</p>
+                                      </div>) : ("")
+                                      }
+                                    <p>{days == 0 ? "Posted today" : `${days}d ago`}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            </div>
-                        </div>
+                              </div>
+                          </div>
                             <div className="card">
                                 <div className="card-body">
                                 <p><strong>{question.title && question.title.rendered}</strong></p>

@@ -72,16 +72,10 @@ function ActiveItem({ currentItems }) {
                    console.log(userProfile)
 
 
-            // if (search.length > 0 && mentor?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || mentor?.acf['user_mentor_services_offered']?.toLowerCase().includes(search?.toLowerCase()) || mentor?.acf['user_mentor_current_position']?.toLowerCase().includes(search?.toLowerCase()) || mentor?.acf['user_mentor_current_company']?.toLowerCase().includes(search?.toLowerCase())) {     
+            if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_location?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_pay?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
                     <div className='col-12 mb-4' key={index}>
-                        {/* <Link to={`/mentor/${mentor.id}`}> */}
                         <div className="card get-help-item mb-4">
-                            {/* { seeIfchecked.includes(userDetails?.id?.toString()) ?
-                            (<div className="checked-mark">
-                                <FontAwesomeIcon icon={faSquareCheck} />
-                             </div>) : ''
-            } */}
                             <div className="card-body job">
                                 <div className="row align-items-start">
                                     <div className='col-lg-2 d-flex align-items-center'>
@@ -126,7 +120,7 @@ function ActiveItem({ currentItems }) {
                         {/* </Link> */}
                     </div>
                 )
-            // }
+            }
          }
     )}
       </>
@@ -201,7 +195,7 @@ function ActiveItem({ currentItems }) {
                                 }} />
                             </div>
                             <div className="col-lg-4 text-end">
-                                <Link to="/mentor-signup" className="btn btn-outline-info btn-lg">Request collaboration</Link>
+                                <Link to="/collaboration-request" className="btn btn-outline-info btn-lg">Request collaboration</Link>
                             </div>
                         </div>
                     </div>
