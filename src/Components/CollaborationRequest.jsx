@@ -8,59 +8,19 @@ import axios from "axios";
 
 export default function CollaborationRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-    const [mentorStatus, setMentorStatus] = useState("No");
-    const [createMentor, setCreateMentor]  = useState({
-        jobs_institution: '',
-        user_mentor_current_position: '',
-        user_mentor_current_company: '',
-        user_mentor_key_responsibilities: '',
-        user_mentor_education: '',
-        user_mentor_preferred_language: '',
-        user_mentor_preferred_meetup: '',
-        user_mentor_rate_of_pay: '',
-        user_mentor_currency: '',
-        user_mentor_name_on_card: '',
-        user_mentor_card_number: '',
-        user_transit_number: '',
-        user_institution_number: '',
-        user_mentor_bio: '',
-        user_mentor_services_offered: ''
-    })
-    const [ getCountries, setGetCountries ] = useState([]);
-
-    // Retreive cities from api
-    useEffect(() => {
-        axios.get("https://restcountries.com/v3.1/all")
-        .then((response) => {
-            setGetCountries(response.data);            
-        })
-        .catch((error) => {
-        })
-    }, [])
-
-      // Api for current user
-  useEffect(() => {
-    axios({
-      url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${userDetails.token}`
-      }
-    })
-    .then((response) => {
-        if (response?.data?.acf?.user_is_mentor === 'Yes') {
-            setMentorStatus(200);
-        }
-    })
-    .catch((err) => {
-      // Handle error
+    const [requestSent, setRequestSent] = useState("No");
+    const [createCollaborationRequest, setCreateCollaborationRequest]  = useState({
+        'collaborations_description': '',
+        'collaborations_due_date': '',
+        'collaborations_pay': '',
+        'collaborations_perk': '',
+        'collaborations_location': '',
     });
-  }, []);
 
     //   Handle Change
   function handleChange(e) {
     const {name, value} = e.target
-    setCreateMentor(prev => {
+    setCreateCollaborationRequest(prev => {
         return (
             { ...prev, [name]: value}
         )
@@ -72,24 +32,19 @@ export default function CollaborationRequest() {
     try {
         // Upload image if file exists
             const response = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
+              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations/`,
                 {   
+                    'title':  createCollaborationRequest.collaborations_description,
+                    'content': "",
+                    'excerpt': "",
+                    'author': userDetails.id,
+                    'status': 'publish',
                     'acf' : {
-                        'user_is_mentor': 'Yes',
-                        'user_mentor_current_position': createMentor.user_mentor_current_position,
-                        'user_mentor_current_company': createMentor.user_mentor_current_company,
-                        'user_mentor_key_responsibilities': createMentor.user_mentor_key_responsibilities,
-                        'user_mentor_education': createMentor.user_mentor_education,
-                        'user_mentor_preferred_language': createMentor.user_mentor_preferred_language,
-                        'user_mentor_preferred_meetup': createMentor.user_mentor_preferred_meetup,
-                        'user_mentor_rate_of_pay': createMentor.user_mentor_rate_of_pay,
-                        'user_mentor_currency': createMentor.user_mentor_currency,
-                        'user_mentor_name_on_card': createMentor.user_mentor_name_on_card,
-                        'user_mentor_card_number': createMentor.user_mentor_card_number,
-                        'user_transit_number': createMentor.user_transit_number,
-                        'user_institution_number': createMentor.user_institution_number,
-                        'user_mentor_bio': createMentor.user_mentor_bio,
-                        'user_mentor_services_offered': createMentor.user_mentor_services_offered,
+                        'collaborations_description': createCollaborationRequest.collaborations_description,
+                        'collaborations_due_date': createCollaborationRequest.collaborations_due_date,
+                        'collaborations_pay': createCollaborationRequest.collaborations_pay,
+                        'collaborations_perk': createCollaborationRequest.collaborations_perk,
+                        'collaborations_location': createCollaborationRequest.collaborations_location,
                     }
                 },
                 {
@@ -99,7 +54,8 @@ export default function CollaborationRequest() {
                 }
             )
             .then((response) => {
-                setMentorStatus(response.status);
+                console.log('Question submitted successfully:', response);
+                setRequestSent(response.status);
             })
             .catch((error) => {
             });
@@ -108,22 +64,11 @@ export default function CollaborationRequest() {
     }
 }
 
-const countries = getCountries
-.slice()
-.sort((a, b) => a?.name?.common?.localeCompare(b?.name?.common))
-.map((country, index) => {
-    for ( let key in country?.currencies) {
-        return (
-            <option key={index}>{key}</option>
-        )
-    }
-})
-
 if (userDetails != null) {
     return(
         <>
             <Navigation />
-            <main className="create-job">
+            <main className="create-collaboration">
                 <div className="container primary" >
                     <div className="page-filter">
                         <div className="row mb-5">
@@ -140,32 +85,32 @@ if (userDetails != null) {
                         </div>
                         <div className="row">
                             <div className="col-lg-12 mb-4">
-                                <input name="user_mentor_current_position" value={createMentor.user_mentor_current_position} onChange={handleChange} className='form-control form-control-lg' placeholder="Type your request briefly (150 characters max.)" aria-label='type' disabled={ mentorStatus === 200 ? true : false} required />
+                                <input name="collaborations_description" value={createCollaborationRequest.collaborations_description} onChange={handleChange} className='form-control form-control-lg' placeholder="Type your request briefly (150 characters max.)" aria-label='Descritpion' type="text" disabled={ requestSent === 201 ? true : false} required />
                                 <p>*Please keep project explanations sufficiently vague to avoid scooping</p>
                             </div>    
                         </div>
                         <div className="row">
                             <div className="col-lg-12  mb-4">
-                                <textarea rows="4" className="form-control form-control-lg" type="text" name="user_mentor_services_offered"  value={createMentor.user_mentor_services_offered} onChange={handleChange} aria-label='Services Offered' placeholder="Services Offered" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
+                            <input name="collaborations_due_date" value={createCollaborationRequest.collaborations_due_date} onChange={handleChange} className='form-control form-control-lg' aria-label='Requested date' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-12 mb-4">
-                                <input className="form-control form-control-lg" type="text" name="user_mentor_name_on_card"  value={createMentor.user_mentor_name_on_card} onChange={handleChange} aria-label='Name on card' placeholder="Name on card" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
+                                <input className="form-control form-control-lg" type="text" name="collaborations_pay"  value={createCollaborationRequest.collaborations_pay} onChange={handleChange} aria-label='Collaboration pay' placeholder="Compensation" autoComplete='on' disabled={ requestSent === 201 ? true : false} required />
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-12 mb-4">
-                                <input className="form-control form-control-lg" type="password" name="user_mentor_card_number"  value={createMentor.user_mentor_card_number} onChange={handleChange} aria-label='Card number' placeholder="Card number" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
+                                <input className="form-control form-control-lg" type="text" name="collaborations_location"  value={createCollaborationRequest.collaborations_location} onChange={handleChange} aria-label='Collaboration location' placeholder="Collaboration location" autoComplete='on' disabled={ requestSent === 201 ? true : false} required />
                             </div>
                         </div>
-                        { mentorStatus === 200 ? 
+                        { requestSent === 201 ? 
                         <div className="alert alert-success mb-5" role="alert">
-                            <p>Success! You are registered as a mentor!</p>
+                            <p>Success! Your collaboration request has been created!</p>
                         </div>
                         : ''    
                         }
-                        <button className="btn btn-info btn-lg" type="submit" disabled={ mentorStatus === 200 ? true : false} >Submit</button>
+                        <button className="btn btn-info btn-lg" type="submit" disabled={ requestSent === 201 ? true : false} >Submit</button>
                     </form>                 
 
                 </div>

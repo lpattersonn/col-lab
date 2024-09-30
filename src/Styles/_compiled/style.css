@@ -1201,6 +1201,51 @@ textarea[data-info=content] {
   padding: 0 5px;
 }
 
+.collaboration-details {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+}
+.collaboration-details-name {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  width: 100%;
+}
+.collaboration-details-name-img {
+  width: 5rem;
+  height: 6rem;
+  border: 1px solid black;
+  border-radius: 3px;
+  object-fit: cover;
+  margin: 0 0.7rem 0 0;
+}
+.collaboration-details-name-info {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.collaboration-details-name-info .collaboration-details-posted {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+.collaboration-details p {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.collaboration-pay {
+  justify-content: center;
+}
+@media screen and (max-width: 1000px) {
+  .collaboration-pay {
+    justify-content: left;
+  }
+}
+
 @media screen and (max-width: 1000px) {
   .container-fluid {
     padding: 0 2rem !important;

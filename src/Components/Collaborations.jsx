@@ -74,18 +74,18 @@ function ActiveItem({ currentItems }) {
 
             if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_location?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_pay?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
-                    <div className='col-12 mb-4' key={index}>
-                        <div className="card get-help-item mb-4">
-                            <div className="card-body job">
+                    <div className='col-12 mb-5' key={index}>
+                        <div className="card get-help-item">
+                            <div className="card-body collaboration">
                                 <div className="row align-items-start">
                                     <div className='col-lg-2 d-flex align-items-center'>
                                         <div className='collaboration-image'>
-                                            <div className="questions-details">
-                                                <div className="questions-details-name">
-                                                    <img className="questions-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
-                                                    <div className="questions-details-name-info">
+                                            <div className="collaboration-details">
+                                                <div className="collaboration-details-name">
+                                                    <img className="collaboration-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
+                                                    <div className="collaboration-details-name-info">
                                                         <p><strong>{userProfile.name}</strong></p>
-                                                        <div className="questions-details-posted">
+                                                        <div className="collaboration-details-posted">
                                                             {userProfile?.acf?.['user-job-Insitution'] ?
                                                             (<div>
                                                                 <p>{userProfile?.acf?.['user-job-Insitution']}</p>
@@ -102,7 +102,7 @@ function ActiveItem({ currentItems }) {
                                             <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.title?.rendered, search) : collaboration?.title?.rendered}} /></strong>
                                         </div>
                                     </div>
-                                    <div className='col-lg-2 d-flex align-items-end'>
+                                    <div className='col-lg-2 d-flex align-items-end collaboration-pay'>
                                         <strong><i>{collaboration?.acf?.collaborations_pay}</i></strong>
                                     </div>
                                     <div className='col-lg-2 d-flex align-items-center'>

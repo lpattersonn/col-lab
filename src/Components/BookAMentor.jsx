@@ -214,7 +214,7 @@ return (
                         <div className='row mb-3'>
                             <div className='col-12'>
                                 <label htmlFor="mentor_request_date" className='small m-0'>Please indicate your proposed meeting date</label>
-                                <input className="form-control" value={mentorRequest.mentor_request_date} name="mentor_request_date" type="date" min={new Date().toISOString().split('T')[0]} aria-label="event-date" disabled={requestSubmitted === 'submitted' || existingRequest > 0 ? true : false } onChange={handleChange} />
+                                <input className="form-control" value={mentorRequest.mentor_request_date} name="mentor_request_date" type="date" min={new Date().toISOString().split('T')[0]} aria-label="Event date" disabled={requestSubmitted === 'submitted' || existingRequest > 0 ? true : false } onChange={handleChange} />
                             </div>
                         </div>
                         <div className='row mb-3'>
