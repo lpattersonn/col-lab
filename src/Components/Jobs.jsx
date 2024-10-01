@@ -42,8 +42,8 @@ function ActiveItem({ currentItems }) {
         let days = Math.floor(posted/(86400 * 1000));
 
         let deadlineString = job.acf.jobs_application_deadline;
-        var find = '-';
-        var re = new RegExp(find, 'g');
+        let find = '-';
+        let re = new RegExp(find, 'g');
         deadlineString  = deadlineString.replace(re, '');
 
         // Extract year, month, and day from the string
@@ -189,8 +189,8 @@ function ExpiredItem({ currentItems }) {
         let days = Math.floor(posted/(86400 * 1000));
 
         let deadlineString = job.acf.jobs_application_deadline;
-        var find = '-';
-        var re = new RegExp(find, 'g');
+        let find = '-';
+        let re = new RegExp(find, 'g');
         deadlineString  = deadlineString.replace(re, '');
 
         // Extract year, month, and day from the string

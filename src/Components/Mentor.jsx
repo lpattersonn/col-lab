@@ -16,7 +16,7 @@ export default function Mentor() {
     const [loading, setLoading] = useState(true);
     const Naviagte = useNavigate()
 
-    // Get menotr information
+    // Get mentor information
     useEffect(() => {
       axios({
         url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${param1}`,
@@ -48,7 +48,7 @@ export default function Mentor() {
         }).catch(err => console.log(err))
     }, [])
 
-    var chatID = undefined;
+    let chatID = undefined;
 
     mentorChats.map((chat) => {
         if(userDetails?.id === chat?.acf?.mentee_id && Number(param1) === chat?.acf?.mentors_id) {

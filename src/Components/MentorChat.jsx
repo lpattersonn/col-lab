@@ -177,7 +177,7 @@ export default function MentorChat() {
                 if (array !== null) { 
                     firstMessage = array.find(message => userDetails.id !== message.author);
 
-                    var dateTime = new Date(firstMessage?.date);
+                    let dateTime = new Date(firstMessage?.date);
 
                     // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
                     let dayOfWeek = dateTime.getDay();
@@ -229,10 +229,10 @@ export default function MentorChat() {
     
 
     const conversation = comments.map((comment, index) => {
-        var date = new Date(comment?.date);
+        let date = new Date(comment?.date);
 
-        var options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-        var humanReadableTime = date.toLocaleDateString('en-US', options);
+        let options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        let humanReadableTime = date.toLocaleDateString('en-US', options);
         
         return (
             <div className={`chat ${comment?.author === userDetails?.id ? 'current-user-message' : 'other-user-message'}`} key={index}>

@@ -74,8 +74,9 @@ function ActiveItem({ currentItems }) {
 
             if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_location?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_pay?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
+                    <Link to={'/collaborations/' + collaboration.id}>
                     <div className='col-12 mb-5' key={index}>
-                        <div className="card get-help-item">
+                        <div className="card collaboration-item">
                             <div className="card-body collaboration">
                                 <div className="row align-items-start">
                                     <div className='col-lg-2 d-flex align-items-center'>
@@ -117,8 +118,8 @@ function ActiveItem({ currentItems }) {
                                 </div>
                             </div>
                         </div>
-                        {/* </Link> */}
                     </div>
+                    </Link>
                 )
             }
          }
