@@ -1,0 +1,29 @@
+/* Button Colours */
+.get-help {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.get-help-img {
+  width: 5rem;
+  height: 6rem;
+  border: 1px solid black;
+  box-shadow: 0px 0px 7px grey;
+  border-radius: 3px;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.get-help-details {
+  padding-top: 4rem;
+}
+
+.get-help-item {
+  box-shadow: 0px 5px 4px lightgrey;
+  transition: 350ms ease-out;
+}
+.get-help-item:hover {
+  background-color: #0f9ed5;
+  color: #fff;
+  transition: 350ms ease-out;
+}/*# sourceMappingURL=get-help.css.map */

@@ -1,0 +1,72 @@
+/* Button Colours */
+.btn-color-1 {
+  background-color: #FFDADF !important;
+}
+.btn-color-2 {
+  background-color: #FDCAB9 !important;
+}
+.btn-color-3 {
+  background-color: #DCC2E0 !important;
+}
+.btn-color-4 {
+  background-color: #A6C3E4 !important;
+}
+.btn-color-5 {
+  background-color: #FFFFB7 !important;
+}
+.btn-color-6 {
+  background-color: #C9EADB !important;
+}
+
+html, body, #root {
+  height: 100% !important;
+}
+
+.dashboard {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 0 0 60px 0;
+}
+
+.dashboard-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  width: fit-content;
+}
+
+h1 {
+  font-size: 30px !important;
+  font-weight: 700 !important;
+}
+
+.btn {
+  width: 300px;
+  height: 200px;
+  border-radius: 30px !important;
+  color: #000 !important;
+  border: .5px solid #b7b7b7!important;
+  box-shadow: 5px 5px 5px #494949 !important;
+  font-size: 22px !important;
+  font-family: sans-serif !important;
+  font-weight: 600 !important;
+  overflow-wrap: break-word;
+  /* box-shadow: 2px 2px 2px #727272 !important; */
+}
+.btn:hover {
+  box-shadow: 2.5px 2.5px 2.5px #494949 !important;
+  /* box-shadow: 5px 5px 5px #727272 !important; */
+}
+
+@media screen and (max-width: 1000px) {
+  .dashboard-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+.btn {
+  width: 100%;
+  min-width: 150px;
+}
+}

@@ -1,0 +1,43 @@
+/* Button Colours */
+.login {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10rem;
+}
+
+.col:has(.login-header) {
+  width: 100% !important;
+  max-width: 400px !important;
+}
+
+.login-header {
+  max-width: 400px;
+  width: 100%;
+}
+
+.form-login {
+  width: 100%;
+  max-width: 54.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-btn {
+  width: 100%;
+}
+
+.login-lead {
+  text-align: left;
+}
+
+.span-login {
+  margin: 0 0 0 0.5rem;
+}
+
+.form-login-check {
+  margin: 0 0 1rem 0;
+}/*# sourceMappingURL=login.css.map */

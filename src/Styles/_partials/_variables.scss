@@ -1,0 +1,31 @@
+// Global Colours
+$mercy-color-1: #0f9ed5;
+$mercy-color-2: #f8f9fc;
+$mercy-color-3: #d3d3d3;
+
+// Font size
+$mercy-font-size-1: 1.6rem;
+
+/* Button Colours */
+$btn-color-1: #FFDADF;
+$btn-color-2: #FDCAB9;
+$btn-color-3: #DCC2E0;
+$btn-color-4: #A6C3E4;
+$btn-color-5: #FFFFB7;
+$btn-color-6: #C9EADB;
+
+// Mixins
+@mixin border($property) {
+    #{$property}: 1.5px solid $mercy-color-1;
+}
+
+@mixin img() {
+    object-position: center;
+    border: 1px solid black;
+    border-radius: 3px;
+    object-fit: cover;
+}
+
+@mixin transition () {
+    transition: 350ms ease-out;
+}

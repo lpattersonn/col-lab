@@ -1,0 +1,41 @@
+.collaboration-details {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+    &-name {
+      display: flex;
+      align-items: center;
+      margin: 0;
+      width: 100%;
+      &-img {
+        width: 5rem;
+        height: 6rem;
+        border: 1px solid black;
+        border-radius: 3px;
+        object-fit: cover;
+        margin: 0 0.7rem 0 0;
+      }
+      &-info {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        .collaboration-details-posted {
+          display: flex;
+          width: 100%;
+          justify-content: space-between;
+        }
+      }
+    }
+    p {
+      font-size: 1.4rem;
+      margin: 0;
+    }
+  }
+.collaboration-pay {
+  justify-content: center;
+  @media screen and (max-width: 1000px) {
+    justify-content: left;
+  }
+}

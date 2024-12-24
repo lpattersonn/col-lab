@@ -1,0 +1,347 @@
+@import './variables.scss';
+
+html {
+    font-size: 10px;
+    font-family: 'Roboto', sans-serif !important;
+}
+main {
+  margin-bottom: 6rem;
+}
+.btn {
+  font-size: 1.6rem !important;
+  font-family: 'Roboto', sans-serif !important;
+  height: fit-content !important;
+  font-weight: 600 !important;
+}
+.btn-main {
+    width: 100%;
+    height: 200px;
+    border-radius: 1rem;
+    color: #000;
+    background-color: transparent;
+    border: 1px solid grey;
+    font-size: 22px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    overflow-wrap: break-word;
+    transition: 400ms ease-out;
+    display: flex;
+    box-shadow: 0px 0px 7px grey;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    &:hover {
+      background-color: $mercy-color-1;
+      color: #fff;
+    }
+    &:hover .btn-main-icon {
+      transition: 400ms ease-out;
+      filter: invert(100%) sepia(16%) saturate(0%) hue-rotate(107deg) brightness(108%) contrast(101%);
+    }
+}
+.btn-secondary {
+  width: 100%;
+  height: 60px;
+  border-radius: 10px;
+  color: #000;
+  background-color: transparent;
+  @include border(border);
+  font-size: 22px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 600;
+  overflow-wrap: break-word;
+  transition: 400ms ease-out;
+  margin: 0 0 2rem 0;
+  height: 100%;
+}
+.btn-secondary:hover {
+  background-color: $mercy-color-1;
+}
+.btn-main-icon {
+  width: 5rem;
+  height: 5rem;
+}
+
+.btn-outline-info {
+  border: 1px solid $mercy-color-1 !important;
+  font-weight: 600 !important;
+  color: $mercy-color-1 !important;
+  border-radius: 0.365rem;
+  height: 100%;
+  &:hover {
+    color: #fff !important;
+    background-color: $mercy-color-1 !important
+  }
+}
+.btn-sm {
+  font-size: 1.4rem !important;
+  height: 100%;
+}
+
+.btn-info {
+  background-color: $mercy-color-1 !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  border: none !important;
+  height: 100%;
+  // box-shadow: 0px 0px 2px 2px grey !important;
+  &:hover {
+    background-color: #000 !important;
+  }
+}
+
+.btn-lg {
+  font-size: 1.6rem !important;
+  height: 100%;
+}
+// Form
+.form-control {
+  border: 1px solid grey !important;
+  font-size: 1.6rem !important;
+}
+.login-text {
+  margin: 0 0 0 0 !important;
+}
+.small {
+  font-size: 1.4rem !important;
+  font-family: 'Roboto', sans-serif;
+}
+.form-registration {
+  .row {
+    .col-lg-6, .col {
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      margin: 0 0 1.5rem 0;
+    }
+  }
+}
+.form-registration-label {
+  margin: 0;
+}
+
+.card-body {
+  div, p {
+    font-size: 1.4rem
+  }
+}
+
+.question-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  &-button {
+    margin: 0 2rem 0 0;
+    margin-bottom: 1rem;
+  }
+}
+
+a {
+  text-decoration: none !important;
+}
+
+// Alert
+.alert {
+  p {
+    margin-bottom: 0;
+  }
+}
+
+// Modal
+.modal {
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(#000, .7);
+  display: flex !important;
+  .modal-popup {
+    max-width: 80rem;
+    margin: auto;
+    margin-top: 7.2rem;
+    padding: 1.5rem 2rem 2rem 2rem;
+    background-color: #fff;
+    border: 1px solid $mercy-color-2;
+    box-shadow: 0px 0px 2px 2px $mercy-color-3;
+    &-icon { 
+      text-align: right;
+      svg {
+        cursor: pointer;
+        width: 2.5rem;
+        height: 2.5rem;
+        :hover {
+          filter: invert(13%) sepia(96%) saturate(6849%) hue-rotate(358deg) brightness(92%) contrast(117%);
+        }
+      }
+    }
+  }
+}
+
+.show-modal {
+  display: flex !important;
+  transition: 350ms ease-out;
+}
+
+.hide-modal {
+  display: none !important;
+  transition: 350ms ease-out;
+}
+
+.show {
+  position: relative;
+  display: block !important;
+  transition: 350ms ease-in-out;
+}
+
+.hide {
+  position: absolute;
+  top: -200px;
+  display: none !important;
+  transition: 350ms ease-in-out;
+}
+
+// Back Icon
+.back-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.link-dark {
+  display: inline-block;
+  align-items: center;
+  width: fit-content;
+  text-decoration: underline !important;
+  &:hover {
+    text-decoration: none !important;
+  }
+}
+
+.red {
+  color: red;
+  margin: 0;
+}
+
+.question-icon-box {
+  text-align: right;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.question-icon {
+  text-align: right;
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  :hover {
+    filter: invert(13%) sepia(96%) saturate(6849%) hue-rotate(358deg) brightness(92%) contrast(117%);
+  }
+}
+
+.breadcrumb-slash {
+  margin: 0 5px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.link-blue {
+  display: inline-block;
+  align-items: center;
+  width: fit-content;
+  text-decoration: underline !important;
+  color: #0b5ed7 !important;
+  &:hover {
+    text-decoration: none !important;
+  }
+}
+
+// General
+#root {
+  margin-bottom: 5rem;
+}
+
+// TinyMC
+.tox-statusbar__right-container {
+  display: none !important;
+}
+.tox-statusbar__path {
+  display: none !important;
+}
+
+// Highlight
+
+.highlight {
+  background-color: yellow;
+  color: #000;
+  font-size: inherit;
+}
+
+.m-right {
+  margin-right: 2rem;
+}
+
+// Page filter
+.page-filter {
+  padding-top: 4rem;
+  width: 100%;
+}
+
+// Toggle
+.toggle.ios, .toggle-on.ios, .toggle-off.ios { border-radius: 20px; }
+.toggle.ios .toggle-handle { border-radius: 20px; }
+
+.btn-light {
+  --bs-btn-color: #000;
+  --bs-btn-bg: grey !important;
+  border: 1px solid black !important;
+  --bs-btn-border-color: black !important;
+  --bs-btn-hover-color: #000;
+  --bs-btn-hover-bg: #d3d4d5;
+  --bs-btn-hover-border-color: black;
+  --bs-btn-focus-shadow-rgb: 211, 212, 213;
+  --bs-btn-active-color: #000;
+  --bs-btn-active-bg: #c6c7c8;
+  --bs-btn-active-border-color: black !important;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #000;
+  --bs-btn-disabled-bg: #f8f9fa;
+  --bs-btn-disabled-border-color: #f8f9fa;
+  height: 100% !important;
+  width: 20px !important;
+}
+
+.inline {
+  display: inline;
+}
+
+.display-none {
+  display: none !important;
+}
+.display-block {
+  display: block !important;
+}
+ .grey {
+  color: grey;
+  &:hover {
+    color: inherit !important;
+  }
+ }
+.overflow-hidden {
+  overflow-y: hidden;
+}
+.overflow-scroll {
+  overflow-y: auto;
+}
+
+.ReactModalPortal {
+  position: relative;
+  z-index: 9999;
+}
+
+// Spinner
+.spinner {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,45 @@
+@import '../_partials/variables';
+
+.mentor { 
+    box-shadow: 0px 0px 7px grey; 
+    transition: 400ms ease-out;
+    height: 100% !important;
+    &:hover {
+        background-color: $mercy-color-1;
+        color: #fff;
+      }
+}
+
+.mentor-details-img {
+  width: 7rem;
+  height: 9rem;
+  border: 1px solid black;
+  box-shadow: 0px 0px 7px grey;
+  border-radius: 3px;
+  object-fit: cover;
+  margin-right: 1rem;
+}
+
+.mentors-chat-sidebar-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+.chat-item {
+  padding-bottom: 1rem !important;
+  color: #000;
+  border-bottom: 1px solid lightgrey;
+  // cursor: pointer;
+  &:hover {
+    color: #fff !important;
+    background-color: $mercy-color-1 !important;
+    border-bottom: 1px solid $mercy-color-1;
+    p:nth-child(2) {
+      color: #fff;
+    }
+  }
+  p:nth-child(2) {
+    color: grey;
+  }
+}

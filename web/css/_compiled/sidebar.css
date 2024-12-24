@@ -1,0 +1,9 @@
+/* Button Colours */
+.sidebar {
+  width: 5%;
+  border-right: 1.5px solid #0f9ed5;
+  transition: 500ms ease-out;
+}
+.sidebar:hover {
+  width: 10%;
+}/*# sourceMappingURL=sidebar.css.map */

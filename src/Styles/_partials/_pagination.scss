@@ -1,0 +1,25 @@
+[aria-label="Pagination"] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    padding: 3rem 0 2rem 0;
+    li {
+        padding: 0.5rem;
+        height: 100%;
+        color: #000;
+        display: flex;
+        align-items: center;
+        a {
+            color: black;
+        }
+    }
+}
+[aria-label="Next page"] {
+ font-size: 2rem;
+}
+[aria-label="Previous page"] {
+    font-size: 2rem;
+}

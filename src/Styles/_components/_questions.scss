@@ -1,0 +1,35 @@
+@import "../_partials/variables";
+
+.questions {
+    padding-top: 4rem;
+}
+
+.question {
+    max-width: 100rem;
+}
+
+.question-box {
+    padding: 1.5rem !important;
+}
+
+textarea[data-info="content"]{
+    background-color: $mercy-color-2;
+}
+
+.question-image {
+    margin-bottom: 1.5rem;
+    &-item {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+}
+
+.tox.tox-tinymce {
+    height: 300px !important;
+}
+
+.question-select {
+    border: none !important;
+    width: 100%;
+}

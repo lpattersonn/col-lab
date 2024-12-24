@@ -1,0 +1,18 @@
+@media screen and (max-width: 1000px) {
+  .container-fluid {
+    padding: 0 2rem !important;
+  }
+  .dashboard-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .btn {
+    width: 100%;
+    min-width: 150px;
+  }
+  .sidebar {
+    display: none;
+  }
+  .dashboard-options {
+    padding: 3rem 0;
+  }
+}

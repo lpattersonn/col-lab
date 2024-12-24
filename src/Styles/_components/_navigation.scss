@@ -1,0 +1,47 @@
+@import "../_partials/variables";
+
+header {
+    position: sticky;
+    border-bottom: 1px solid $mercy-color-2;
+    padding-top: 2rem;
+    box-shadow: 2px 2px 2px #d3d3d3;
+    z-index: 10000;
+    top: 0;
+    background-color: #fff;
+}
+.navbar {
+    flex-wrap: nowrap;
+    justify-content: space-between !important;
+    .nav-brand {
+        text-decoration: none;
+        color: black;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .brand {
+            margin-right: 1rem;
+        }
+        h1 {
+            font-size: 3rem !important;
+        }
+    }
+}
+
+.nav-item {
+    font-size: 1.6rem;
+}
+.nav-link {
+    color: grey !important;
+    font-weight: 600 !important;
+    &:hover {
+        color: #000 !important;
+    }
+}
+.nav-link.active, .nav-pills .show>.nav-link {
+    background-color: $mercy-color-1 !important;
+    color: #fff !important;
+}
+.active-header {
+    background-color: $mercy-color-1 !important;
+    color: #fff !important;
+}
