@@ -4,13 +4,8 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
-<<<<<<< HEAD
 import ReactPaginate from 'react-paginate';
 import { Tab, initMDB } from "mdb-ui-kit";
-=======
-import defaultImage from "../Images/5402435_account_profile_user_avatar_man_icon.svg"
-import ReactPaginate from 'react-paginate';
->>>>>>> origin/main
 import { renderedQuestion } from '../helper';
 import axios from 'axios';
 
@@ -22,13 +17,10 @@ export default function Collaborations() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-<<<<<<< HEAD
         initMDB({ Tab });
     }, []);
 
     useEffect(() => {
-=======
->>>>>>> origin/main
         axios({
           url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations`,
           method: 'GET',
@@ -214,7 +206,6 @@ function ActiveItem({ currentItems }) {
                     </div>
                     <hr className="mb-5 mt-5"></hr>
                     <div className="mentors">
-<<<<<<< HEAD
                         <ul className="nav nav-tabs mb-5" id="ex1" role="tablist">
                             <li className="nav-item" role="presentation">
                                 <a data-mdb-tab-init className="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true" >Collaborations</a>
@@ -232,10 +223,6 @@ function ActiveItem({ currentItems }) {
                                 {/* {localStorage.getItem('countExpiredJobs') > 0 ? < ExpiredPaginatedItems itemsPerPage={15} />: <p><strong>Nothing to show here.</strong></p>} */}
                                 {/* <ActivePaginatedmentors itemsPerPage={15} /> */}
                             </div>
-=======
-                        <div className='row'>
-                            <ActivePaginatedmentors itemsPerPage={21} />
->>>>>>> origin/main
                         </div>
                     </div>
                 </div>
@@ -259,9 +246,5 @@ function ActiveItem({ currentItems }) {
     } else {
         window.location.replace('/')
     }
-<<<<<<< HEAD
 }
 
-=======
-}
->>>>>>> origin/main
