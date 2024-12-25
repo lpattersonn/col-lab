@@ -97,25 +97,25 @@ if (userDetails != null) {
                         <div className="row">
                             <div className="col-lg-12 mb-4">
                                 <label htmlFor="collaborations_features"><strong>Description</strong></label>
-                                <textarea name="collaborations_features" id="collaborations_features" rows="7" value={createCollaborationRequest.collaborations_description} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' type="text" disabled={ requestSent === 201 ? true : false} required />
+                                <textarea name="collaborations_features" id="collaborations_features" rows="7" value={createCollaborationRequest.collaborations_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' type="text" disabled={ requestSent === 201 ? true : false} required />
                             </div>    
                         </div>
                         <div className="row">
                             <div className="col-lg-12  mb-4">
                             <label htmlFor="collaborations_due_date"><strong>Start date</strong></label>
-                            <input name="collaborations_due_date" value={createCollaborationRequest.collaborations_due_date} onChange={handleChange} className='form-control form-control-lg' aria-label='Start date' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
+                            <input name="collaborations_due_date" id="collaborations_due_date" value={createCollaborationRequest.collaborations_due_date} onChange={handleChange} className='form-control form-control-lg' aria-label='Start date' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-12  mb-4">
                             <label htmlFor="collaborations_deadline"><strong>Application deadline</strong></label>
-                            <input name="collaborations_deadline" value={createCollaborationRequest.collaborations_deadline} onChange={handleChange} className='form-control form-control-lg' aria-label='Application deadline' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
+                            <input name="collaborations_deadline" id="collaborations_deadline" value={createCollaborationRequest.collaborations_deadline} onChange={handleChange} className='form-control form-control-lg' aria-label='Application deadline' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-12 mb-4">
-                                <label htmlFor="collaborations_due_date"><strong>Compensation</strong></label>
-                                <input className="form-control form-control-lg" type="text" name="collaborations_pay"  value={createCollaborationRequest.collaborations_pay} onChange={handleChange} aria-label='Collaboration pay' autoComplete='on' disabled={ requestSent === 201 ? true : false} required />
+                                <label htmlFor="collaborations_pay"><strong>Compensation</strong></label>
+                                <input className="form-control form-control-lg" type="text" name="collaborations_pay" id="collaborations_pay" value={createCollaborationRequest.collaborations_pay} onChange={handleChange} aria-label='Collaboration pay' autoComplete='on' disabled={ requestSent === 201 ? true : false} required />
                             </div>
                         </div>
                         <div className="row">
