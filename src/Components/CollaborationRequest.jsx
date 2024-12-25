@@ -103,7 +103,7 @@ if (userDetails != null) {
                         <div className="row">
                             <div className="col-lg-12  mb-4">
                             <label htmlFor="collaborations_due_date"><strong>Start date</strong></label>
-                            <input name="collaborations_due_date" id="collaborations_due_date" value={createCollaborationRequest.collaborations_due_date} onChange={handleChange} className='form-control form-control-lg' aria-label='Start date' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
+                            <input name="collaborations_due_date" id="collaborations_due_daten" value={createCollaborationRequest.collaborations_due_date} onChange={handleChange} className='form-control form-control-lg' aria-label='Start date' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
                             </div>
                         </div>
                         <div className="row">
@@ -124,13 +124,13 @@ if (userDetails != null) {
                                 <input className="form-control form-control-lg" type="text" name="collaborations_location" id="collaborations_location"  value={createCollaborationRequest.collaborations_location} onChange={handleChange} aria-label='Collaboration location' autoComplete='on' disabled={ requestSent === 201 ? true : false} required />
                             </div>
                         </div>
+                        <button className="btn btn-info btn-lg" type="submit" disabled={ requestSent === 201 ? true : false} >Submit</button>
                         { requestSent === 201 ? 
-                        <div className="alert alert-success mb-5" role="alert">
+                        <div className="alert alert-success mt-5" role="alert">
                             <p>Success! Your collaboration request has been created!</p>
                         </div>
                         : ''    
                         }
-                        <button className="btn btn-info btn-lg" type="submit" disabled={ requestSent === 201 ? true : false} >Submit</button>
                     </form>                 
 
                 </div>

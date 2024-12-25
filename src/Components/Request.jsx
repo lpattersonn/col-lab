@@ -51,94 +51,6 @@ export default function Request() {
         .catch(err => console.log(err))
       }, []);
 
-    // Get all mentor chats
-    //     useEffect(() => {
-    //         axios({
-    //             method: 'GET',
-    //             url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`
-    //         },
-    //         {
-    //             headers: {
-    //                 Authorization: `Bearer ${userDetails.token}`
-    //             }
-    //         }
-    //     ).then((res) => {
-    //         setMentorChats(res.data)
-    //     }).catch(err => console.log(err))
-    // }, [])
-
-    let chatID = undefined;
-
-    // mentorChats.map((chat) => {
-    //     if(userDetails?.id === chat?.acf?.mentee_id && Number(param1) === chat?.acf?.mentors_id) {
-    //         chatID = chat?.id;
-    //         return;
-    //     }
-    // })
-
-    // Handle Check
-    // function handelCheckedChange(e) {
-    //     let checked = e.target.checked;
-    //     if (checked === true) {
-    //         axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/jobs/${param1}`,{acf: {
-    //             'jobs_applied_users': `${requestDetails?.acf?.jobs_applied_users} ${JSON.stringify(userDetails.id)} `
-    //           }
-    //         },
-    //         {
-    //                 headers: {
-    //                 Authorization: `Bearer ${userDetails.token}`
-    //             }
-    //         } 
-    //           )
-    //           .then(res => {
-    //             setrequestDetails(res.data)})
-    //           .catch(err => {console.log(err)})
-    //     }
-    // }
-
-//   function DateToReadable(param) {
-//     const dateString = param;
-//     const year = dateString?.substring(0, 4);
-//     const month = dateString?.substring(4, 6);
-//     const day = dateString?.substring(6, 8);
-
-//     const date = new Date(`${year}-${month}-${day}`);
-//     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-//     const formattedDate = date.toLocaleDateString('en-US', options);
-//     return formattedDate
-//   }
- 
-//   const createMentorChat = async (e) => {
-//     try {
-//         const createChat = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`,
-//             {
-//                 author: userDetails.id,
-//                 title: `Mentor: ${ requestDetails?.name}, Mentee: ${userDetails?.displayName}`,
-//                 content: `Mentorship session between ${requestDetails.name} and ${userDetails.displayName}`,
-//                 excerpt: `Mentorship session between ${requestDetails.name} and ${userDetails.displayName}`,
-//                 status: 'publish',
-//                 acf: {
-//                     'mentors_id': `${param1}`,
-//                     'mentee_id': `${userDetails.id}`,
-//                     'mentors_image': `${requestDetails?.avatar_urls?.['48']}`,
-//                     'mentee_id': `${requestDetails?.avatar_urls?.['48']}`,
-//                 }
-//             },
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${userDetails.token}`
-//                 }
-//             }
-//         ).then((response) => {
-//                 Naviagte(`/mentor-chat/${response?.data?.id}`);
-//             }
-//         ).catch((err) => {})
-
-//     } catch (err) {
-
-//     }
-//   };
-
   if (userDetails != null) {
     if (loading === false) {
     return(
@@ -167,31 +79,28 @@ export default function Request() {
                         </div>
                         <div className="row mb-4">
                             <div className="col-lg-12 mb-4">
-                                <span><strong>About me:</strong> {requestDetails?.acf?.['user_mentor_bio']}</span>
+                                <h1>{requestDetails?.title?.rendered}</h1>
                             </div>
                             <div className="col-lg-12 mb-4">
-                                <span><strong>Key responsibilities:</strong><br></br> {requestDetails?.acf?.['user_mentor_key_responsibilities']}</span>
+                                <span><strong>Location:</strong> {requestDetails?.acf?.collaborations_location}</span>
                             </div>
                             <div className="col-lg-12 mb-4">
-                                <span><strong>Education:</strong> {requestDetails?.acf?.user_mentor_education}</span>
+                                <span><strong>Compensation:</strong> {requestDetails?.acf?.collaborations_pay}</span>
                             </div>
                             <div className="col-lg-12 mb-4">
-                                <span><strong>Preferred language(s):</strong> {requestDetails?.acf?.user_mentor_preferred_language}</span>
-                            </div>
+                                <span><strong>Description:</strong><br></br> {requestDetails?.acf?.['collaborations_features']}</span>
+                            </div>                         
                             <div className="col-lg-12 mb-4">
-                                <span><strong>Services offered:</strong> <br></br>{requestDetails?.acf?.['user_mentor_services_offered']}</span>
-                            </div>
+                                <span><strong>Start date:</strong> {requestDetails?.acf?.collaborations_due_date}</span>
+                            </div>        
                             <div className="col-lg-12 mb-4">
-                                <span><strong>Preferred meet-up:</strong> {requestDetails?.acf?.user_mentor_preferred_meetup}</span>
-                            </div>
-                            <div className="col-lg-12 mb-4">
-                                <span><strong>Rate of pay:</strong> {requestDetails?.acf?.['user_mentor_currency']} {requestDetails?.acf?.['user_mentor_rate_of_pay']}/hour</span>                            
-                            </div>                      
+                                <span><strong>Deadline:</strong> {requestDetails?.acf?.collaborations_deadline}</span>
+                            </div>                
                         </div>    
                         <div className="row mb-4 d-flex align-items-center">
                             <div className="col-auto">
-                                <button className={`btn btn-info btn-lg ${chatID === undefined ? 'display-block' : 'display-none'}`} onClick={''}>Sign up with mentor</button>
-                                <Link className={`btn btn-info btn-lg ${chatID === undefined ? 'display-none' : 'display-block'}`} to={`/mentor-chat/${chatID}`} >Return to chat</Link>
+                                {/* <button className={`btn btn-info btn-lg ${chatID === undefined ? 'display-block' : 'display-none'}`} onClick={''}>Sign up with mentor</button>
+                                <Link className={`btn btn-info btn-lg ${chatID === undefined ? 'display-none' : 'display-block'}`} to={`/mentor-chat/${chatID}`} >Return to chat</Link> */}
                             </div> 
                             <div className="col-auto">
                                 <Link to={"/collaborations"}><button className="btn btn-danger btn-lg"><strong>Back</strong></button></Link>
