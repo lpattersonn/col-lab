@@ -31,7 +31,7 @@ export default function Collaborations() {
         .then((response) => {
             setCollaborations(response?.data);
             setLoading(false);
-            console.log(response);
+            console.log(response.data);
         })
         .catch((err) => {
           // Handle error
@@ -69,60 +69,56 @@ function ActiveItem({ currentItems }) {
                    for (let name of users) {
                        if ( name.id == collaboration.author) {
                         userProfile = name;
-                        console.log(userProfile);
                        }
                    }
 
-                   console.log(userProfile)
-
-
             if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_location?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_pay?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
-                    <Link to={'/collaborations/' + collaboration.id}>
-                    <div className='col-12 mb-5' key={index}>
-                        <div className="card collaboration-item">
-                            <div className="card-body collaboration">
-                                <div className="row align-items-start">
-                                    <div className='col-lg-2 d-flex align-items-center'>
-                                        <div className='collaboration-image'>
-                                            <div className="collaboration-details">
-                                                <div className="collaboration-details-name">
-                                                    <img className="collaboration-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
-                                                    <div className="collaboration-details-name-info">
-                                                        <p><strong>{userProfile.name}</strong></p>
-                                                        <div className="collaboration-details-posted">
-                                                            {userProfile?.acf?.['user-job-Insitution'] ?
-                                                            (<div>
-                                                                <p>{userProfile?.acf?.['user-job-Insitution']}</p>
-                                                            </div>) : ("")
-                                                            }
+                    <Link to={'/collaborations/' + collaboration.id}  key={index}>
+                        <div className='col-12 mb-5'>
+                            <div className="card collaboration-item">
+                                <div className="card-body collaboration">
+                                    <div className="row align-items-start">
+                                        <div className='col-lg-2 d-flex align-items-center'>
+                                            <div className='collaboration-image'>
+                                                <div className="collaboration-details">
+                                                    <div className="collaboration-details-name">
+                                                        <img className="collaboration-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
+                                                        <div className="collaboration-details-name-info">
+                                                            <p><strong>{userProfile.name}</strong></p>
+                                                            <div className="collaboration-details-posted">
+                                                                {userProfile?.acf?.['user-job-Insitution'] ?
+                                                                (<div>
+                                                                    <p>{userProfile?.acf?.['user-job-Insitution']}</p>
+                                                                </div>) : ("")
+                                                                }
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className='col-lg-3 d-flex align-items-center'>
-                                        <div className='get-help'>
-                                            <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.title?.rendered, search) : collaboration?.title?.rendered}} /></strong>
+                                        <div className='col-lg-3 d-flex align-items-center'>
+                                            <div className='get-help'>
+                                                <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.title?.rendered, search) : collaboration?.title?.rendered}} /></strong>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-end collaboration-pay'>
-                                        <strong><i>{collaboration?.acf?.collaborations_pay}</i></strong>
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center'>
-                                    {collaboration?.acf?.collaborations_location}
-                                    </div>
-                                    <div className='col-lg-1 d-flex align-items-center justify-content-end'>
-                                        {days == 0 ? "Posted today" : `${days}d ago`}
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                        0 responses
+                                        <div className='col-lg-2 d-flex align-items-end collaboration-pay'>
+                                            <strong><i>{collaboration?.acf?.collaborations_pay}</i></strong>
+                                        </div>
+                                        <div className='col-lg-2 d-flex align-items-center'>
+                                        {collaboration?.acf?.collaborations_location}
+                                        </div>
+                                        <div className='col-lg-1 d-flex align-items-center justify-content-end'>
+                                            {days == 0 ? "Posted today" : `${days}d ago`}
+                                        </div>
+                                        <div className='col-lg-2 d-flex align-items-center justify-content-end'>
+                                            0 responses
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </Link>
                 )
             }
@@ -187,7 +183,7 @@ function ActiveItem({ currentItems }) {
                         </div>
                         <div className="row mb-5">
                             <div className="col-lg-12">
-                                <p class="lead"><strong>Move your research along using our collaboration platform!</strong></p>
+                                <p className="lead"><strong>Move your research along using our collaboration platform!</strong></p>
                             </div>
                         </div>
                         <div className="row">
