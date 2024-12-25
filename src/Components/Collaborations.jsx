@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
-import defaultImage from "../Images/5402435_account_profile_user_avatar_man_icon.svg"
 import ReactPaginate from 'react-paginate';
+import { Tab, initMDB } from "mdb-ui-kit";
 import { renderedQuestion } from '../helper';
 import axios from 'axios';
 
@@ -15,6 +15,10 @@ export default function Collaborations() {
     const [ collaborations, setCollaborations ] = useState([]);
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        initMDB({ Tab });
+    }, []);
 
     useEffect(() => {
         axios({
@@ -202,8 +206,23 @@ function ActiveItem({ currentItems }) {
                     </div>
                     <hr className="mb-5 mt-5"></hr>
                     <div className="mentors">
-                        <div className='row'>
-                            <ActivePaginatedmentors itemsPerPage={21} />
+                        <ul className="nav nav-tabs mb-5" id="ex1" role="tablist">
+                            <li className="nav-item" role="presentation">
+                                <a data-mdb-tab-init className="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true" >Collaborations</a>
+                            </li>
+                            <li className="nav-item" role="presentation">
+                                <a data-mdb-tab-init className="nav-link" id="ex1-tab-2" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false" >Archived</a>
+                            </li>
+                        </ul>
+                        <div className="tab-content" id="ex1-content">
+                            <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                                {/* {localStorage.getItem('countActiveJobs') > 0 ? <ActivePaginatedItems itemsPerPage={15} /> : <p><strong>Nothing to show here.</strong></p>} */}
+                                <ActivePaginatedmentors itemsPerPage={15} />
+                            </div>
+                            <div className="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                                {/* {localStorage.getItem('countExpiredJobs') > 0 ? < ExpiredPaginatedItems itemsPerPage={15} />: <p><strong>Nothing to show here.</strong></p>} */}
+                                {/* <ActivePaginatedmentors itemsPerPage={15} /> */}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -228,3 +247,4 @@ function ActiveItem({ currentItems }) {
         window.location.replace('/')
     }
 }
+
