@@ -102,7 +102,6 @@ export default function Login() {
             <div className="row mb-4">
                 <div className="col-lg-12 d-flex justify-content-center mb-3"><img className="brand" src={Brand}/></div>
                 <div className="col-lg-12">
-                    <h1 className="mb-3 login-header text-center">Welcome to <i>colLabb</i>!</h1>
                 </div>
             </div>
             <form className="form-login"  onSubmit={handleSubmit}>

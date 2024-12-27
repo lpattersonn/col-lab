@@ -101,8 +101,8 @@ function ActiveItem({ currentItems }) {
                                                     <img className="collaboration-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
                                                 </div>
                                                 <div>
-                                                    <p className="my-0">{userProfile?.name} | {userProfile?.acf?.["user-job-Insitution"]}</p>
-                                                    <p>{years > 0 ? `${years} years` : months > 0 ? `${months} months` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                                    <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]}</p>
+                                                    <p>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                                 </div>
                                             </div>
                                             <div className="d-flex flex-direction-row">
@@ -121,7 +121,7 @@ function ActiveItem({ currentItems }) {
                                         </div>
                                     </div>
                                     {/* Middle Section */}
-                                    <div>
+                                    <div style={{marginBottom: "1.8rem"}}>
                                         <h3 style={{fontSize: "1.4rem"}}>{collaboration?.acf?.collaborations_description}</h3>
                                         <div>{collaboration?.acf?.collaborations_features}</div>
                                     </div>

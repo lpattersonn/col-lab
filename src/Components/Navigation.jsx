@@ -16,7 +16,7 @@ export default function Navigation() {
                 <div className="row">
                     <div className="col">
                         <nav className="navbar navbar-expand-lg">
-                            <a className="nav-brand" href="/"><img className="brand" src={Brand} loading='lazy'/><h1><i>colLabb</i></h1></a>
+                            <a className="nav-brand" href="/"><img className="brand" src={Brand} loading='lazy'/></a>
                             <ul className="nav nav-pills">
                               <li className="nav-item">
                                 <Link className={window.location.href.includes("/dashboard") ? "nav-link active" : "nav-link" } to="/">Home</Link>
