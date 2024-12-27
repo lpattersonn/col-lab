@@ -31,7 +31,6 @@ export default function Collaborations() {
         .then((response) => {
             setCollaborations(response?.data);
             setLoading(false);
-            console.log(response.data);
         })
         .catch((err) => {
           // Handle error
@@ -62,7 +61,22 @@ function ActiveItem({ currentItems }) {
         {currentItems.map((collaboration, index) => {
           
                    let posted = Date.now() - new Date(collaboration.date);
-                   let days = Math.floor(posted/(86400 * 1000));
+                //    let days = Math.floor(posted/(86400 * 1000));
+
+                   // Calculate total days
+                    let totalDays = Math.floor(posted / (86400 * 1000));
+
+                    // Calculate years
+                    let years = Math.floor(totalDays / 365);
+
+                    // Calculate remaining days after extracting years
+                    let remainingDaysAfterYears = totalDays % 365;
+
+                    // Calculate months
+                    let months = Math.floor(remainingDaysAfterYears / 30);
+
+                    // Calculate remaining days after extracting months
+                    let days = remainingDaysAfterYears % 30;
 
                    let userProfile = "";
            
@@ -72,54 +86,50 @@ function ActiveItem({ currentItems }) {
                        }
                    }
 
+                   console.log(collaboration);
+
             if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_location?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_pay?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
-                    <Link to={'/collaborations/' + collaboration.id}  key={index}>
-                        <div className='col-12 mb-5'>
-                            <div className="card collaboration-item">
-                                <div className="card-body collaboration">
-                                    <div className="row align-items-start">
-                                        <div className='col-lg-2 d-flex align-items-center'>
-                                            <div className='collaboration-image'>
-                                                <div className="collaboration-details">
-                                                    <div className="collaboration-details-name">
-                                                        <img className="collaboration-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
-                                                        <div className="collaboration-details-name-info">
-                                                            <p><strong>{userProfile.name}</strong></p>
-                                                            <div className="collaboration-details-posted">
-                                                                {userProfile?.acf?.['user-job-Insitution'] ?
-                                                                (<div>
-                                                                    <p>{userProfile?.acf?.['user-job-Insitution']}</p>
-                                                                </div>) : ("")
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                        <div className='col-12 mb-5' key={index}>
+                            <div className="card collaboration">
+                                <div className="card-body">
+                                {/* Top Section */}
+                                    <div className="collaboration-header">
+                                        <div className="d-flex flex-direction-row">
+                                            <div className="d-flex" style={{marginRight: "6rem"}}>
+                                                <div>
+                                                    <img className="collaboration-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
+                                                </div>
+                                                <div>
+                                                    <p className="my-0">{userProfile?.name} | {userProfile?.acf?.["user-job-Insitution"]}</p>
+                                                    <p>{years > 0 ? `${years} years` : months > 0 ? `${months} months` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                                </div>
+                                            </div>
+                                            <div className="d-flex flex-direction-row">
+                                                <div className="designation-button">
+                                                    <span className="small">For Authorship</span>
+                                                </div>
+                                                <div className="due-button">
+                                                   <span className="small">Due {collaboration?.acf?.["collaborations_deadline"]}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className='col-lg-3 d-flex align-items-center'>
-                                            <div className='get-help'>
-                                                <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.title?.rendered, search) : collaboration?.title?.rendered}} /></strong>
-                                            </div>
-                                        </div>
-                                        <div className='col-lg-2 d-flex align-items-end collaboration-pay'>
-                                            <strong><i>{collaboration?.acf?.collaborations_pay}</i></strong>
-                                        </div>
-                                        <div className='col-lg-2 d-flex align-items-center'>
-                                        {collaboration?.acf?.collaborations_location}
-                                        </div>
-                                        <div className='col-lg-1 d-flex align-items-center justify-content-end'>
-                                            {days == 0 ? "Posted today" : `${days}d ago`}
-                                        </div>
-                                        <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                            0 responses
+                                        <div className='d-flex flex-direction-row justify-content-end'>
+                                            <div className="option-button"></div>
+                                            <div className="option-button"></div>
+                                            <div className="option-button"></div>
                                         </div>
                                     </div>
+                                    {/* Middle Section */}
+                                    <div>
+                                        <h3 style={{fontSize: "1.4rem"}}>{collaboration?.acf?.collaborations_description}</h3>
+                                        <div>{collaboration?.acf?.collaborations_features}</div>
+                                    </div>
+                                    {/* Bottom Section */}
+                                    <div className="mt-2">3 people responded to this</div>
                                 </div>
                             </div>
                         </div>
-                    </Link>
                 )
             }
          }

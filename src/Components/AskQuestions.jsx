@@ -171,8 +171,24 @@ export default function AskQuestions() {
             currentItems.map((question, index) => {
                 let userName = "";
                 let userProfileImg = "";
-                let questionPosted = Date.now() - new Date(question.date);
-                let days = Math.floor(questionPosted/(86400 * 1000));
+
+                let posted = Date.now() - new Date(question.date);
+                //    let days = Math.floor(posted/(86400 * 1000));
+
+                // Calculate total days
+                let totalDays = Math.floor(posted / (86400 * 1000));
+
+                // Calculate years
+                let years = Math.floor(totalDays / 365);
+
+                // Calculate remaining days after extracting years
+                let remainingDaysAfterYears = totalDays % 365;
+
+                // Calculate months
+                let months = Math.floor(remainingDaysAfterYears / 30);
+
+                // Calculate remaining days after extracting months
+                let days = remainingDaysAfterYears % 30;
         
                 for (let name of users) {
                     if ( name.id == question.author) {
@@ -216,7 +232,7 @@ export default function AskQuestions() {
                                                 <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question.title.rendered, search) : question.title.rendered } } />
                                             </div>
                                             <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                                <p>{days == 0 ? "Posted today" : `${days}d ago`}</p>
+                                            <p>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                             </div>
                                             <div className='col-lg-2 d-flex align-items-center justify-content-end'>
                                                 <p className="text-right">{ numberOfComments[0].count} {numberOfComments[0].count == 1 ? 'response' : 'responses'}</p>
@@ -244,7 +260,7 @@ export default function AskQuestions() {
                                                 <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question.title.rendered, search) : question.title.rendered } } />
                                             </div>
                                             <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                                <p>{days == 0 ? "Posted today" : `${days}d ago`}</p>
+                                            <p>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                             </div>
                                             <div className='col-lg-2 d-flex align-items-center justify-content-end'>
                                                 <p className="text-right">{ numberOfComments[0].count} {numberOfComments[0].count == 1 ? 'response' : 'responses'}</p>

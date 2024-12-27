@@ -1,3 +1,12 @@
+.collaboration {
+  border: none !important;
+  border-radius: 5px;
+  &:hover {
+    background: #F4FDFF;
+  }
+  padding: 2rem;
+}
+
 .collaboration-details {
     display: flex;
     flex-direction: row;
@@ -10,10 +19,10 @@
       margin: 0;
       width: 100%;
       &-img {
-        width: 5rem;
-        height: 6rem;
+        width: 4rem;
+        height: 4rem;
         border: 1px solid black;
-        border-radius: 3px;
+        border-radius: 100%;
         object-fit: cover;
         margin: 0 0.7rem 0 0;
       }
@@ -38,4 +47,36 @@
   @media screen and (max-width: 1000px) {
     justify-content: left;
   }
+}
+.designation-button {
+  font-size: 1.4rem !important;
+  display: flex;
+  align-items: center;
+  padding:  .5rem 2rem;
+  color: white;
+  background: red;
+  height: fit-content;
+  margin-right: 1rem;
+  font-weight: 700;
+}
+.due-button {
+  font-size: 1.4rem !important;
+  display: flex;
+  align-items: center;
+  padding:  .5rem 2rem;
+  background: lightgrey;
+  height: fit-content;
+  font-weight: 700;
+}
+.option-button {
+  width: .5rem;
+  height: .5rem;
+  background: grey;
+  border-radius: 100%;
+  margin-right: .3rem;
+}
+.collaboration-header {
+  display: grid !important;
+  grid-template-columns: 4fr 1fr;
+  height: fit-content;
 }

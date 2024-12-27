@@ -1200,6 +1200,15 @@ textarea[data-info=content] {
   padding: 0 5px;
 }
 
+.collaboration {
+  border: none !important;
+  border-radius: 5px;
+  padding: 2rem;
+}
+.collaboration:hover {
+  background: #F4FDFF;
+}
+
 .collaboration-details {
   display: flex;
   flex-direction: row;
@@ -1214,10 +1223,10 @@ textarea[data-info=content] {
   width: 100%;
 }
 .collaboration-details-name-img {
-  width: 5rem;
-  height: 6rem;
+  width: 4rem;
+  height: 4rem;
   border: 1px solid black;
-  border-radius: 3px;
+  border-radius: 100%;
   object-fit: cover;
   margin: 0 0.7rem 0 0;
 }
@@ -1243,6 +1252,42 @@ textarea[data-info=content] {
   .collaboration-pay {
     justify-content: left;
   }
+}
+
+.designation-button {
+  font-size: 1.4rem !important;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  color: white;
+  background: red;
+  height: fit-content;
+  margin-right: 1rem;
+  font-weight: 700;
+}
+
+.due-button {
+  font-size: 1.4rem !important;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  background: lightgrey;
+  height: fit-content;
+  font-weight: 700;
+}
+
+.option-button {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: grey;
+  border-radius: 100%;
+  margin-right: 0.3rem;
+}
+
+.collaboration-header {
+  display: grid !important;
+  grid-template-columns: 4fr 1fr;
+  height: fit-content;
 }
 
 @media screen and (max-width: 1000px) {

@@ -79,7 +79,21 @@ export default function Question() {
     let userJobInsitution = "";
 
     let questionPosted = Date.now() - new Date(question.date);
-    let days = Math.floor(questionPosted/(86400 * 1000));
+    // let days = Math.floor(questionPosted/(86400 * 1000));
+    // Calculate total days
+    let totalDays = Math.floor(questionPosted / (86400 * 1000));
+
+    // Calculate years
+    let years = Math.floor(totalDays / 365);
+
+    // Calculate remaining days after extracting years
+    let remainingDaysAfterYears = totalDays % 365;
+
+    // Calculate months
+    let months = Math.floor(remainingDaysAfterYears / 30);
+
+    // Calculate remaining days after extracting months
+    let days = remainingDaysAfterYears % 30;
 
     for (let name of getUsers) {
       if ( name.id == question.author) {
@@ -95,7 +109,21 @@ export default function Question() {
         let userJobInsitution = "";
 
         let questionPosted = Date.now() - new Date(question.date);
-        let days = Math.floor(questionPosted/(86400 * 1000));
+        // let days = Math.floor(questionPosted/(86400 * 1000));
+        // Calculate total days
+        let totalDays = Math.floor(questionPosted / (86400 * 1000));
+
+        // Calculate years
+        let years = Math.floor(totalDays / 365);
+
+        // Calculate remaining days after extracting years
+        let remainingDaysAfterYears = totalDays % 365;
+
+        // Calculate months
+        let months = Math.floor(remainingDaysAfterYears / 30);
+
+        // Calculate remaining days after extracting months
+        let days = remainingDaysAfterYears % 30;
 
         for (let name of getUsers) {
           if ( name.id == question.author) {
@@ -121,7 +149,7 @@ export default function Question() {
                         <p>{userJobInsitution}</p>
                       </div>) : ("")
                       }
-                    <p>{days == 0 ? "Posted today" : `${days}d ago`}</p>
+                    <p>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                     </div>
                   </div>
                 </div>
@@ -241,7 +269,7 @@ return (
                                           <p>{userJobInsitution}</p>
                                       </div>) : ("")
                                       }
-                                    <p>{days == 0 ? "Posted today" : `${days}d ago`}</p>
+                                    <p>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                     </div>
                                 </div>
                               </div>
