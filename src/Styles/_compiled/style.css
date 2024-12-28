@@ -1297,6 +1297,10 @@ textarea[data-info=content] {
   color: black !important;
 }
 
+.collaboration-icon {
+  width: 4rem;
+}
+
 @media screen and (max-width: 1000px) {
   .container-fluid {
     padding: 0 2rem !important;

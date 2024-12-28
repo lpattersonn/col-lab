@@ -7,6 +7,7 @@ import { TailSpin } from "react-loader-spinner";
 import ReactPaginate from 'react-paginate';
 import { Tab, initMDB } from "mdb-ui-kit";
 import { renderedQuestion } from '../helper';
+import UserComment from "../Images/user-comment.svg";
 import axios from 'axios';
 
 export default function Collaborations() {
@@ -136,9 +137,10 @@ function ActiveItem({ currentItems }) {
                                     </div>
                                     {/* Bottom Section */}
                                     <div className="row d-flex flex-row">
-                                        <div className="mt-2 col-auto" style={{marginRight: "6rem"}}>{localStorage.getItem(`collaboration_count${index}`)} people responded to this</div>
+                                        <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
+                                        <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{localStorage.getItem(`collaboration_count${index}`)} people responded to this</div>
                                         <div className="col-auto">
-                                            <a href="" className="btn btn-primary collab-btn">Collaborate</a>
+                                            <a href={`/collaboration-chat/${collaboration.id}`} className="btn btn-primary collab-btn">Collaborate</a>
                                         </div>
                                     </div>
                                 </div>
@@ -224,11 +226,11 @@ function ActiveItem({ currentItems }) {
                             </div>
                         </div>
                     </div>
-                    <hr className="mb-5 mt-5"></hr>
-                    <div className="mentors">
+
+                    <div className="mentors mt-5">
                         <ul className="nav nav-tabs mb-5" id="ex1" role="tablist">
                             <li className="nav-item" role="presentation">
-                                <a data-mdb-tab-init className="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true" >Collaborations</a>
+                                <a data-mdb-tab-init className="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true" >Active Requests</a>
                             </li>
                             <li className="nav-item" role="presentation">
                                 <a data-mdb-tab-init className="nav-link" id="ex1-tab-2" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false" >Archived</a>
