@@ -38,8 +38,23 @@ function ActiveItem({ currentItems }) {
     return (
       <>
         {currentItems.map((job, index) => {
-        let posted = Date.now() - new Date(job.date);
-        let days = Math.floor(posted/(86400 * 1000));
+
+            let posted = Date.now() - new Date(job.date);
+
+           // Calculate total days
+            let totalDays = Math.floor(posted / (86400 * 1000));
+
+            // Calculate years
+            let years = Math.floor(totalDays / 365);
+
+            // Calculate remaining days after extracting years
+            let remainingDaysAfterYears = totalDays % 365;
+
+            // Calculate months
+            let months = Math.floor(remainingDaysAfterYears / 30);
+
+            // Calculate remaining days after extracting months
+            let days = remainingDaysAfterYears % 30;
 
         let deadlineString = job.acf.jobs_application_deadline;
         let find = '-';
@@ -88,7 +103,7 @@ function ActiveItem({ currentItems }) {
                                     {job?.acf?.jobs_city}, {job?.acf?.jobs_country}
                                     </div>
                                     <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                        {days == 0 ? "Posted today" : `${days}d ago`}
+                                        {years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +138,7 @@ function ActiveItem({ currentItems }) {
                                     {job?.acf?.jobs_city}, {job?.acf?.jobs_country}
                                     </div>
                                     <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                        {days == 0 ? "Posted today" : `${days}d ago`}
+                                        {years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}
                                     </div>
                                 </div>
                             </div>
@@ -186,7 +201,21 @@ function ExpiredItem({ currentItems }) {
       <>
         {currentItems.map((job, index) => {
         let posted = Date.now() - new Date(job.date);
-        let days = Math.floor(posted/(86400 * 1000));
+
+        // Calculate total days
+         let totalDays = Math.floor(posted / (86400 * 1000));
+
+         // Calculate years
+         let years = Math.floor(totalDays / 365);
+
+         // Calculate remaining days after extracting years
+         let remainingDaysAfterYears = totalDays % 365;
+
+         // Calculate months
+         let months = Math.floor(remainingDaysAfterYears / 30);
+
+         // Calculate remaining days after extracting months
+         let days = remainingDaysAfterYears % 30;
 
         let deadlineString = job.acf.jobs_application_deadline;
         let find = '-';
@@ -234,8 +263,8 @@ function ExpiredItem({ currentItems }) {
                                     <div className='col-lg-2 d-flex align-items-center align-items-center'>
                                         {job?.acf?.jobs_city}, {job?.acf?.jobs_country}
                                     </div>
-                                    <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                        {days == 0 ? "Posted today" : `${days}d ago`}
+                                    <div className='col-lg-2 d-flex align-items-center justify-content-end'>                            
+                                        {years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}
                                     </div>
                                 </div>
                             </div>
@@ -270,7 +299,7 @@ function ExpiredItem({ currentItems }) {
                                     {job?.acf?.jobs_city}, {job?.acf?.jobs_country}
                                     </div>
                                     <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                        {days == 0 ? "Posted today" : `${days}d ago`}
+                                        {years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}
                                     </div>
                                 </div>
                             </div>
