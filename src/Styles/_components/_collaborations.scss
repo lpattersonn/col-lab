@@ -1,5 +1,5 @@
 .collaboration {
-  border: none !important;
+  // border: none !important;
   border-radius: 5px;
   &:hover {
     background: #F4FDFF;
@@ -69,6 +69,7 @@
   font-weight: 700;
 }
 .option-button {
+  display: block;
   width: .5rem;
   height: .5rem;
   background: grey;
@@ -80,4 +81,10 @@
   grid-template-columns: 4fr 1fr;
   height: fit-content;
   margin-bottom: 2rem;
+}
+
+.collab-btn {
+  background: none !important;
+  border: 2px solid black !important;
+  color: black !important;
 }

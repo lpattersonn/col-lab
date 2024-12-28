@@ -1201,7 +1201,6 @@ textarea[data-info=content] {
 }
 
 .collaboration {
-  border: none !important;
   border-radius: 5px;
   padding: 2rem;
 }
@@ -1277,6 +1276,7 @@ textarea[data-info=content] {
 }
 
 .option-button {
+  display: block;
   width: 0.5rem;
   height: 0.5rem;
   background: grey;
@@ -1289,6 +1289,12 @@ textarea[data-info=content] {
   grid-template-columns: 4fr 1fr;
   height: fit-content;
   margin-bottom: 2rem;
+}
+
+.collab-btn {
+  background: none !important;
+  border: 2px solid black !important;
+  color: black !important;
 }
 
 @media screen and (max-width: 1000px) {

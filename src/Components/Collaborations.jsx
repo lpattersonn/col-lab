@@ -86,7 +86,14 @@ function ActiveItem({ currentItems }) {
                        }
                    }
 
-                   console.log(collaboration);
+                   function commentCount() {
+                    return axios.get(`${collaboration._links.replies['0'].href}`)
+                    .then((response) => {
+                      localStorage.setItem(`collaboration_count${index}`, response.data.length);
+                    }).catch((err) => {});
+                    }
+
+                    commentCount();
 
             if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_location?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_pay?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
@@ -102,7 +109,9 @@ function ActiveItem({ currentItems }) {
                                                 </div>
                                                 <div>
                                                     <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]}</p>
-                                                    <p>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                                    <div className="d-flex flex-row align-items-center" >
+                                                        <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="d-flex flex-direction-row">
@@ -110,7 +119,7 @@ function ActiveItem({ currentItems }) {
                                                     <span className="small">For Authorship</span>
                                                 </div>
                                                 <div className="due-button">
-                                                   <span className="small">Due {collaboration?.acf?.["collaborations_deadline"]}</span>
+                                                   <span className="small">Deadline {collaboration?.acf?.["collaborations_deadline"]}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -122,11 +131,16 @@ function ActiveItem({ currentItems }) {
                                     </div>
                                     {/* Middle Section */}
                                     <div style={{marginBottom: "1.8rem"}}>
-                                        <h3 style={{fontSize: "1.4rem"}}>{collaboration?.acf?.collaborations_description}</h3>
+                                        <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}>{collaboration?.acf?.collaborations_description}</h3>
                                         <div>{collaboration?.acf?.collaborations_features}</div>
                                     </div>
                                     {/* Bottom Section */}
-                                    <div className="mt-2">3 people responded to this</div>
+                                    <div className="row d-flex flex-row">
+                                        <div className="mt-2 col-auto" style={{marginRight: "6rem"}}>{localStorage.getItem(`collaboration_count${index}`)} people responded to this</div>
+                                        <div className="col-auto">
+                                            <a href="" className="btn btn-primary collab-btn">Collaborate</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
