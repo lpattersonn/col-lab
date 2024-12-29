@@ -1301,6 +1301,35 @@ textarea[data-info=content] {
   width: 4rem;
 }
 
+.options-container {
+  position: relative;
+}
+.options-container .options {
+  position: relative;
+  z-index: 10;
+  height: fit-content;
+  cursor: pointer;
+}
+.options-container .option-items {
+  display: none;
+  margin-top: 1rem;
+  position: absolute;
+  z-index: 9;
+  width: fit-content;
+  top: 0;
+  right: 0;
+  border-radius: 0.5rem;
+  background-color: rgba(211, 211, 211, 0.3);
+  padding: 0.5rem 1rem;
+  color: black;
+}
+.options-container .option-items .option-item {
+  cursor: pointer;
+}
+.options-container .option-items .option-item:hover {
+  border-bottom: 1px solid grey;
+}
+
 @media screen and (max-width: 1000px) {
   .container-fluid {
     padding: 0 2rem !important;

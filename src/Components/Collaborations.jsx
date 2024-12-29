@@ -57,9 +57,26 @@ export default function Collaborations() {
     // Start paginated active jobs
 
 function ActiveItem({ currentItems }) {
+    const [optionDisplay, setOptionDisplay] = useState({});
+    let [buttonClick, setButtonClick] = useState(0);
+
+    const handleToggleOptions = (index) => {
+        setOptionDisplay(prevState => ({
+            ...prevState,
+            [index]: prevState[index] === 'show' ? 'hide' : 'show'
+        }));
+    };
+
+    const handleHideCollaboration = (index) => {
+        setButtonClick(prev => prev + 1); // Trigger a re-render by updating state
+    };
+
+
     return (
       <>
         {currentItems.map((collaboration, index) => {
+
+                let showCollaboration =  localStorage.getItem(`show_collaboration${index}`);
           
                    let posted = Date.now() - new Date(collaboration.date);
                 //    let days = Math.floor(posted/(86400 * 1000));
@@ -96,9 +113,11 @@ function ActiveItem({ currentItems }) {
 
                     commentCount();
 
+                    // Toggle option display
+
             if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_location?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_pay?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
-                        <div className='col-12 mb-5' key={index}>
+                        <div className={`col-12 mb-5 ${showCollaboration}`} key={index}>
                             <div className="card collaboration">
                                 <div className="card-body">
                                 {/* Top Section */}
@@ -124,10 +143,19 @@ function ActiveItem({ currentItems }) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className='d-flex flex-direction-row justify-content-end'>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
+                                        <div className="options-container">
+                                            <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
+                                                <div className="option-button"></div>
+                                                <div className="option-button"></div>
+                                                <div className="option-button"></div>
+                                            </div>
+                                            <div className={`option-items ${optionDisplay[index]}`}>
+                                                <div className="option-item" onClick={() => {
+                                                    localStorage.setItem(`show_collaboration${index}`, 'hide')
+                                                    handleHideCollaboration(index)
+                                                    }}>Hide</div>
+                                                <div className="option-item">Report</div>
+                                            </div>
                                         </div>
                                     </div>
                                     {/* Middle Section */}

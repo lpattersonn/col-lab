@@ -82,13 +82,39 @@
   height: fit-content;
   margin-bottom: 2rem;
 }
-
 .collab-btn {
   background: none !important;
   border: 2px solid black !important;
   color: black !important;
 }
-
 .collaboration-icon {
 width: 4rem;
+}
+.options-container {
+  position: relative;
+  .options {
+    position: relative;
+    z-index: 10;
+    height: fit-content;
+    cursor: pointer;
+  }
+  .option-items {
+    display: none;
+    margin-top: 1rem;
+    position: absolute;
+    z-index: 9;
+    width: fit-content;
+    top: 0;
+    right: 0;
+    border-radius: .5rem;
+    background-color: rgb(lightgrey, 0.3);
+    padding: 0.5rem 1rem;
+    color: black;
+    .option-item {
+      cursor: pointer;
+      &:hover {
+        border-bottom: 1px solid grey;
+      }
+    }
+  }
 }
