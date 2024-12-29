@@ -188,7 +188,7 @@ export default function Dashboard() {
         <div className="row">
           <div className="col-lg-12">
             <div className="my-5">
-              <h1>Welcome to <i>collabb</i>, a collaborative network for scientists!</h1>
+              <h1>Welcome to <i>collabb</i>e, a collaborative network for scientists!</h1>
             </div>
             <div className="col">
               <div className="row">
@@ -253,7 +253,7 @@ export default function Dashboard() {
                       <Link to="/mentorship-opportunities" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Teach}/>Mentorships</button></Link>
                       <button className='btn-main'><img className="btn-main-icon" src={Borrow} loading="lazy"/>Borrow Items</button>
                       <Link to="/jobs" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Job}/>Jobs</button></Link>
-                      <button className='btn-main'><img className="btn-main-icon" src={LearningCenter} loading="lazy"/>Learning Center</button>
+                      <Link to="/learning-center" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={LearningCenter} loading="lazy"/>Learning Center</button></Link>
                     </div>
                   </div>
                 </div>

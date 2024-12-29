@@ -18,6 +18,7 @@ import Collaborations from './Components/Collaborations';
 import CollaborationRequest from './Components/CollaborationRequest';
 import CollaborationChat from './Components/CollaborationChat';
 import Request from './Components/Request';
+import LearningCenter from './Components/LearningCenter';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
         <Route path="/collaboration-request" element={<CollaborationRequest />} />
         <Route path="/collaborations/:param1" element={<Request />} />
         <Route path="/collaboration-chat/:param1" element={<CollaborationChat />} />
+        <Route path="/learning-center" element={<LearningCenter />} />
       </Routes>
    </Router>
   );
