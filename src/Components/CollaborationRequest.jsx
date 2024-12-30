@@ -80,7 +80,7 @@ if (userDetails != null) {
                     </div>
                     <div className="row">
                         <div className="col-12 mb-4">
-                            <h1><strong>Seek collaboration opportunities with your peers. Two heads are better than one!</strong></h1>
+                            <h1><strong>Collaborate with your peers. Two heads are better than one!</strong></h1>
                         </div>
                     </div>
                     <div className="row mt-5">
@@ -91,7 +91,7 @@ if (userDetails != null) {
                             <form className="form-create-job mx-auto" onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="collaborations_description"><strong>Type your request briefly (150 characters max.)</strong></label>
+                                        <label htmlFor="collaborations_description"><strong>Type your request briefly (150 characters max).</strong></label>
                                         <input name="collaborations_description" id="collaborations_description" value={createCollaborationRequest.collaborations_description} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="ex. Need help creating a knockout cell line." type="text" disabled={ requestSent === 201 ? true : false} required />
 
                                     </div>    

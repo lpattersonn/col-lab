@@ -240,7 +240,7 @@ function ActiveItem({ currentItems }) {
                         </div>
                         <div className="row mb-5">
                             <div className="col-lg-12">
-                                <p className="lead"><strong>Teaching reinforces knowledge! Teach technical skills in person and earn a certificate + COLLAB points.</strong></p>
+                                <p className="lead"><strong>Teaching reinforces knowledge! Train your peers and earn a certificate of expertise to show off your skills!</strong></p>
                             </div>
                         </div>
                         <div className="row">

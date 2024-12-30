@@ -188,7 +188,7 @@ export default function Dashboard() {
         <div className="row">
           <div className="col-lg-12">
             <div className="my-5">
-              <h1>Welcome to <i>collabb</i>e, a collaborative network for scientists!</h1>
+              <h1>Welcome to <i>collabb</i>, a collaborative network for scientists!</h1>
             </div>
             <div className="col">
               <div className="row">
