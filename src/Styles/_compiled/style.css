@@ -813,6 +813,23 @@ textarea[data-info=content] {
 
 .form-create-job {
   width: 100%;
+  border: 1px solid grey;
+  padding: 4rem 3rem;
+  position: relative;
+}
+.form-create-job::before {
+  content: "5 points required!";
+  background: #ff0000;
+  position: absolute;
+  font-size: 1.6rem;
+  width: fit-content;
+  padding: 0.5rem 1rem;
+  color: white;
+  font-weight: 600;
+  top: -18px;
+  margin: auto;
+  left: 0;
+  right: 0;
 }
 
 .job-detail-div {
@@ -1328,6 +1345,10 @@ textarea[data-info=content] {
 }
 .options-container .option-items .option-item:hover {
   border-bottom: 1px solid grey;
+}
+
+.collaboration-page_image {
+  width: 100%;
 }
 
 @media screen and (max-width: 1000px) {

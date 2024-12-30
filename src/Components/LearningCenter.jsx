@@ -253,7 +253,7 @@ function ActiveItem({ currentItems }) {
                                 }} />
                             </div>
                             <div className="col-lg-4 text-end">
-                                <Link to="/collaboration-request" className="btn btn-outline-info btn-lg">Learn A New Skill</Link>
+                                <Link to="/learning-request" className="btn btn-outline-info btn-lg">Learn A New Skill</Link>
                             </div>
                         </div>
                     </div>

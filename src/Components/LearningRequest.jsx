@@ -7,7 +7,7 @@ import SectionImage from "../Images/rb_2582.png";
 import axios from "axios";
 
 
-export default function CollaborationRequest() {
+export default function LearningRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const [requestSent, setRequestSent] = useState("No");
     const [createCollaborationRequest, setCreateCollaborationRequest]  = useState({
@@ -74,7 +74,7 @@ if (userDetails != null) {
                     <div className="page-filter">
                         <div className="row mb-5">
                             <div className="col-12 d-flex">
-                            <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">></span><Link className="link-dark small d-flex align-items-center" to="/collaborations">Collaborations</Link><span className="breadcrumb-slash">>></span><span className="small d-flex align-items-center">Request Collaboration</span>
+                            <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">></span><Link className="link-dark small d-flex align-items-center" to="/learning-center">Learning Center</Link><span className="breadcrumb-slash">>></span><span className="small d-flex align-items-center">Learning Request</span>
                             </div>
                         </div>
                     </div>

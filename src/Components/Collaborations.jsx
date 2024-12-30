@@ -136,7 +136,7 @@ function ActiveItem({ currentItems }) {
                                             </div>
                                             <div className="d-flex flex-direction-row">
                                                 <div className="designation-button">
-                                                    <span className="small">For Authorship</span>
+                                                    <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
                                                 </div>
                                                 <div className="due-button">
                                                    <span className="small">Deadline {collaboration?.acf?.["collaborations_deadline"]}</span>
@@ -240,7 +240,7 @@ function ActiveItem({ currentItems }) {
                                 <p className="lead"><strong>Move your research along using our collaboration platform!</strong></p>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="row mt-3">
                             <div className="col-lg-4">
                                 <p><strong>Browse all collaboration opportunities</strong></p>
                             </div>

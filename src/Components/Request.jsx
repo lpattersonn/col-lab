@@ -31,8 +31,6 @@ export default function Request() {
         setLoading(false);
       })
       .catch(err => console.log(err))
-
-      
     }, []);
 
      // Get menotr information
