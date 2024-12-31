@@ -10,18 +10,18 @@ import axios from "axios";
 export default function LearningRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const [requestSent, setRequestSent] = useState("No");
-    const [createCollaborationRequest, setCreateCollaborationRequest]  = useState({
-        'collaborations_description': '',
-        'collaborations_features': '',
-        'collaborations_pay': '',
-        'collaborations_perk': '',
-        'collaborations_deadline': ''
+    const [createLearningRequest, setCreateLearningRequest]  = useState({
+        'learning_description': '',
+        'learning_features': '',
+        'learning_pay': '',
+        'learning_perk': '',
+        'learning_deadline': ''
     });
 
     //   Handle Change
   function handleChange(e) {
     const {name, value} = e.target
-    setCreateCollaborationRequest(prev => {
+    setCreateLearningRequest(prev => {
         return (
             { ...prev, [name]: value}
         )
@@ -33,19 +33,19 @@ export default function LearningRequest() {
     try {
         // Upload image if file exists
             const response = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations/`,
+              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center/`,
                 {   
-                    'title':  createCollaborationRequest.collaborations_description,
+                    'title':  createLearningRequest.learning_description,
                     'content': "",
                     'excerpt': "",
                     'author': userDetails.id,
                     'status': 'publish',
                     'acf' : {
-                        'collaborations_description': createCollaborationRequest.collaborations_description,
-                        'collaborations_features': createCollaborationRequest.collaborations_features,
-                        'collaborations_pay': createCollaborationRequest.collaborations_pay,
-                        'collaborations_perk': createCollaborationRequest.collaborations_perk,
-                        'collaborations_deadline': createCollaborationRequest.collaborations_deadline
+                        'learning_description': createLearningRequest.learning_description,
+                        'learning_features': createLearningRequest.learning_features,
+                        'learning_pay': createLearningRequest.learning_pay,
+                        'learning_perk': createLearningRequest.learning_perk,
+                        'learning_deadline': createLearningRequest.learning_deadline
                     }
                 },
                 {
@@ -91,30 +91,30 @@ if (userDetails != null) {
                             <form className="form-create-job mx-auto" onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="collaborations_description"><strong>What would you like to learn? (1 skill max.)</strong></label>
-                                        <input name="collaborations_description" id="collaborations_description" value={createCollaborationRequest.collaborations_description} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="ex. Flow cytometry" type="text" disabled={ requestSent === 201 ? true : false} required />
+                                        <label htmlFor="learning_description"><strong>What would you like to learn? (1 skill max.)</strong></label>
+                                        <input name="learning_description" id="learning_description" value={createLearningRequest.learning_description} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="ex. Flow cytometry" type="text" disabled={ requestSent === 201 ? true : false} required />
 
                                     </div>    
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="collaborations_features"><strong>Description</strong></label>
-                                        <textarea name="collaborations_features" id="collaborations_features" rows="7" value={createCollaborationRequest.collaborations_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Explain in brief detail what you would like to learn (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
+                                        <label htmlFor="learning_features"><strong>Description</strong></label>
+                                        <textarea name="learning_features" id="learning_features" rows="7" value={createLearningRequest.learning_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Explain in brief detail what you would like to learn (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
                                     </div>    
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12  mb-4">
-                                    <label htmlFor="collaborations_deadline"><strong>I would like to learn this skill by</strong></label>
-                                    <input name="collaborations_deadline" id="collaborations_deadline" value={createCollaborationRequest.collaborations_deadline} onChange={handleChange} className='form-control form-control-lg' aria-label='Application deadline' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
+                                    <label htmlFor="learning_deadline"><strong>I would like to learn this skill by</strong></label>
+                                    <input name="learning_deadline" id="learning_deadline" value={createLearningRequest.learning_deadline} onChange={handleChange} className='form-control form-control-lg' aria-label='Application deadline' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="collaborations_pay"><strong>Meeting Preference</strong></label>
-                                        <select name="collaborations_pay" id="collaborations_pay" onChange={handleChange} aria-label="Compensation" className="form-control form-control-lg form-select" required>
-                                            <option selected disabled value="">Choose an option</option>
-                                            <option value="">Virtual</option>
-                                            <option value="">In Person</option>
+                                        <label htmlFor="learning_pay"><strong>Meeting Preference</strong></label>
+                                        <select name="learning_pay" id="learning_pay" value={createLearningRequest.learning_pay} onChange={handleChange} aria-label="Compensation" className="form-control form-control-lg form-select" required>
+                                            <option defaultValue disabled value="">Choose an option</option>
+                                            <option>Virtual</option>
+                                            <option>In Person</option>
                                         </select>
                                     </div>
                                 </div>

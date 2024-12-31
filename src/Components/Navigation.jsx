@@ -22,13 +22,19 @@ export default function Navigation() {
                                 <Link className={window.location.href.includes("/dashboard") ? "nav-link active" : "nav-link" } to="/">Home</Link>
                               </li>
                               <li className="nav-item">
-                                <Link className={window.location.href.includes("/chats") ? "nav-link active" : "nav-link" } to="/profile">Chats</Link>
+                                <Link className={window.location.href.includes("/chats") ? "nav-link active" : "nav-link" } to="/profile">Chat Room</Link>
                               </li>
                               <li className="nav-item">
-                                <Link className={window.location.href.includes("/ponits-center") ? "nav-link active" : "nav-link" } to="/profile">Points Center</Link>
+                                <Link className={window.location.href.includes("/ponits-center") ? "nav-link active" : "nav-link" } to="/profile">My Activity</Link>
                               </li>
                               <li className="nav-item">
-                                <Link className={window.location.href.includes("/profile") ? "nav-link active" : "nav-link" } to="/profile">Profile</Link>
+                                <Link className={window.location.href.includes("/chats") ? "nav-link active" : "nav-link" } to="/profile">Points Center</Link>
+                              </li>
+                              <li className="nav-item">
+                                <Link className={window.location.href.includes("/contact-us") ? "nav-link active" : "nav-link" } to="/contact-us">Contact Us</Link>
+                              </li>
+                              <li className="nav-item">
+                                <Link className={window.location.href.includes("/profile") ? "nav-link active" : "nav-link" } to="/profile">Settings</Link>
                               </li>
                               <li className="nav-item">
                                 <a className="nav-link" href="/" onClick={logout}>Logout</a>

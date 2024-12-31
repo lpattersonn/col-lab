@@ -114,69 +114,72 @@ function ActiveItem({ currentItems }) {
                     commentCount();
 
                     // Toggle option display
-
+            
             if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_location?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.collaborations_pay?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
-                        <div className={`col-12 mb-5 ${showCollaboration}`} key={index}>
-                            <div className="card collaboration">
-                                <div className="card-body">
-                                {/* Top Section */}
-                                    <div className="collaboration-header">
+                    <div className={`col-12 mb-5 ${showCollaboration}`} key={index}>
+                        <div className="card collaboration">
+                            <div className="card-body">
+                            {/* Top Section */}
+                                <div className="collaboration-header">
+                                    <div className="d-flex flex-direction-row">
+                                        <div className="d-flex" style={{marginRight: "6rem"}}>
+                                            <div>
+                                                <img className="collaboration-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
+                                            </div>
+                                            <div>
+                                                <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]}</p>
+                                                <div className="d-flex flex-row align-items-center" >
+                                                    <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div className="d-flex flex-direction-row">
-                                            <div className="d-flex" style={{marginRight: "6rem"}}>
-                                                <div>
-                                                    <img className="collaboration-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
-                                                </div>
-                                                <div>
-                                                    <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]}</p>
-                                                    <div className="d-flex flex-row align-items-center" >
-                                                        <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
-                                                    </div>
-                                                </div>
+                                            <div className="designation-button">
+                                                <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
                                             </div>
-                                            <div className="d-flex flex-direction-row">
-                                                <div className="designation-button">
-                                                    <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
-                                                </div>
-                                                <div className="due-button">
-                                                   <span className="small">Deadline {collaboration?.acf?.["collaborations_deadline"]}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="options-container">
-                                            <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
-                                                <div className="option-button"></div>
-                                                <div className="option-button"></div>
-                                                <div className="option-button"></div>
-                                            </div>
-                                            <div className={`option-items ${optionDisplay[index]}`}>
-                                                <div className="option-item" onClick={() => {
-                                                    localStorage.setItem(`show_collaboration${index}`, 'hide')
-                                                    handleHideCollaboration(index)
-                                                    }}>Hide</div>
-                                                <div className="option-item">Report</div>
+                                            <div className="due-button">
+                                            <span className="small">Deadline {collaboration?.acf?.["collaborations_deadline"]}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    {/* Middle Section */}
-                                    <div style={{marginBottom: "1.8rem"}}>
-                                        <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}>{collaboration?.acf?.collaborations_description}</h3>
-                                        <div>{collaboration?.acf?.collaborations_features}</div>
-                                    </div>
-                                    {/* Bottom Section */}
-                                    <div className="row d-flex flex-row">
-                                        <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
-                                        <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{localStorage.getItem(`collaboration_count${index}`)} people responded to this</div>
-                                        <div className="col-auto">
-                                            <a href={`/collaboration-chat/${collaboration.id}`} className="btn btn-primary collab-btn">Collaborate</a>
+                                    <div className="options-container">
+                                        <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
+                                            <div className="option-button"></div>
+                                            <div className="option-button"></div>
+                                            <div className="option-button"></div>
+                                        </div>
+                                        <div className={`option-items ${optionDisplay[index]}`}>
+                                            <div className="option-item" onClick={() => {
+                                                localStorage.setItem(`show_collaboration${index}`, 'hide')
+                                                handleHideCollaboration(index)
+                                                }}>Hide</div>
+                                            <div className="option-item">Report</div>
                                         </div>
                                     </div>
                                 </div>
+                                {/* Middle Section */}
+                                <div style={{marginBottom: "1.8rem"}}>
+                                    <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}>{collaboration?.acf?.collaborations_description}</h3>
+                                    <div>{collaboration?.acf?.collaborations_features}</div>
+                                </div>
+                                {/* Bottom Section */}
+                                <div className="row d-flex flex-row">
+                                    <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
+                                    <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{localStorage.getItem(`collaboration_count${index}`)} people responded to this</div>
+                                    {userDetails.id != collaboration.author ?
+                                    <div className="col-auto">
+                                        <a href={`/collaboration-chat/${collaboration.id}`} className="btn btn-primary collab-btn">Collaborate</a>
+                                    </div>
+                                    : ""
+                                    }
+                                </div>
                             </div>
                         </div>
+                    </div>
                 )
             }
-         }
+        }
     )}
       </>
     );

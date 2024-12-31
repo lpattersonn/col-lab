@@ -10,6 +10,7 @@ import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import { scienceBrnaches } from '../helper';
 import { TailSpin } from "react-loader-spinner";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import UserComment from "../Images/user-comment.svg";
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -169,6 +170,7 @@ export default function AskQuestions() {
         <>
         {currentItems &&
             currentItems.map((question, index) => {
+                let user = {};
                 let userName = "";
                 let userProfileImg = "";
 
@@ -192,6 +194,7 @@ export default function AskQuestions() {
         
                 for (let name of users) {
                     if ( name.id == question.author) {
+                    user = name;
                     userName = name.name;
                     userProfileImg = name['avatar_urls']['48'];
                     }
@@ -213,62 +216,155 @@ export default function AskQuestions() {
                 numberOfComments[0].count = parseInt(count); // Parse string to integer
         
                 commentCount();
+
+                    // <Link to={{ pathname: `/question/${question.id}/`}} key={index}>
+                            //     <div className="card get-help-item mb-4">
+                            //         <div className="card-body">
+                            //             <div className="row">
+                            //                 <div className='col-lg-3 d-flex align-items-center'>
+                            //                     <div className='get-help'>
+                            //                         <img className="get-help-img mr-3" src={userProfileImg} alt={userProfileImg} loading="eager"/>
+                            //                         <p><strong>{userName}</strong></p>
+                            //                     </div>
+                            //                 </div>
+                            //                 <div className='col-lg-5 d-flex align-items-center'>
+                            //                     {/* <p>{question.title.rendered.replace(search, `<p>${search}</p>`)}</p> */} 
+                            //                     <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question.title.rendered, search) : question.title.rendered } } />
+                            //                 </div>
+                            //                 <div className='col-lg-2 d-flex align-items-center justify-content-end'>
+                            //                 <p>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                            //                 </div>
+                            //                 <div className='col-lg-2 d-flex align-items-center justify-content-end'>
+                            //                     <p className="text-right">{ numberOfComments[0].count} {numberOfComments[0].count == 1 ? 'response' : 'responses'}</p>
+                            //                 </div>
+                            //             </div>
+                            //         </div>
+                            //     </div>
+                            // </Link>
         
                 if (search.length > 0 && question.title.rendered.toLowerCase().includes(`${search.toLowerCase()}`) || userName.toLowerCase().includes(search.toLowerCase())) {      
                     if (questionSubject === 'Specific' && usersAccountDetails?.acf?.user_feild == question?.acf?.question_subject_area) {          
                         return (
-                            <Link to={{ pathname: `/question/${question.id}/`}} key={index}>
-                                <div className="card get-help-item mb-4">
-                                    <div className="card-body">
-                                        <div className="row">
-                                            <div className='col-lg-3 d-flex align-items-center'>
-                                                <div className='get-help'>
-                                                    <img className="get-help-img mr-3" src={userProfileImg} alt={userProfileImg} loading="eager"/>
-                                                    <p><strong>{userName}</strong></p>
+                        
+
+                        <div className={`col-12 mb-5`} key={index}>
+                        <div className="card collaboration">
+                            <div className="card-body">
+                            {/* Top Section */}
+                                <div className="collaboration-header">
+                                    <div className="d-flex flex-direction-row">
+                                        <div className="d-flex" style={{marginRight: "6rem"}}>
+                                            <div>
+                                                <img className="collaboration-details-name-img" src={userProfileImg} alt={userName} loading="lazy" />
+                                            </div>
+                                            <div>
+                                                <p className="my-0"><strong>{userName}</strong> | {user?.acf?.["user-job-Insitution"]}</p>
+                                                <div className="d-flex flex-row align-items-center" >
+                                                    <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                                 </div>
                                             </div>
-                                            <div className='col-lg-5 d-flex align-items-center'>
-                                                {/* <p>{question.title.rendered.replace(search, `<p>${search}</p>`)}</p> */} 
-                                                <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question.title.rendered, search) : question.title.rendered } } />
-                                            </div>
-                                            <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                            <p>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
-                                            </div>
-                                            <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                                <p className="text-right">{ numberOfComments[0].count} {numberOfComments[0].count == 1 ? 'response' : 'responses'}</p>
-                                            </div>
                                         </div>
+                                        {/* <div className="d-flex flex-direction-row">
+                                            <div className="designation-button">
+                                                <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
+                                            </div>
+                                            <div className="due-button">
+                                            <span className="small">Deadline {collaboration?.acf?.["collaborations_deadline"]}</span>
+                                            </div>
+                                        </div> */}
+                                    </div>
+                                    <div className="options-container">
+                                        {/* <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
+                                            <div className="option-button"></div>
+                                            <div className="option-button"></div>
+                                            <div className="option-button"></div>
+                                        </div> */}
+                                        {/* <div className={`option-items ${optionDisplay[index]}`}>
+                                            <div className="option-item" onClick={() => {
+                                                localStorage.setItem(`show_collaboration${index}`, 'hide')
+                                                handleHideCollaboration(index)
+                                                }}>Hide</div>
+                                            <div className="option-item">Report</div>
+                                        </div> */}
                                     </div>
                                 </div>
-                            </Link>
+                                {/* Middle Section */}
+                                <div style={{marginBottom: "1.8rem"}}>
+                                    <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question.title.rendered, search) : question.title.rendered } } /></h3>
+                                    <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question?.excerpt?.rendered?.split(0, 340), search) : question?.excerpt?.rendered?.split(0, 340) } } />
+                                </div>
+                                {/* Bottom Section */}
+                                {/* <div className="row d-flex flex-row">
+                                    <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
+                                    <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{localStorage.getItem(`collaboration_count${index}`)} people responded to this</div>
+                                    {userDetails.id != collaboration.author ?
+                                    <div className="col-auto">
+                                        <a href={`/collaboration-chat/${collaboration.id}`} className="btn btn-primary collab-btn">Collaborate</a>
+                                    </div>
+                                    : ""
+                                    }
+                                </div> */}
+                            </div>
+                        </div>
+                        </div>
                         )
                     }
                     if (questionSubject === 'General') {          
                         return (
-                            <Link to={{ pathname: `/question/${question.id}/`}} key={index}>
-                                <div className="card get-help-item mb-4">
-                                    <div className="card-body">
-                                        <div className="row">
-                                            <div className='col-lg-3 d-flex align-items-center'>
-                                                <div className='get-help'>
-                                                    <img className="get-help-img mr-3" src={userProfileImg} alt={userProfileImg} loading="eager"/>
-                                                    <p><strong>{userName}</strong></p>
+                            <div className={`col-12 mb-5`} key={index}>
+                            <div className="card collaboration">
+                                <div className="card-body">
+                                {/* Top Section */}
+                                    <div className="collaboration-header">
+                                        <div className="d-flex flex-direction-row">
+                                            <div className="d-flex" style={{marginRight: "6rem"}}>
+                                                <div>
+                                                    <img className="collaboration-details-name-img" src={userProfileImg} alt={userName} loading="lazy" />
+                                                </div>
+                                                <div>
+                                                    <p className="my-0"><strong>{userName}</strong> | {user?.acf?.["user-job-Insitution"]}</p>
+                                                    <div className="d-flex flex-row align-items-center" >
+                                                        <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className='col-lg-5 d-flex align-items-center'>
-                                                {/* <p>{question.title.rendered.replace(search, `<p>${search}</p>`)}</p> */} 
-                                                <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question.title.rendered, search) : question.title.rendered } } />
+                                            {/* <div className="d-flex flex-direction-row">
+                                                <div className="designation-button">
+                                                    <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
+                                                </div>
+                                                <div className="due-button">
+                                                <span className="small">Deadline {collaboration?.acf?.["collaborations_deadline"]}</span>
+                                                </div>
+                                            </div> */}
+                                        </div>
+                                        <div className="options-container">
+                                            <div className='d-flex flex-direction-row justify-content-end options'>
+                                                <div className="option-button"></div>
+                                                <div className="option-button"></div>
+                                                <div className="option-button"></div>
                                             </div>
-                                            <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                            <p>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
-                                            </div>
-                                            <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                                <p className="text-right">{ numberOfComments[0].count} {numberOfComments[0].count == 1 ? 'response' : 'responses'}</p>
+                                            <div className={`option-items`}>
+                                                <div className="option-item" >Hide</div>
+                                                <div className="option-item">Report</div>
                                             </div>
                                         </div>
                                     </div>
+                                    {/* Middle Section */}
+                                    <div style={{marginBottom: "1.8rem"}}>
+                                        <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question.title.rendered, search) : question.title.rendered } } /></h3>
+                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question?.excerpt?.rendered?.split(0, 340), search) : question?.excerpt?.rendered?.split(0, 340) } } />
+                                    </div>
+                                    {/* Bottom Section */}
+                                    <div className="row d-flex flex-row">
+                                        <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
+                                        <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{numberOfComments[0].count} people responded to this</div>
+                                        <div className="col-auto">
+                                        <Link to={{ pathname: `/question/${question.id}/`}} className="btn btn-primary collab-btn">View</Link>
+                                        </div>
+                                    </div>
                                 </div>
-                            </Link>
+                            </div>
+                            </div>
                         )
                     }
                 } 
@@ -322,7 +418,7 @@ function PaginatedItems({ itemsPerPage }) {
                 <Navigation />
                 <div className="get-help mb-5">
                     <div className='container primary'>
-                        <div className='get-help-details'>
+                        <div className='get-help-details mb-5'>
                             <div className="row mb-5">
                                 <div className="col-6 d-flex align-item-center">
                                     <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">>></span><span className="small d-flex align-items-center">Ask Questions</span>
@@ -362,7 +458,6 @@ function PaginatedItems({ itemsPerPage }) {
                                 </div>
                             </div>
                         </div>
-                        <hr className="mb-5"></hr>
                         <PaginatedItems itemsPerPage={15} />
                     </div>
                     
