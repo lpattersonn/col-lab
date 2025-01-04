@@ -81,7 +81,7 @@ if (userDetails != null) {
                             <img className="collaboration-page_image" src={SectionImage} alt="Image of scientist" role="presentation" />
                         </div>
                         <div className="col-lg-6">
-                            <form className="form-create-job mx-auto" action='https://formsubmit.co/makum086@uottawa.ca' method='POST'>
+                            <form className="form-create-job mx-auto" action='https://formsubmit.co/mercy@mapltech.com' method='POST'>
                                 <input
                                     type='hiden'
                                     name='_subject'
