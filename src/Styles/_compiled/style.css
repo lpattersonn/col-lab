@@ -743,13 +743,8 @@ abbr {
   font-weight: 700;
 }
 
-/* Button Colours */
 .questions {
   padding-top: 4rem;
-}
-
-.question {
-  max-width: 100rem;
 }
 
 .question-box {
@@ -767,6 +762,10 @@ textarea[data-info=content] {
   width: 100px;
   height: 100px;
   object-fit: cover;
+}
+
+.question-item {
+  background: #F4FDFF !important;
 }
 
 .tox.tox-tinymce {

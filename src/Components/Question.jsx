@@ -136,8 +136,8 @@ export default function Question() {
         if (question.status === "approved") {
 
           return (
-          <div className="card mb-4" key={index}>
-            <div className='card-body'>
+          <div className="card mb-4 collaboration" key={index}>
+            <div className='card-body p-0'>
               <div className="questions-details mb-3">
                 <div className="questions-details-name">
                   <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} alt={userProfileImg ? userProfileImg : defaultImage} loading="lazy" />
@@ -257,7 +257,8 @@ return (
             <div className="row">
                 <div className="col-12">
                     <div className="question mx-auto">
-                        <div className="question-item">
+                        <div className="card collaboration question-item">
+                          <div className="card-body">
                           <div className="questions-details">
                               <div className="questions-details-name">
                                 <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} alt={userProfileImg ? userProfileImg : defaultImage} loading="lazy" />
@@ -274,8 +275,7 @@ return (
                                 </div>
                               </div>
                           </div>
-                            <div className="card">
-                                <div className="card-body">
+                            <div>
                                 <p><strong>{question.title && question.title.rendered}</strong></p>
                                 {question.content && ( <div dangerouslySetInnerHTML={{ __html: question.content.rendered }} />)}
                                 {question['acf'] && question['acf']['question_image'] && 
@@ -283,7 +283,6 @@ return (
                                   <img className="question-image-item" src={question.acf.question_image} loading='lazy'/>
                                 </div>}
                                 <button className="btn btn-sm btn-outline-info ml-auto" onClick={()=>{setModalClass("show")}}>Answer</button>
-                                </div>
                             </div>
                             <div className={"new-comment"+' '+"mt-3"+" "+modalClass}>
                                 <div className="card">
@@ -371,7 +370,7 @@ return (
                                           <input className="form-control form-control-lg" type="file" onChange={handleFileChange} disabled={commentStatus === "approved" ? true : false} />
                                         </div>
                                         <div className="col-8 text-end mt-4">
-                                          <button className="btn btn-info btn-lg" type="submit">Submit</button>
+                                          <button className="btn btn-info btn-lg collab-btn" type="submit">Submit</button>
                                         </div>
                                         { serverComment !== "" ? 
                                         <div className="col-12 mt-4">
@@ -394,8 +393,9 @@ return (
                                   </div>
                                 </div>
                             </div>
+                          </div>  
                         </div>
-                        <p className="small mt-5">See All Answers</p>
+                        <p className="small mt-5"><strong>See All Answers</strong></p>
                         <hr className="mb-5"></hr>
                         <div className="question-comments">
                         {comments.length > 0 ? allComments : <p>No answers yet...answer this question.</p>}

@@ -98,7 +98,7 @@ export function submitReport(argPostType, userDetails) {
       author: userDetails?.id,
       author_email: userDetails?.email,
       author_name: `${userDetails?.firstName} ${userDetails?.lastName}`,
-      content: 'Reporting a user infraction',
+      content: argPostType?.content?.rendered,
       excerpt: 'Reporting a user infraction',
       status: 'publish',
       'acf' : {

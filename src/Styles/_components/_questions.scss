@@ -1,11 +1,5 @@
-@import "../_partials/variables";
-
 .questions {
     padding-top: 4rem;
-}
-
-.question {
-    max-width: 100rem;
 }
 
 .question-box {
@@ -23,6 +17,10 @@ textarea[data-info="content"]{
         height: 100px;
         object-fit: cover;
     }
+}
+
+.question-item {
+    background: #F4FDFF !important;
 }
 
 .tox.tox-tinymce {

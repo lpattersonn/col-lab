@@ -97,13 +97,10 @@ if (userDetails != null) {
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-<<<<<<< HEAD
                                         <label htmlFor="borrow_features"><strong>Item Description</strong></label>
                                         <textarea name="borrow_features" id="borrow_features" rows="7" value={createLearningRequest.borrow_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Give a detailed description of item as necessary (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
-=======
                                         <label htmlFor="learning_features"><strong>Item Description</strong></label>
                                         <textarea name="learning_features" id="learning_features" rows="4" value={createLearningRequest.learning_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Give a detailed description of item as necessary (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
->>>>>>> d33910f5fb1fa824b09edbaafb7d19140d1d14f8
                                     </div>    
                                 </div>
                                 <div className="row">
