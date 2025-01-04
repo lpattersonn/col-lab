@@ -8,6 +8,7 @@ import ReactPaginate from 'react-paginate';
 import { Tab, initMDB } from "mdb-ui-kit";
 import { renderedQuestion } from '../helper';
 import UserComment from "../Images/user-comment.svg";
+import { submitReport } from '../helper';
 import axios from 'axios';
 
 export default function Collaborations() {
@@ -154,7 +155,9 @@ function ActiveItem({ currentItems }) {
                                                 localStorage.setItem(`show_collaboration${index}`, 'hide')
                                                 handleHideCollaboration(index)
                                                 }}>Hide</div>
-                                            <div className="option-item">Report</div>
+                                            <div className="option-item" onClick={()=>{
+                                                    submitReport(collaboration, userDetails);
+                                                }}>Report</div>
                                         </div>
                                     </div>
                                 </div>

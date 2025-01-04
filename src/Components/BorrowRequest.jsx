@@ -11,11 +11,11 @@ export default function BorrowRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const [requestSent, setRequestSent] = useState("No");
     const [createLearningRequest, setCreateLearningRequest]  = useState({
-        'learning_description': '',
-        'learning_features': '',
-        'learning_pay': '',
-        'learning_perk': '',
-        'learning_deadline': ''
+        'borrow_description': '',
+        'borrow_features': '',
+        'borrow_pay': '',
+        'borrow_perk': '',
+        'borrow_deadline': ''
     });
 
     //   Handle Change
@@ -33,19 +33,18 @@ export default function BorrowRequest() {
     try {
         // Upload image if file exists
             const response = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center/`,
+              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items`,
                 {   
-                    'title':  createLearningRequest.learning_description,
+                    'title':  createLearningRequest.borrow_description,
                     'content': "",
                     'excerpt': "",
                     'author': userDetails.id,
                     'status': 'publish',
                     'acf' : {
-                        'learning_description': createLearningRequest.learning_description,
-                        'learning_features': createLearningRequest.learning_features,
-                        'learning_pay': createLearningRequest.learning_pay,
-                        'learning_perk': createLearningRequest.learning_perk,
-                        'learning_deadline': createLearningRequest.learning_deadline
+                        'borrow_description': createLearningRequest.borrow_description,
+                        'borrow_features': createLearningRequest.borrow_features,
+                        'borrow_pay': createLearningRequest.borrow_pay,
+                        'borrow_deadline': createLearningRequest.borrow_deadline
                     }
                 },
                 {
@@ -74,7 +73,7 @@ if (userDetails != null) {
                     <div className="page-filter">
                         <div className="row mb-5">
                             <div className="col-12 d-flex">
-                            <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">></span><Link className="link-dark small d-flex align-items-center" to="/borrow-request">Borrow Item</Link><span className="breadcrumb-slash">>></span><span className="small d-flex align-items-center">Request An Item</span>
+                            <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">></span><Link className="link-dark small d-flex align-items-center" to="/borrow-items">Borrow Item</Link><span className="breadcrumb-slash">>></span><span className="small d-flex align-items-center">Request An Item</span>
                             </div>
                         </div>
                     </div>
@@ -91,27 +90,27 @@ if (userDetails != null) {
                             <form className="form-create-job mx-auto" onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="learning_description"><strong>What item do you need?</strong></label>
-                                        <input name="learning_description" id="learning_description" value={createLearningRequest.learning_description} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Please make one borrow request per item" type="text" disabled={ requestSent === 201 ? true : false} required />
+                                        <label htmlFor="borrow_description"><strong>What item do you need?</strong></label>
+                                        <input name="borrow_description" id="borrow_description" value={createLearningRequest.borrow_description} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Please make one borrow request per item" type="text" disabled={ requestSent === 201 ? true : false} required />
 
                                     </div>    
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="learning_features"><strong>Item Description</strong></label>
-                                        <textarea name="learning_features" id="learning_features" rows="7" value={createLearningRequest.learning_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Give a detailed description of item as necessary (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
+                                        <label htmlFor="borrow_features"><strong>Item Description</strong></label>
+                                        <textarea name="borrow_features" id="borrow_features" rows="7" value={createLearningRequest.borrow_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Give a detailed description of item as necessary (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
                                     </div>    
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12  mb-4">
-                                    <label htmlFor="learning_deadline"><strong>I would like this item by</strong></label>
-                                    <input name="learning_deadline" id="learning_deadline" value={createLearningRequest.learning_deadline} onChange={handleChange} className='form-control form-control-lg' aria-label='Application deadline' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
+                                    <label htmlFor="borrow_deadline"><strong>I would like this item by</strong></label>
+                                    <input name="borrow_deadline" id="borrow_deadline" value={createLearningRequest.borrow_deadline} onChange={handleChange} className='form-control form-control-lg' aria-label='Application deadline' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="learning_pay"><strong>Indicate your intention</strong></label>
-                                        <select name="learning_pay" id="learning_pay" value={createLearningRequest.learning_pay} onChange={handleChange} aria-label="Compensation" className="form-control form-control-lg form-select" required>
+                                        <label htmlFor="borrow_pay"><strong>Indicate your intention</strong></label>
+                                        <select name="borrow_pay" id="borrow_pay" value={createLearningRequest.borrow_pay} onChange={handleChange} aria-label="Compensation" className="form-control form-control-lg form-select" required>
                                             <option defaultValue disabled value="">Choose an option</option>
                                             <option>For Free</option>
                                             <option>Will Replace</option>

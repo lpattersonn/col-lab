@@ -8,6 +8,7 @@ import ReactPaginate from 'react-paginate';
 import { Tab, initMDB } from "mdb-ui-kit";
 import { renderedQuestion } from '../helper';
 import UserComment from "../Images/user-comment.svg";
+import { submitReport } from '../helper';
 import axios from 'axios';
 
 export default function BorrowItems() {
@@ -23,7 +24,7 @@ export default function BorrowItems() {
 
     useEffect(() => {
         axios({
-          url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center`,
+          url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items`,
           method: 'GET',
           headers: {
             Authorization: `Bearer ${userDetails.token}`
@@ -107,7 +108,7 @@ function ActiveItem({ currentItems }) {
                    function commentCount() {
                     return axios.get(`${collaboration._links.replies['0'].href}`)
                     .then((response) => {
-                      localStorage.setItem(`learning_count${index}`, response.data.length);
+                      localStorage.setItem(`borrow_count${index}`, response.data.length);
                     }).catch((err) => {});
                     }
 
@@ -115,7 +116,7 @@ function ActiveItem({ currentItems }) {
 
                     // Toggle option display
 
-            if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.learning_pay?.toLowerCase().includes(search?.toLowerCase())) {     
+            if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.borrow_pay?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
                         <div className={`${showOpportunity} mb-4 col-lg-6`} key={index}>
                             <div className="card collaboration">
@@ -146,26 +147,28 @@ function ActiveItem({ currentItems }) {
                                                     localStorage.setItem(`show_learning${index}`, 'hide')
                                                     handleHideCollaboration(index)
                                                     }}>Hide</div>
-                                                <div className="option-item">Report</div>
+                                                <div className="option-item" onClick={()=>{
+                                                    submitReport(collaboration, userDetails);
+                                                }}>Report</div>
                                             </div>
                                         </div>
                                     </div>
                                     {/* Middle Section */}
                                     <div style={{marginBottom: "1.8rem"}}>
-                                        <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}>{collaboration?.acf?.learning_description}</h3>
-                                        <div>{collaboration?.acf?.learning_features?.length > 250 ? collaboration?.acf?.learning_features?.slice(0, 250)+"..." : collaboration?.acf?.learning_features}</div>
+                                        <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}>{collaboration?.acf?.borrow_description}</h3>
+                                        <div>{collaboration?.acf?.borrow_features?.length > 250 ? collaboration?.acf?.borrow_features?.slice(0, 250)+"..." : collaboration?.acf?.borrow_features}</div>
                                         <div className="d-flex flex-direction-row mt-4">
                                             <div className="designation-button">
-                                                <span className="small">{collaboration?.acf?.["learning_pay"]}</span>
+                                                <span className="small">{collaboration?.acf?.["borrow_pay"]}</span>
                                             </div>
                                             <div className="due-button">
-                                                <span className="small">Deadline {collaboration?.acf?.["learning_deadline"]}</span>
+                                                <span className="small">Deadline {collaboration?.acf?.["borrow_deadline"]}</span>
                                             </div>
                                         </div>
                                     </div>
                                     {/* Bottom Section */}
                                     <div className="row d-flex justify-content-between flex-row">                                        
-                                        <div className="mt-2 col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {localStorage.getItem(`learning_count${index}`)} people responded to this</div>
+                                        <div className="mt-2 col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {localStorage.getItem(`borrow_count${index}`)} people responded to this</div>
                                         {userDetails.id != collaboration.author ?
                                         <div className="col-auto ml-auto">
                                             <a href={`/collaboration-chat/${collaboration.id}`} className="btn btn-primary collab-btn">Chat</a>
