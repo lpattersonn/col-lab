@@ -9,78 +9,71 @@ import axios from "axios";
 
 export default function ContactUs() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-    const [requestSent, setRequestSent] = useState("No");
-    const [createLearningRequest, setCreateLearningRequest]  = useState({
-        'learning_description': '',
-        'learning_features': '',
-        'learning_pay': '',
-        'learning_perk': '',
-        'learning_deadline': ''
-    });
+    // const [requestSent, setRequestSent] = useState("No");
+    // const [createLearningRequest, setCreateLearningRequest]  = useState({
+    //     'learning_description': '',
+    //     'learning_features': '',
+    //     'learning_pay': '',
+    //     'learning_perk': '',
+    //     'learning_deadline': ''
+    // });
 
-    //   Handle Change
-  function handleChange(e) {
-    const {name, value} = e.target
-    setCreateLearningRequest(prev => {
-        return (
-            { ...prev, [name]: value}
-        )
-    })
-}
+//     //   Handle Change
+//   function handleChange(e) {
+//     const {name, value} = e.target
+//     setCreateLearningRequest(prev => {
+//         return (
+//             { ...prev, [name]: value}
+//         )
+//     })
+// }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        // Upload image if file exists
-            const response = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center/`,
-                {   
-                    'title':  createLearningRequest.learning_description,
-                    'content': "",
-                    'excerpt': "",
-                    'author': userDetails.id,
-                    'status': 'publish',
-                    'acf' : {
-                        'learning_description': createLearningRequest.learning_description,
-                        'learning_features': createLearningRequest.learning_features,
-                        'learning_pay': createLearningRequest.learning_pay,
-                        'learning_perk': createLearningRequest.learning_perk,
-                        'learning_deadline': createLearningRequest.learning_deadline
-                    }
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${userDetails.token}`
-                    }
-                }
-            )
-            .then((response) => {
-                console.log('Question submitted successfully:', response);
-                setRequestSent(response.status);
-            })
-            .catch((error) => {
-            });
-    } catch (error) {
-        console.error('Error submitting question:', error);
-    }
-}
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     try {
+//         // Upload image if file exists
+//             const response = await axios.post(
+//               `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center/`,
+//                 {   
+//                     'title':  createLearningRequest.learning_description,
+//                     'content': "",
+//                     'excerpt': "",
+//                     'author': userDetails.id,
+//                     'status': 'publish',
+//                     'acf' : {
+//                         'learning_description': createLearningRequest.learning_description,
+//                         'learning_features': createLearningRequest.learning_features,
+//                         'learning_pay': createLearningRequest.learning_pay,
+//                         'learning_perk': createLearningRequest.learning_perk,
+//                         'learning_deadline': createLearningRequest.learning_deadline
+//                     }
+//                 },
+//                 {
+//                     headers: {
+//                         Authorization: `Bearer ${userDetails.token}`
+//                     }
+//                 }
+//             )
+//             .then((response) => {
+//                 console.log('Question submitted successfully:', response);
+//                 setRequestSent(response.status);
+//             })
+//             .catch((error) => {
+//             });
+//     } catch (error) {
+//         console.error('Error submitting question:', error);
+//     }
+// }
 
 if (userDetails != null) {
     return(
         <>
             <Navigation />
-            <main className="create-collaboration" style={{marginBottom: "0", paddingBottom: "0",}}>
+            <main className="create-collaboration" style={{marginTop: "6rem"}}>
                 <div className="container primary" >
-                    <div className="page-filter">
-                        <div className="row mb-5">
-                            <div className="col-12 d-flex">
-                            <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">></span><Link className="link-dark small d-flex align-items-center" to="/learning-center">Learning Center</Link><span className="breadcrumb-slash">>></span><span className="small d-flex align-items-center">Learning Request</span>
-                            </div>
-                        </div>
-                    </div>
                     <div className="row">
                         <div className="col-12 mb-4">
-                            <h1><strong>Grow your skill set by learning from your peers.</strong></h1>
+                            <h1><strong>Contact Us</strong></h1>
                         </div>
                     </div>
                     <div className="row mt-5">
@@ -88,43 +81,34 @@ if (userDetails != null) {
                             <img className="collaboration-page_image" src={SectionImage} alt="Image of scientist" role="presentation" />
                         </div>
                         <div className="col-lg-6">
-                            <form className="form-create-job mx-auto" onSubmit={handleSubmit}>
+                            <form className="form-create-job mx-auto" action='https://formsubmit.co/makum086@uottawa.ca' method='POST'>
+                                <input
+                                    type='hiden'
+                                    name='_subject'
+                                    value='New Contact Form Submission From www.col-labb.com'
+                                    style={{ display: `none` }}
+                                />
+                                <input type="hidden" name="_cc" value="tech@mapltech.com" />
+                                <input type="hidden" name="_autoresponse" value="Thank you for contacting Col-Labb! We’ve received your request, and one of our team members will get back to you as soon as possible. Please note that we are currently experiencing a high volume of inquiries, so our response time may be a little longer than usual."></input>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="learning_description"><strong>What would you like to learn? (1 skill max.)</strong></label>
-                                        <input name="learning_description" id="learning_description" value={createLearningRequest.learning_description} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="ex. Flow cytometry" type="text" disabled={ requestSent === 201 ? true : false} required />
-
-                                    </div>    
-                                </div>
-                                <div className="row">
-                                    <div className="col-lg-12 mb-4">
-                                        <label htmlFor="learning_features"><strong>Description</strong></label>
-                                        <textarea name="learning_features" id="learning_features" rows="7" value={createLearningRequest.learning_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Explain in brief detail what you would like to learn (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
+                                        <label htmlFor="name"><strong>Name</strong></label>
+                                        <input name="name" id="name" className='form-control form-control-lg' aria-label='Name' type="text" required />
                                     </div>    
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12  mb-4">
-                                    <label htmlFor="learning_deadline"><strong>I would like to learn this skill by</strong></label>
-                                    <input name="learning_deadline" id="learning_deadline" value={createLearningRequest.learning_deadline} onChange={handleChange} className='form-control form-control-lg' aria-label='Application deadline' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
+                                    <label htmlFor="email"><strong>Email</strong></label>
+                                    <input name="email" id="email" className='form-control form-control-lg' aria-label='Email' type="email" required />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="learning_pay"><strong>Meeting Preference</strong></label>
-                                        <select name="learning_pay" id="learning_pay" value={createLearningRequest.learning_pay} onChange={handleChange} aria-label="Compensation" className="form-control form-control-lg form-select" required>
-                                            <option defaultValue disabled value="">Choose an option</option>
-                                            <option>Virtual</option>
-                                            <option>In Person</option>
-                                        </select>
-                                    </div>
+                                        <label htmlFor="Message"><strong>Message</strong></label>
+                                        <textarea name="Message" id="Message" rows="7" className='form-control form-control-lg' aria-label='Message' type="text" required />
+                                    </div>    
                                 </div>
-                                <button className="btn btn-info btn-lg" type="submit" disabled={ requestSent === 201 ? true : false} >Submit</button>
-                                { requestSent === 201 ? 
-                                <div className="alert alert-success mt-5" role="alert">
-                                    <p>Success! Your training request has been created!</p>
-                                </div>
-                                : ''    
-                                }
+                                <button className="btn btn-info btn-lg" type="submit">Submit</button>
                             </form>      
                         </div>           
                     </div>

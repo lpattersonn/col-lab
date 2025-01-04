@@ -8,6 +8,9 @@
     border: 1px solid grey;
     padding: 4rem 3rem;
     position: relative;
+}
+
+.points {
     &::before {
         content: "5 points required!";
         background: #ff0000;
