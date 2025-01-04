@@ -251,7 +251,7 @@ export default function Dashboard() {
                       <Link to="/collaborations" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={HandShake} loading="lazy"/>Find Collaborations</button></Link>
                       <Link to="/ask-questions" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Ask_Question}/>Ask Questions</button></Link>
                       <Link to="/mentorship-opportunities" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Teach}/>Mentorships</button></Link>
-                      <button className='btn-main'><img className="btn-main-icon" src={Borrow} loading="lazy"/>Borrow Items</button>
+                      <Link to="/borrow-items" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Borrow} loading="lazy"/>Borrow Items</button></Link>
                       <Link to="/jobs" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Job}/>Jobs</button></Link>
                       <Link to="/learning-center" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={LearningCenter} loading="lazy"/>Learning Center</button></Link>
                     </div>

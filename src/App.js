@@ -21,6 +21,7 @@ import Request from './Components/Request';
 import LearningCenter from './Components/LearningCenter';
 import LearningRequest from './Components/LearningRequest';
 import ContactUs from './Components/ContactUs';
+import BorrowItems from './Components/BorrowItems';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
         <Route path="/learning-center" element={<LearningCenter />} />
         <Route path="/learning-request" element={<LearningRequest />} />
         <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/borrow-items" element={<BorrowItems />} />
       </Routes>
    </Router>
   );
