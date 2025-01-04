@@ -7,21 +7,21 @@ import SectionImage from "../Images/rb_2582.png";
 import axios from "axios";
 
 
-export default function CollaborationRequest() {
+export default function BorrowRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const [requestSent, setRequestSent] = useState("No");
-    const [createCollaborationRequest, setCreateCollaborationRequest]  = useState({
-        'collaborations_description': '',
-        'collaborations_features': '',
-        'collaborations_pay': '',
-        'collaborations_perk': '',
-        'collaborations_deadline': ''
+    const [createLearningRequest, setCreateLearningRequest]  = useState({
+        'learning_description': '',
+        'learning_features': '',
+        'learning_pay': '',
+        'learning_perk': '',
+        'learning_deadline': ''
     });
 
     //   Handle Change
   function handleChange(e) {
     const {name, value} = e.target
-    setCreateCollaborationRequest(prev => {
+    setCreateLearningRequest(prev => {
         return (
             { ...prev, [name]: value}
         )
@@ -33,19 +33,19 @@ export default function CollaborationRequest() {
     try {
         // Upload image if file exists
             const response = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations/`,
+              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center/`,
                 {   
-                    'title':  createCollaborationRequest.collaborations_description,
+                    'title':  createLearningRequest.learning_description,
                     'content': "",
                     'excerpt': "",
                     'author': userDetails.id,
                     'status': 'publish',
                     'acf' : {
-                        'collaborations_description': createCollaborationRequest.collaborations_description,
-                        'collaborations_features': createCollaborationRequest.collaborations_features,
-                        'collaborations_pay': createCollaborationRequest.collaborations_pay,
-                        'collaborations_perk': createCollaborationRequest.collaborations_perk,
-                        'collaborations_deadline': createCollaborationRequest.collaborations_deadline
+                        'learning_description': createLearningRequest.learning_description,
+                        'learning_features': createLearningRequest.learning_features,
+                        'learning_pay': createLearningRequest.learning_pay,
+                        'learning_perk': createLearningRequest.learning_perk,
+                        'learning_deadline': createLearningRequest.learning_deadline
                     }
                 },
                 {
@@ -74,13 +74,13 @@ if (userDetails != null) {
                     <div className="page-filter">
                         <div className="row mb-5">
                             <div className="col-12 d-flex">
-                            <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">></span><Link className="link-dark small d-flex align-items-center" to="/collaborations">Collaborations</Link><span className="breadcrumb-slash">>></span><span className="small d-flex align-items-center">Request Collaboration</span>
+                            <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">></span><Link className="link-dark small d-flex align-items-center" to="/borrow-request">Borrow Item</Link><span className="breadcrumb-slash">>></span><span className="small d-flex align-items-center">Request An Item</span>
                             </div>
                         </div>
                     </div>
                     <div className="row">
                         <div className="col-12 mb-4">
-                            <h1><strong>Collaborate with your peers. Two heads are better than one!</strong></h1>
+                            <h1><strong>Request items from your peers to help move your project along.</strong></h1>
                         </div>
                     </div>
                     <div className="row mt-5">
@@ -91,39 +91,37 @@ if (userDetails != null) {
                             <form className="form-create-job mx-auto" onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="collaborations_description"><strong>Type your request briefly (150 characters max).</strong></label>
-                                        <input name="collaborations_description" id="collaborations_description" value={createCollaborationRequest.collaborations_description} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="ex. Need help creating a knockout cell line." type="text" disabled={ requestSent === 201 ? true : false} required />
+                                        <label htmlFor="learning_description"><strong>What item do you need?</strong></label>
+                                        <input name="learning_description" id="learning_description" value={createLearningRequest.learning_description} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Please make one borrow request per item" type="text" disabled={ requestSent === 201 ? true : false} required />
 
                                     </div>    
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="collaborations_features"><strong>Description</strong></label>
-                                        <textarea name="collaborations_features" id="collaborations_features" rows="7" value={createCollaborationRequest.collaborations_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Explain your request in further detail. Please keep project explanations sufficiently vague to avoid scooping." type="text" disabled={ requestSent === 201 ? true : false} required />
+                                        <label htmlFor="learning_features"><strong>Item Description</strong></label>
+                                        <textarea name="learning_features" id="learning_features" rows="7" value={createLearningRequest.learning_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Give a detailed description of item as necessary (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
                                     </div>    
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12  mb-4">
-                                    <label htmlFor="collaborations_deadline"><strong>Deadline for project completion</strong></label>
-                                    <input name="collaborations_deadline" id="collaborations_deadline" value={createCollaborationRequest.collaborations_deadline} onChange={handleChange} className='form-control form-control-lg' aria-label='Application deadline' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
+                                    <label htmlFor="learning_deadline"><strong>I would like this item by</strong></label>
+                                    <input name="learning_deadline" id="learning_deadline" value={createLearningRequest.learning_deadline} onChange={handleChange} className='form-control form-control-lg' aria-label='Application deadline' type="date" min={new Date().toISOString().split('T')[0]} disabled={ requestSent === 201 ? true : false} required />
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
-                                        <label htmlFor="collaborations_pay"><strong>Compensation</strong></label>
-                                        <select name="collaborations_pay" id="collaborations_pay" onChange={handleChange} aria-label="Compensation" className="form-control form-control-lg form-select" required>
+                                        <label htmlFor="learning_pay"><strong>Indicate your intention</strong></label>
+                                        <select name="learning_pay" id="learning_pay" value={createLearningRequest.learning_pay} onChange={handleChange} aria-label="Compensation" className="form-control form-control-lg form-select" required>
                                             <option defaultValue disabled value="">Choose an option</option>
                                             <option>For Free</option>
-                                            <option>For Authorship</option>
-                                            <option>For Acknowledgment</option>
-                                            <option>Negotiable</option>
+                                            <option>Will Replace</option>
                                         </select>
                                     </div>
                                 </div>
                                 <button className="btn btn-info btn-lg" type="submit" disabled={ requestSent === 201 ? true : false} >Submit</button>
                                 { requestSent === 201 ? 
                                 <div className="alert alert-success mt-5" role="alert">
-                                    <p>Success! Your collaboration request has been created!</p>
+                                    <p>Success! Your borrow request has been created!</p>
                                 </div>
                                 : ''    
                                 }

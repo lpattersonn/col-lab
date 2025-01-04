@@ -238,17 +238,17 @@ function ActiveItem({ currentItems }) {
                     <div className='get-help-details'>
                         <div className="row mb-5">
                             <div className="col-6 d-flex align-item-center">
-                                <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">>></span><span className="small d-flex align-items-center">Learning Center</span>
+                                <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">>></span><span className="small d-flex align-items-center">Borrow Items</span>
                             </div>
                         </div>
                         <div className="row mb-5">
                             <div className="col-lg-12">
-                                <p className="lead"><strong>Teaching reinforces knowledge! Train your peers and earn a certificate of expertise to show off your skills!</strong></p>
+                                <p className="lead"><strong>Lend a hand — or an item. It goes a long way!</strong></p>
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-lg-4">
-                                <p><strong>Browse all teaching opportunities</strong></p>
+                                <p><strong>See all requests for items</strong></p>
                             </div>
                             <div className="col-lg-4">
                                 <input type="search" name="search" className="form-control" placeholder='Start typing to search' value={search} onChange={(e) => {
@@ -256,7 +256,7 @@ function ActiveItem({ currentItems }) {
                                 }} />
                             </div>
                             <div className="col-lg-4 text-end">
-                                <Link to="/learning-request" className="btn btn-outline-info btn-lg">Learn A New Skill</Link>
+                                <Link to="/borrow-request" className="btn btn-outline-info btn-lg">Request An Item</Link>
                             </div>
                         </div>
                     </div>

@@ -127,9 +127,14 @@ function ActiveItem({ currentItems }) {
                                 <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">>></span><span className="small d-flex align-items-center">Mentorship Opportunities</span>
                             </div>
                         </div>
+                        <div className="row mb-5">
+                            <div className="col-lg-12">
+                                <p className="lead"><strong>Propel your career with expert training and guidance from our mentors</strong></p>
+                            </div>
+                        </div>
                         <div className="row">
                             <div className="col-lg-4">
-                                <p><strong>Meet our <i>collabb</i> Mentors</strong></p>
+                                <p><strong>Meet our COLLABB Mentors</strong></p>
                             </div>
                             <div className="col-lg-4">
                                 <input type="search" name="search" className="form-control" placeholder='Start typing to search' value={search} onChange={(e) => {

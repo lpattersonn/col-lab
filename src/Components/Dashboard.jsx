@@ -12,7 +12,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { dateFormat } from "../helper.js";
 import { TailSpin } from "react-loader-spinner";
 import axios from 'axios';
-import defaultImage from '../Images/5402435_account_profile_user_avatar_man_icon.svg';
+import defaultImage from '../Images/user-profile.svg';
 
 export default function Dashboard() {
   let userDetails = JSON.parse(localStorage.getItem("userDetails"));

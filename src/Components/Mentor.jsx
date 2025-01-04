@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { TailSpin } from "react-loader-spinner";
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
+import SectionImage from "../Images/rb_2582.png";
 
 
 

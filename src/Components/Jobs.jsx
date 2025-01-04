@@ -366,14 +366,22 @@ function ExpiredItem({ currentItems }) {
                             <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash">>></span><span className="small d-flex align-items-center">Jobs</span>
                         </div>
                     </div>
+                    <div className="row mb-5">
+                            <div className="col-lg-12">
+                                <p className="lead"><strong>Find jobs that match your skill set!</strong></p>
+                            </div>
+                    </div>
                     <div className="row">
-                        <div className="col-lg-6">
-                            <input type="search" className="form-control" placeholder='Start typing to search' value={search} onChange={(e) => {
-                                setSearch(e.target.value)
-                            }} />
+                        <div className="col-lg-4">
+                            <p><strong>Browse all job opportunities</strong></p>
                         </div>
-                        <div className="col-lg-6 d-flex justify-content-end">
-                            <Link to="/create-job"><button className="btn btn-outline-info btn-lg">Create a Job Posting</button></Link>
+                        <div className="col-lg-4">
+                            <input type="search" name="search" className="form-control" placeholder='Start typing to search' value={search} onChange={(e) => {
+                                setSearch(e.target.value)
+                             }} />
+                        </div>
+                        <div className="col-lg-4 text-end">
+                            <Link to="/create-job" className="btn btn-outline-info btn-lg">Create a Job Posting</Link>
                         </div>
                     </div>
                 </div>

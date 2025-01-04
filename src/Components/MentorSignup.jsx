@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import SectionImage from "../Images/rb_5236.png";
 
 
 export default function MentorSignup() {
@@ -130,45 +131,54 @@ if (userDetails != null) {
                             </div>
                         </div>
                     </div>
+                    <div className="row">
+                            <div className="col-12">
+                                <h1><strong>Become a COLLABB mentor</strong></h1>
+                            </div>
+                    </div>
+                    <div className="col-lg-12">
+                            <img className="collaboration-page_image" src={SectionImage} alt="Image of scientists" role="presentation" />
+                        </div>
                     <form className="form-create-job mx-auto" onSubmit={handleSubmit}>
-                        <div className="row">
-                            <div className="col-12 mb-4">
-                                <h1><strong>Become a <i>collabb</i> mentor</strong></h1>
+                        <div className="row  mb-2">
+                            <div className="col-12">
+                                <h2><strong>Mentorship Application Form</strong></h2>
                             </div>
                         </div>
-                        <p className="mb-3">Applying is easy! We already know about you.<br></br> We just need a bit more  information…Mentorship applications are verified:</p>
+                        <p className="mb-4">Applying is easy! We already know about you...we just need a bit more information (please note that mentorship applications are verified).</p>
+                        
                         <div className="row">
-                            <div className="col-lg-12 mb-4">
+                            <div className="col-lg-6  mb-4">
                                 <input name="user_mentor_current_position" value={createMentor.user_mentor_current_position} onChange={handleChange} className='form-control form-control-lg' placeholder="Current position" aria-label='Current position' disabled={ mentorStatus === 200 ? true : false} required />
-                            </div>    
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-12 mb-4">
+                            </div>
+                            <div className="col-lg-6  mb-4">
                                 <input name="user_mentor_current_company" value={createMentor.user_mentor_current_company} onChange={handleChange} className='form-control form-control-lg' placeholder="Current company/institution" aria-label='Current company/institution' disabled={ mentorStatus === 200 ? true : false} required />
                             </div>
                         </div>
+
                         <div className="row">
-                            <div className="col-lg-12  mb-4">
+                            <div className="col-lg-6  mb-4">
                                 <input className="form-control form-control-lg" type="text" name="user_mentor_preferred_language"  value={createMentor.user_mentor_preferred_language} onChange={handleChange} aria-label='Preferred language' placeholder="Preferred language" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
                             </div>
+                            <div className="col-lg-6  mb-4">
+                                <select className="form-control form-control-lg form-select" type="text" name="user_mentor_preferred_meetup"  value={createMentor.user_mentor_preferred_meetup} onChange={handleChange} aria-label='Preferred meet-up: virtual or in-person' autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required>
+                                    <option disabled value="">Preferred meet-up: virtual or in-person</option>
+                                    <option value="Virtual">Virtual</option>
+                                    <option value="In-person">In person</option>
+                                </select>
+                            </div>
                         </div>
+
+
                         <div className="row">
                             <div className="col-lg-12  mb-4">
                                 <textarea rows="4" className="form-control form-control-lg" type="text" name="user_mentor_services_offered"  value={createMentor.user_mentor_services_offered} onChange={handleChange} aria-label='Services Offered' placeholder="Services Offered" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col-12 mb-4">
-                                <select className="form-control form-control-lg form-select" type="text" name="user_mentor_preferred_meetup"  value={createMentor.user_mentor_preferred_meetup} onChange={handleChange} aria-label='Preferred meet-up: virtual or in-person' autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required>
-                                    <option disabled value="">Preferred meet-up: virtual or in-person</option>
-                                    <option value="Virtual">Virtual</option>
-                                    <option value="In-person">In-person</option>
-                                </select>
-                            </div>
-                        </div>
+
                         <div className="row">
                             <div className="col-lg-6  mb-4">
-                                <input className="form-control form-control-lg" type="number" name="user_mentor_rate_of_pay"  value={createMentor.user_mentor_rate_of_pay} onChange={handleChange} aria-label='Rate of pay' placeholder="Rate of pay" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
+                                <input className="form-control form-control-lg" type="number" name="user_mentor_rate_of_pay"  value={createMentor.user_mentor_rate_of_pay} onChange={handleChange} aria-label='Rate of pay' placeholder="Hourly rate" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
                             </div>
                             <div className="col-lg-6  mb-4">
                                 <select name="user_mentor_currency" value={createMentor.user_mentor_currency}  onChange={handleChange} className='form-control form-select form-control-lg' aria-label="Currency" autoComplete="Currency"  disabled={ mentorStatus === 200 ? true : false} required>
@@ -179,39 +189,21 @@ if (userDetails != null) {
                         </div>
                         <div className="row">
                             <div className="col-12 mb-4">
-                                <p className="small m-0"><strong>Briefly describe yourself, past and present postions,  and reasons for signing up:</strong></p>
-                                <textarea rows="7" className="form-control form-control-lg" type="text" name="user_mentor_bio"  value={createMentor.user_mentor_bio} onChange={handleChange} aria-label='Mentor bio' placeholder="Mentor bio" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
+                                <p className="mb-2"><strong>Short Bio</strong></p>
+                                <textarea rows="7" className="form-control form-control-lg" type="text" name="user_mentor_bio"  value={createMentor.user_mentor_bio} onChange={handleChange} aria-label='Briefly describe yourself, past and present postions,  and reasons for signing up:' placeholder="Briefly tell us about yourself e.g. past and present postions, expertise, hobbies, reasons for signing up, etc." autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
                             </div>
                         </div>
-                        <p className="lead">Qualifications:</p>
+                        <p className="mb-2"><strong>Qualifications</strong></p>
                         <div className="row">
                             <div className="col-12 mb-4">
-                                <textarea rows="7" className="form-control form-control-lg" type="text" name="user_mentor_key_responsibilities"  value={createMentor.user_mentor_key_responsibilities} onChange={handleChange} aria-label='Key responsibilities in current role' placeholder="Key responsibilities in current role" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
+                                <textarea rows="7" className="form-control form-control-lg" type="text" name="user_mentor_key_responsibilities"  value={createMentor.user_mentor_key_responsibilities} onChange={handleChange} aria-label='Key responsibilities in current role' placeholder="Please detail your key responsibilities in your current role." autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
                             </div>
                         </div>
+
+                        <p className="mb-2"><strong>Education</strong></p>
                         <div className="row">
                             <div className="col-12 mb-4">
-                                <textarea rows="7" className="form-control form-control-lg" type="text" name="user_mentor_education"  value={createMentor.user_mentor_education} onChange={handleChange} aria-label='Education' placeholder="Education: please list from most recent, including school and date of completion" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
-                            </div>
-                        </div>
-                 
-                        <p className="lead">Add your direct deposit information. *This is encrypted</p>
-                        <div className="row">
-                            <div className="col-lg-6 mb-4">
-                                <input className="form-control form-control-lg" type="text" name="user_mentor_name_on_card"  value={createMentor.user_mentor_name_on_card} onChange={handleChange} aria-label='Name on card' placeholder="Name on card" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-lg-12 mb-4">
-                                <input className="form-control form-control-lg" type="password" name="user_mentor_card_number"  value={createMentor.user_mentor_card_number} onChange={handleChange} aria-label='Card number' placeholder="Card number" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
-                            </div>
-                        </div>
-                        <div className="row mb-4">
-                            <div className="col-lg-6 mb-4">
-                                <input className="form-control form-control-lg" type="password" name="user_transit_number"  value={createMentor.user_transit_number} onChange={handleChange} aria-label='Transit number' placeholder="Transit number" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
-                            </div>
-                            <div className="col-lg-6 mb-4">
-                                <input className="form-control form-control-lg" type="password" name="user_institution_number"  value={createMentor.user_institution_number} onChange={handleChange} aria-label='Institution number' placeholder="Institution number" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
+                                <textarea rows="7" className="form-control form-control-lg" type="text" name="user_mentor_education"  value={createMentor.user_mentor_education} onChange={handleChange} aria-label='Education' placeholder="Starting with the most recent, please indicate your completed education, including the school, date of completion, and degrees, diplomas, and/or certificates earned." autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
                             </div>
                         </div>
                         { mentorStatus === 200 ? 
