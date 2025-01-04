@@ -162,7 +162,7 @@ if (userDetails != null) {
                             </div>
                             <div className="col-lg-6  mb-4">
                                 <select className="form-control form-control-lg form-select" type="text" name="user_mentor_preferred_meetup"  value={createMentor.user_mentor_preferred_meetup} onChange={handleChange} aria-label='Preferred meet-up: virtual or in-person' autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required>
-                                    <option disabled value="">Preferred meet-up: virtual or in-person</option>
+                                    <option disabled value="">Preferred meet-up</option>
                                     <option value="Virtual">Virtual</option>
                                     <option value="In-person">In person</option>
                                 </select>
@@ -171,26 +171,23 @@ if (userDetails != null) {
 
 
                         <div className="row">
-                            <div className="col-lg-12  mb-4">
+                            <div className="col-lg-6  mb-4">
                                 <textarea rows="4" className="form-control form-control-lg" type="text" name="user_mentor_services_offered"  value={createMentor.user_mentor_services_offered} onChange={handleChange} aria-label='Services Offered' placeholder="Services Offered" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
                             </div>
-                        </div>
-
-                        <div className="row">
                             <div className="col-lg-6  mb-4">
-                                <input className="form-control form-control-lg" type="number" name="user_mentor_rate_of_pay"  value={createMentor.user_mentor_rate_of_pay} onChange={handleChange} aria-label='Rate of pay' placeholder="Hourly rate" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
-                            </div>
-                            <div className="col-lg-6  mb-4">
-                                <select name="user_mentor_currency" value={createMentor.user_mentor_currency}  onChange={handleChange} className='form-control form-select form-control-lg' aria-label="Currency" autoComplete="Currency"  disabled={ mentorStatus === 200 ? true : false} required>
-                                    <option disabled value="">Currency</option>
-                                    {countries}
+                                <select className="form-control form-control-lg form-select" type="text" name="user_mentor_expertise_level"  value={createMentor.user_mentor_expertise_level} onChange={handleChange} aria-label='mentor expertise level' autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required>
+                                    <option disabled value="">Level of expertise</option>
+                                    <option value="Virtual">Beginner</option>
+                                    <option value="In-person">Intermediate</option>
+                                    <option value="In-person">Expert</option>
                                 </select>
                             </div>
                         </div>
+                        
                         <div className="row">
                             <div className="col-12 mb-4">
                                 <p className="mb-2"><strong>Short Bio</strong></p>
-                                <textarea rows="7" className="form-control form-control-lg" type="text" name="user_mentor_bio"  value={createMentor.user_mentor_bio} onChange={handleChange} aria-label='Briefly describe yourself, past and present postions,  and reasons for signing up:' placeholder="Briefly tell us about yourself e.g. past and present postions, expertise, hobbies, reasons for signing up, etc." autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
+                                <textarea rows="5" className="form-control form-control-lg" type="text" name="user_mentor_bio"  value={createMentor.user_mentor_bio} onChange={handleChange} aria-label='Briefly describe yourself, past and present postions,  and reasons for signing up:' placeholder="Briefly tell us about yourself e.g. past and present postions, expertise, hobbies, reasons for signing up, etc." autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
                             </div>
                         </div>
                         <p className="mb-2"><strong>Qualifications</strong></p>
@@ -204,6 +201,18 @@ if (userDetails != null) {
                         <div className="row">
                             <div className="col-12 mb-4">
                                 <textarea rows="7" className="form-control form-control-lg" type="text" name="user_mentor_education"  value={createMentor.user_mentor_education} onChange={handleChange} aria-label='Education' placeholder="Starting with the most recent, please indicate your completed education, including the school, date of completion, and degrees, diplomas, and/or certificates earned." autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required></textarea>
+                            </div>
+                        </div>
+                        <p className="mb-2"><strong>Set your pay</strong></p>
+                        <div className="row">
+                            <div className="col-lg-6  mb-4">
+                                <input className="form-control form-control-lg" type="number" name="user_mentor_rate_of_pay"  value={createMentor.user_mentor_rate_of_pay} onChange={handleChange} aria-label='Rate of pay' placeholder="Hourly rate" autoComplete='on' disabled={ mentorStatus === 200 ? true : false} required />
+                            </div>
+                            <div className="col-lg-6  mb-4">
+                                <select name="user_mentor_currency" value={createMentor.user_mentor_currency}  onChange={handleChange} className='form-control form-select form-control-lg' aria-label="Currency" autoComplete="Currency"  disabled={ mentorStatus === 200 ? true : false} required>
+                                    <option disabled value="">Currency</option>
+                                    {countries}
+                                </select>
                             </div>
                         </div>
                         { mentorStatus === 200 ? 

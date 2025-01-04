@@ -142,7 +142,7 @@ function ActiveItem({ currentItems }) {
                                 }} />
                             </div>
                             <div className="col-lg-4 text-end">
-                                <Link to="/mentor-signup" className="btn btn-outline-info btn-lg">Apply To Become a Mentor</Link>
+                                <Link to="/mentor-signup" className="btn btn-outline-info btn-lg">Apply To Become A Mentor</Link>
                             </div>
                         </div>
                     </div>
