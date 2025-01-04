@@ -274,7 +274,7 @@ export default function AskQuestions() {
                                     {/* Middle Section */}
                                     <div style={{marginBottom: "1.8rem"}}>
                                         <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question.title.rendered, search) : question.title.rendered } } /></h3>
-                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question?.excerpt?.rendered?.split(0, 340), search) : question?.excerpt?.rendered?.split(0, 340) } } />
+                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question?.excerpt?.rendered, search) : question?.excerpt?.rendered?.split(0, 340) } } />
                                     </div>
                                     {/* Bottom Section */}
                                     <div className="row d-flex flex-row">
