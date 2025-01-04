@@ -99,7 +99,7 @@ if (userDetails != null) {
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
                                         <label htmlFor="learning_features"><strong>Item Description</strong></label>
-                                        <textarea name="learning_features" id="learning_features" rows="7" value={createLearningRequest.learning_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Give a detailed description of item as necessary (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
+                                        <textarea name="learning_features" id="learning_features" rows="4" value={createLearningRequest.learning_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Give a detailed description of item as necessary (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
                                     </div>    
                                 </div>
                                 <div className="row">
