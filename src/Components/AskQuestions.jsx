@@ -12,6 +12,7 @@ import { TailSpin } from "react-loader-spinner";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import UserComment from "../Images/user-comment.svg";
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import { submitReport } from '../helper';
 
 
 export default function AskQuestions() {
@@ -264,14 +265,16 @@ export default function AskQuestions() {
                                                 localStorage.setItem(`show_question${index}`, 'hide')
                                                 handleHideCollaboration(index)
                                                 }}>Hide</div>
-                                                <div className="option-item">Report</div>
+                                                <div className="option-item" onClick={()=>{
+                                                    submitReport(question, userDetails);
+                                                }}>Report</div>
                                             </div>
                                         </div>
                                     </div>
                                     {/* Middle Section */}
                                     <div style={{marginBottom: "1.8rem"}}>
                                         <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question.title.rendered, search) : question.title.rendered } } /></h3>
-                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question?.excerpt?.rendered?.split(0, 340), search) : question?.excerpt?.rendered?.split(0, 340) } } />
+                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(question?.excerpt?.rendered, search) : question?.excerpt?.rendered?.split(0, 340) } } />
                                     </div>
                                     {/* Bottom Section */}
                                     <div className="row d-flex flex-row">
@@ -311,13 +314,14 @@ export default function AskQuestions() {
                                                     <div className="option-button"></div>
                                                     <div className="option-button"></div>
                                                     <div className="option-button"></div>
-                                                </div>
-                                                <div className={`option-items ${optionDisplay[index]}`} >
-                                                    <div className="option-item" onClick={() => {
+                                                </div>;   
+                                                <div className={`option-items ${optionDisplay[index]}`} >                                                     <div className="option-item" onClick={() => {
                                                     localStorage.setItem(`show_question${index}`, 'hide')
                                                     handleHideCollaboration(index)
                                                     }}>Hide</div>
-                                                    <div className="option-item">Report</div>
+                                                    <div className="option-item" onClick={()=>{
+                                                    submitReport(question, userDetails);
+                                                }}>Report</div>
                                                 </div>
                                             </div>
                                         </div>

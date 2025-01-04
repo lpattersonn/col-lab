@@ -7,7 +7,7 @@ import SectionImage from "../Images/rb_2582.png";
 import axios from "axios";
 
 
-export default function LearningRequest() {
+export default function CreateQuestion() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const [requestSent, setRequestSent] = useState("No");
     const [createLearningRequest, setCreateLearningRequest]  = useState({

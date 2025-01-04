@@ -88,3 +88,34 @@ export function humanReadableDate(args) {
   const humanReadableDate = date.toLocaleDateString('en-US', options);
   return humanReadableDate;
 }
+
+// Submit a report
+export function submitReport(argPostType, userDetails) {
+  // Create a axios post request that creates a post request that creates a request post type. 
+  return axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/report-post`,
+    {
+      title: `Misconduct from ${userDetails?.firstName} on ${argPostType?.type}`,
+      author: userDetails?.id,
+      author_email: userDetails?.email,
+      author_name: `${userDetails?.firstName} ${userDetails?.lastName}`,
+      content: 'Reporting a user infraction',
+      excerpt: 'Reporting a user infraction',
+      status: 'publish',
+      'acf' : {
+          'offence_type': `${argPostType?.type}`,
+          'offence_authorid': `${argPostType?.author}`,
+      },
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${userDetails?.token}`,
+        'Content-Type': 'application/json',
+      }
+    }
+    ).then((res) => {
+        console.log(res);
+        alert("Thank you. The post has been reported.")
+    }).catch((error) => {
+      console.log(error)
+    });
+}

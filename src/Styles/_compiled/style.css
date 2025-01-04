@@ -817,7 +817,8 @@ textarea[data-info=content] {
   padding: 4rem 3rem;
   position: relative;
 }
-.form-create-job::before {
+
+.points::before {
   content: "5 points required!";
   background: #ff0000;
   position: absolute;

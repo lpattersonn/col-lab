@@ -9,6 +9,7 @@ import { Tab, initMDB } from "mdb-ui-kit";
 import { renderedQuestion } from '../helper';
 import UserComment from "../Images/user-comment.svg";
 import axios from 'axios';
+import { submitReport } from '../helper';
 
 export default function LearningCenter() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -146,7 +147,9 @@ function ActiveItem({ currentItems }) {
                                                     localStorage.setItem(`show_learning${index}`, 'hide')
                                                     handleHideCollaboration(index)
                                                     }}>Hide</div>
-                                                <div className="option-item">Report</div>
+                                                <div className="option-item" onClick={()=>{
+                                                    submitReport(collaboration, userDetails);
+                                                }}>Report</div>
                                             </div>
                                         </div>
                                     </div>
