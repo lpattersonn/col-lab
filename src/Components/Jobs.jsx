@@ -7,11 +7,14 @@ import { renderedQuestion } from "../helper"
 import ReactPaginate from 'react-paginate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareCheck, faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import UserComment from "../Images/user-comment.svg";
+import { submitReport } from '../helper';
 
 
 export default function Jobs() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const [search, setSearch] = useState('');
+    const [users, setUsers] = useState([]);
     const [jobs, setJobs] = useState([]);
     
     useEffect(() => {
@@ -32,9 +35,40 @@ export default function Jobs() {
         localStorage.setItem('countExpiredJobs', 0);
     }, []);
 
+        // Return users
+        useEffect(() => {
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${userDetails.token}`
+                        }
+                }
+            )
+                .then((response) => {
+                    setUsers(response.data);
+                }).catch((err) => {
+                    console.error(err);
+                });
+            }, []);
+
 // Start paginated active jobs
 
 function ActiveItem({ currentItems }) {
+
+    const [optionDisplay, setOptionDisplay] = useState({});
+    let [buttonClick, setButtonClick] = useState(0);
+
+    const handleToggleOptions = (index) => {
+        setOptionDisplay(prevState => ({
+            ...prevState,
+            [index]: prevState[index] === 'show' ? 'hide' : 'show'
+        }));
+    };
+
+    const handleHideCollaboration = (index) => {
+        setButtonClick(prev => prev + 1); // Trigger a re-render by updating state
+    };
+
     return (
       <>
         {currentItems.map((job, index) => {
@@ -78,7 +112,13 @@ function ActiveItem({ currentItems }) {
 
             if (search.length > 0 && job.title.rendered.toLowerCase().includes(search.toLowerCase()) || job.acf.jobs_institution.toLowerCase().includes(search.toLowerCase())) {
                 let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
-                console.log(seeIfchecked.includes(userDetails?.id?.toString()))
+                let userProfile = "";
+                let showOpportunity =  localStorage.getItem(`show_learning${index}`);
+                for (let name of users) {
+                    if ( name.id == job.author) {
+                     userProfile = name;
+                    }
+                }
                 return (
                     <Link to={"/job/"+job["id"]} key={index}>
                         <div className="card get-help-item mb-4">{ seeIfchecked.includes(userDetails?.id?.toString()) ?
@@ -113,7 +153,13 @@ function ActiveItem({ currentItems }) {
             }
             if (search.length == 0) {
                 let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
-                console.log(seeIfchecked.includes(userDetails?.id?.toString()))
+                let userProfile = "";
+                let showOpportunity =  localStorage.getItem(`show_learning${index}`);
+                for (let name of users) {
+                    if ( name.id == job.author) {
+                     userProfile = name;
+                    }
+                }
                 return (
                     <Link to={"/job/"+job["id"]} key={index}>
                         <div className="card get-help-item mb-4">{ seeIfchecked.includes(userDetails?.id?.toString()) ?
@@ -143,6 +189,70 @@ function ActiveItem({ currentItems }) {
                                 </div>
                             </div>
                         </div>
+
+                        {/* New Section */}
+                        <div className={`${showOpportunity} mb-4 col-lg-6`} key={index}>
+                            <div className="card collaboration">
+                                <div className="card-body">
+                                {/* Top Section */}
+                                    <div className="collaboration-header">
+                                        <div className="d-flex flex-direction-row">
+                                            <div className="d-flex" style={{marginRight: "6rem"}}>
+                                                <div>
+                                                    <img className="collaboration-details-name-img" src={userProfile?.acf?.user_profile_picture} alt={userProfile.name} loading="lazy" />
+                                                </div>
+                                                <div>
+                                                    <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]} | {userProfile?.acf?.["user-country-of-residence"]}</p>
+                                                    <div className="d-flex flex-row align-items-center" >
+                                                        <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="options-container">
+                                            <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
+                                                <div className="option-button"></div>
+                                                <div className="option-button"></div>
+                                                <div className="option-button"></div>
+                                            </div>
+                                            <div className={`option-items ${optionDisplay[index]}`}>
+                                                <div className="option-item" onClick={() => {
+                                                    localStorage.setItem(`show_learning${index}`, 'hide')
+                                                    handleHideCollaboration(index)
+                                                    }}>Hide</div>
+                                                <div className="option-item" onClick={()=>{
+                                                    submitReport(job, userDetails);
+                                                }}>Report</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Middle Section */}
+                                    <div style={{marginBottom: "1.8rem"}}>
+                                        <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}>{job?.acf?.learning_description}</h3>
+                                        <div>{job?.acf?.learning_features?.length > 250 ? job?.acf?.learning_features?.slice(0, 250)+"..." : job?.acf?.learning_features}</div>
+                                        <div className="d-flex flex-direction-row mt-4">
+                                            <div className="designation-button">
+                                                <span className="small">{job?.acf?.["learning_pay"]}</span>
+                                            </div>
+                                            <div className="due-button">
+                                                <span className="small">Deadline {job?.acf?.["learning_deadline"]}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Bottom Section */}
+                                    <div className="row d-flex justify-content-between flex-row">                                        
+                                        <div className="mt-2 col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {localStorage.getItem(`learning_count${index}`)} people responded to this</div>
+                                        {userDetails.id != job.author ?
+                                        <div className="col-auto ml-auto">
+                                            <a href={`/collaboration-chat/${job.id}`} className="btn btn-primary collab-btn">Chat</a>
+                                        </div>
+                                        : ""
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* New Section End*/}
                     </Link>
                 )
             }
@@ -239,7 +349,7 @@ function ExpiredItem({ currentItems }) {
 
             if (search.length > 0 && job.title.rendered.toLowerCase().includes(search.toLowerCase()) || job.acf.jobs_institution.toLowerCase().includes(search.toLowerCase())) {
                 let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
-                console.log(seeIfchecked.includes(userDetails?.id?.toString()))
+                let showOpportunity =  localStorage.getItem(`show_learning${index}`);
                 return (
                     <Link to={"/job/"+job["id"]} key={index}>
                         <div className="card get-help-item mb-4">{ seeIfchecked.includes(userDetails?.id?.toString()) ?
@@ -274,7 +384,7 @@ function ExpiredItem({ currentItems }) {
             }
             if (search.length == 0) {
                 let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
-                console.log(seeIfchecked.includes(userDetails?.id?.toString()))
+                let showOpportunity =  localStorage.getItem(`show_learning${index}`);
                 return (
                     <Link to={"/job/"+job["id"]} key={index}>
                         <div className="card get-help-item mb-4">{ seeIfchecked.includes(userDetails?.id?.toString()) ?

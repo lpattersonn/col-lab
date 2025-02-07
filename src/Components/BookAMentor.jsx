@@ -97,7 +97,6 @@ const mentorRequestSubmit = () => {
             }   
         }
     ).then((response) => {
-        console.log("submitted")
     }).catch((error) => {
 
     });
@@ -146,7 +145,6 @@ return (
                                             prop.updateParentState(state);
                                             setMentorAgree("Not chosen");
                                             toggleTriggerRerender();
-                                            console.log(triggerRerender)
                                             setMentorRequest({
                                                 mentor_request_date: '',
                                                 mentor_request_time: '',
@@ -343,13 +341,11 @@ return (
                             <div className='col-auto'>
                                 <button className={`btn btn-primary ${mentorAgree != "Not chosen" ? "disabled" : ""}`} type="submit" onClick={() => {
                                     setMentorAgree('Agree');
-                                    console.log('Agree');
                                     }} aria-label="Accept">Accept</button>                             
                             </div>
                             <div className='col-auto'>
                                 <button className={`btn btn-danger ${mentorAgree != "Not chosen" ? "disabled" : ""}`} type="submit" onClick={() => {
                                     setMentorAgree('Not Agree');
-                                    console.log('Not Agree');
                                     }} aria-label="Reject">Reject</button>                             
                             </div>
                         </div>

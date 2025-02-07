@@ -87,11 +87,8 @@ export default function Dashboard() {
           return item?.acf?.mentor_agree === "Agree";
         });
         setEvents(relatedResponse);
-        console.log(events);
       }).catch((err) => {})
     }, []);
-
-    console.log(events);
 
       const questions = getHelpQuestions.map((question, index) => {
         let userName = "";
@@ -118,8 +115,9 @@ export default function Dashboard() {
         for (let name of getUsers) {
           if ( name.id == question.author) {
             userName = name.name;
-            userProfileImg = name['avatar_urls']['48'];
-            userJobInsitution = name['acf']['user-job-Insitution'];
+            console.log(name)
+            userProfileImg = name?.acf?.user_profile_picture;
+            userJobInsitution = name?.['acf']?.['user-job-Insitution'];
           }
         }
 
@@ -199,7 +197,7 @@ export default function Dashboard() {
                         <div className="dashboard-user-details">
                           <div className="dashboard-user-details-image">
                           {usersAccountDetails['avatar_urls'] && usersAccountDetails['avatar_urls']['48'] !== 'https://secure.gravatar.com/avatar/bda5ea71631e2cce73beb5e17644bd74?s=48&d=mm&r=g' ? (
-                            <img src={usersAccountDetails['avatar_urls']['48']} alt="User Avatar" loading="lazy" />
+                            <img src={usersAccountDetails?.acf?.user_profile_picture} alt="User Avatar" loading="lazy" />
                           ) : (
                             <img src={defaultImage} alt="Default User Avatar" loading="lazy" />
                           )}
@@ -237,7 +235,6 @@ export default function Dashboard() {
                       <div className="link-item">
                         <Calendar tileClassName={({date}) => {
                           let scheduledEvents = events.some((item) => dateFormat(date) === item?.acf?.mentor_request_date)
-                          console.log(date);
                           return scheduledEvents ? "scheduled-event" : null;
                           
                         }} firstDayOfWeek={0}/>

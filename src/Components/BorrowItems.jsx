@@ -126,10 +126,10 @@ function ActiveItem({ currentItems }) {
                                         <div className="d-flex flex-direction-row">
                                             <div className="d-flex" style={{marginRight: "6rem"}}>
                                                 <div>
-                                                    <img className="collaboration-details-name-img" src={userProfile?.['avatar_urls']?.['48']} alt={userProfile.name} loading="lazy" />
+                                                    <img className="collaboration-details-name-img" src={userProfile?.acf?.user_profile_picture} alt={userProfile.name} loading="lazy" />
                                                 </div>
                                                 <div>
-                                                    <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]}</p>
+                                                    <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]} | {userProfile?.acf?.["user-country-of-residence"]}</p>
                                                     <div className="d-flex flex-row align-items-center" >
                                                         <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                                     </div>

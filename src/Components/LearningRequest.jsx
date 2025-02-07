@@ -55,7 +55,6 @@ export default function LearningRequest() {
                 }
             )
             .then((response) => {
-                console.log('Question submitted successfully:', response);
                 setRequestSent(response.status);
             })
             .catch((error) => {

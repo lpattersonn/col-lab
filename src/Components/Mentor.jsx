@@ -102,8 +102,8 @@ export default function Mentor() {
                 acf: {
                     'mentors_id': `${param1}`,
                     'mentee_id': `${userDetails.id}`,
-                    'mentors_image': `${mentorDetails?.avatar_urls?.['48']}`,
-                    'mentee_id': `${mentorDetails?.avatar_urls?.['48']}`,
+                    'mentors_image': `${mentorDetails?.acf?.user_profile_picture}`,
+                    'mentee_id': `${mentorDetails?.acf?.user_profile_picture}`,
                 }
             },
             {
@@ -138,7 +138,7 @@ export default function Mentor() {
                     <div className="form-create-job mx-auto" >
                         <div className="row mb-4 d-flex align-items-center">
                             <div className="col-auto mb-4">
-                                <img className="mentor-details-img" src={mentorDetails?.avatar_urls?.['48']} alt={mentorDetails?.name} />
+                                <img className="mentor-details-img" src={mentorDetails?.acf?.user_profile_picture} alt={mentorDetails?.name} />
                             </div>
                             <div className="col-auto mb-4">
                                 <h1>{mentorDetails?.name}</h1>

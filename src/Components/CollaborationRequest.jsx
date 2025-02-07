@@ -55,7 +55,6 @@ export default function CollaborationRequest() {
                 }
             )
             .then((response) => {
-                console.log('Question submitted successfully:', response);
                 setRequestSent(response.status);
             })
             .catch((error) => {

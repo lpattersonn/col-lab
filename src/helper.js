@@ -113,7 +113,6 @@ export function submitReport(argPostType, userDetails) {
       }
     }
     ).then((res) => {
-        console.log(res);
         alert("Thank you. The post has been reported.")
     }).catch((error) => {
       console.log(error)

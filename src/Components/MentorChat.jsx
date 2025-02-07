@@ -230,7 +230,6 @@ export default function MentorChat() {
 
     const conversation = comments.map((comment, index) => {
         let date = new Date(comment?.date);
-
         let options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
         let humanReadableTime = date.toLocaleDateString('en-US', options);
         
@@ -243,7 +242,7 @@ export default function MentorChat() {
                 </div>
                 <div className='image d-flex align-items-center'>
                     <span className='chat-date date'>{humanReadableTime}</span>
-                    <img className='chat-img' src={ comment?.author_avatar_urls?.['48']} alt={comment?.author_name} loading="eager" /> 
+                    <img className='chat-img' src={ comment?.['author_avatar_urls']?.['48'] } alt={comment?.author_name} loading="eager" /> 
                 </div>
             </div>
         )
@@ -287,7 +286,7 @@ if (userDetails !== null) {
                                 <div className='mentors-chat-item-header'>
                                     <div className='row d-flex align-items-center justify-content-between'>
                                         <div className="col-auto">
-                                            <img className='chat-item-header-img' src={user?.avatar_urls?.['48']} alt={user?.name} loading="eager" /> 
+                                            <img className='chat-item-header-img' src={user?.acf?.user_profile_picture} alt={user?.name} loading="eager" /> 
                                         </div>
                                         <div className="col-auto ml-auto">
                                             <img className='chat-icons' src={SearchIcon} alt="Home icon" loading="eager" onClick={() => {
@@ -314,7 +313,7 @@ if (userDetails !== null) {
                                 <div className='mentors-chat-item-header mentors-chat-item-header-main'>
                                     <div className='row d-flex align-items-center'>
                                         <div className="col-auto">
-                                            <img className='chat-item-header-img' src={userDetails.id === mentee.id ? mentor?.avatar_urls?.['48'] : mentee?.avatar_urls?.['48']} alt={ userDetails.id === mentee.id ? mentor?.name : mentee?.name} loading="eager" /> 
+                                            <img className='chat-item-header-img' src={userDetails.id === mentee.id ? mentor?.acf?.user_profile_picture : mentee?.acf?.user_profile_picture} alt={ userDetails.id === mentee.id ? mentor?.name : mentee?.name} loading="eager" /> 
                                         </div>
                                         <div className="col-auto d-flex align-items-center">
                                             <div>

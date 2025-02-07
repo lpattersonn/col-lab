@@ -98,7 +98,7 @@ export default function Question() {
     for (let name of getUsers) {
       if ( name.id == question.author) {
         userName = name.name;
-        userProfileImg = name['avatar_urls']['48'];
+        userProfileImg = name?.acf?.user_profile_picture;
         userJobInsitution = name['acf']['user-job-Insitution'];
       }
     }
@@ -128,7 +128,7 @@ export default function Question() {
         for (let name of getUsers) {
           if ( name.id == question.author) {
             userName = name.name;
-            userProfileImg = name['avatar_urls']['48'];
+            userProfileImg = name?.acf?.user_profile_picture;
             userJobInsitution = name['acf']['user-job-Insitution'];
           }
         }
@@ -217,10 +217,8 @@ export default function Question() {
                 }
               }
           ).then((response) => {
-              console.log(response.data)
               setCommentStatus(response.data.status)
               setSuccessServerComment("Success! Your comment has been published.")
-              console.log(response.data.status)
           })
           // Update points
           const updatePoints = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
@@ -234,7 +232,6 @@ export default function Question() {
           }
         }
           ).then(function (response) {
-            console.log(response.data);
            })
           
       } catch (error) {

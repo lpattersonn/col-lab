@@ -54,7 +54,6 @@ export default function BorrowRequest() {
                 }
             )
             .then((response) => {
-                console.log('Question submitted successfully:', response);
                 setRequestSent(response.status);
             })
             .catch((error) => {

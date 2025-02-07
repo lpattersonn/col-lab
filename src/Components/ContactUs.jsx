@@ -9,61 +9,6 @@ import axios from "axios";
 
 export default function ContactUs() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-    // const [requestSent, setRequestSent] = useState("No");
-    // const [createLearningRequest, setCreateLearningRequest]  = useState({
-    //     'learning_description': '',
-    //     'learning_features': '',
-    //     'learning_pay': '',
-    //     'learning_perk': '',
-    //     'learning_deadline': ''
-    // });
-
-//     //   Handle Change
-//   function handleChange(e) {
-//     const {name, value} = e.target
-//     setCreateLearningRequest(prev => {
-//         return (
-//             { ...prev, [name]: value}
-//         )
-//     })
-// }
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//         // Upload image if file exists
-//             const response = await axios.post(
-//               `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center/`,
-//                 {   
-//                     'title':  createLearningRequest.learning_description,
-//                     'content': "",
-//                     'excerpt': "",
-//                     'author': userDetails.id,
-//                     'status': 'publish',
-//                     'acf' : {
-//                         'learning_description': createLearningRequest.learning_description,
-//                         'learning_features': createLearningRequest.learning_features,
-//                         'learning_pay': createLearningRequest.learning_pay,
-//                         'learning_perk': createLearningRequest.learning_perk,
-//                         'learning_deadline': createLearningRequest.learning_deadline
-//                     }
-//                 },
-//                 {
-//                     headers: {
-//                         Authorization: `Bearer ${userDetails.token}`
-//                     }
-//                 }
-//             )
-//             .then((response) => {
-//                 console.log('Question submitted successfully:', response);
-//                 setRequestSent(response.status);
-//             })
-//             .catch((error) => {
-//             });
-//     } catch (error) {
-//         console.error('Error submitting question:', error);
-//     }
-// }
 
 if (userDetails != null) {
     return(

@@ -66,7 +66,7 @@ export default function Request() {
                     <div className="form-create-job mx-auto" >
                         <div className="row mb-4 d-flex align-items-center">
                             <div className="col-auto mb-4">
-                                <img className="mentor-details-img" src={requestorDetails?.avatar_urls?.['48']} alt={requestorDetails?.name} />
+                                <img className="mentor-details-img" src={requestorDetails?.acf?.user_profile_picture} alt={requestorDetails?.name} />
                             </div>
                             <div className="col-auto mb-4">
                                 <h1>{requestorDetails?.name}</h1>
