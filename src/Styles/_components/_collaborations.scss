@@ -91,12 +91,19 @@
 width: 4rem;
 }
 .options-container {
+  margin-left: auto;
   position: relative;
+  width: fit-content;
   .options {
     position: relative;
     z-index: 10;
     height: fit-content;
     cursor: pointer;
+  }
+  &:hover {
+    .option-items {
+      display: block;
+    }
   }
   .option-items {
     display: none;

@@ -1319,13 +1319,18 @@ textarea[data-info=content] {
 }
 
 .options-container {
+  margin-left: auto;
   position: relative;
+  width: fit-content;
 }
 .options-container .options {
   position: relative;
   z-index: 10;
   height: fit-content;
   cursor: pointer;
+}
+.options-container:hover .option-items {
+  display: block;
 }
 .options-container .option-items {
   display: none;

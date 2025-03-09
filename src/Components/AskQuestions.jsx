@@ -235,14 +235,15 @@ export default function AskQuestions() {
                                                     <div className="option-button"></div>
                                                     <div className="option-button"></div>
                                                     <div className="option-button"></div>
-                                                </div>;   
-                                                <div className={`option-items ${optionDisplay[index]}`} >                                                     <div className="option-item" onClick={() => {
-                                                    localStorage.setItem(`show_question${index}`, 'hide')
-                                                    handleHideCollaboration(index)
+                                                </div>   
+                                                <div className={`option-items ${optionDisplay[index]}`} >                                                     
+                                                    <div className="option-item" onClick={() => {
+                                                        localStorage.setItem(`show_question${index}`, 'hide')
+                                                        handleHideCollaboration(index)
                                                     }}>Hide</div>
                                                     <div className="option-item" onClick={()=>{
-                                                    submitReport(question, userDetails);
-                                                }}>Report</div>
+                                                        submitReport(question, userDetails);
+                                                    }}>Report</div>
                                                 </div>
                                             </div>
                                         </div>
