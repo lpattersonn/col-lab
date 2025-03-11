@@ -86,6 +86,10 @@
   background: none !important;
   border: 2px solid black !important;
   color: black !important;
+  &:hover {
+    background: black !important;
+    color: white !important;
+  }
 }
 .collaboration-icon {
 width: 4rem;

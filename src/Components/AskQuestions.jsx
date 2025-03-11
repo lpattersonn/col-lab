@@ -14,75 +14,48 @@ import { submitReport } from '../helper';
 
 
 export default function AskQuestions() {
-    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-
-    const [question, setQuestion] = useState([]);
-    const [users, setUsers] = useState([]);
-    const [search, setSearch] = useState('');
-    const [usersAccountDetails, setUsersAccountDetails] = useState({});
-    const [questionSubject, setQuestionSubject] = useState('General');
-    const [loading, setLoading] = useState(true);
+    const userDetails = JSON.parse(localStorage.getItem('userDetails')); // Get user details and turn it in to a object
+    const [question, setQuestion] = useState([]); // Get all questions as a array
+    const [users, setUsers] = useState([]); //Get all users as a array
+    const [search, setSearch] = useState(''); // Get search term 
+    const [usersAccountDetails, setUsersAccountDetails] = useState({}); // Set user account details
+    const [questionSubject, setQuestionSubject] = useState('General'); // Get user question subject 
+    const [loading, setLoading] = useState(true); // Set loading status if loading
     const [askQuestionApi, setAskQuestionApi] = useState({
         title: '',
         content: '',
         question_subject_area: '', 
         question_image: '',
-    });
+    }); // Set API Question detials
 
-    // Get questions on page load
-    useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions?per_page=100`)
-            .then((response) => {
-                setQuestion(response.data);
-                setLoading(false);
-            }).catch((err) => {
-                console.error(err);
-            });
-    }, []);
-
-    // Get questions when user submits question
-    useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions?per_page=100`)
-            .then((response) => {
-                setLoading(false);
-                setQuestion(response.data);
-            }).catch((err) => {
-                console.error(err);
-            });
-    }, [askQuestionApi, search]);
-
-    // Return users
-    useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
-            {
-                headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                  }
-            }
-        )
-            .then((response) => {
-                setUsers(response.data);
-            }).catch((err) => {
-                console.error(err);
-            });
-    }, []);
-
-      // Api for current user
+// API calls
   useEffect(() => {
-    let userDetails = JSON.parse(localStorage.getItem("userDetails"));
-    axios({
-      url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${userDetails.token}`
-      }
-    })
-    .then((response) => {
-      localStorage.setItem('userPoints', JSON.stringify(response.data['acf']['user-points']));
-      setUsersAccountDetails(response.data);
-    })
-    .catch((err) => {
-      // Handle error
+    Promise.all([
+        // Get all questions
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions?per_page=100`, {
+            headers: { Authorization: `Bearer ${userDetails.token }`}
+        }),
+        // Get all users
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, {
+            headers: { Authorization: `Bearer ${userDetails.token}`}
+        }),
+        // Get single user detials
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`, {
+            headers: { Authorization: `Bearer ${userDetails.token}` }
+        })
+    ]).then(
+        ([userQuestions, allUsers, singleUserDetails]) => {
+            // Questions
+            setQuestion(userQuestions?.data);
+            // All users
+            setUsers(allUsers?.data);
+            // Single user detials
+            setUsersAccountDetails(singleUserDetails?.data);
+            localStorage.setItem('userPoints', JSON.stringify(singleUserDetails?.data['acf']['user-points']));
+            setLoading(false);
+        }
+    ).catch(error => {
+        console.error("API Request failed:", error);
     });
   }, []);
 
@@ -133,6 +106,11 @@ export default function AskQuestions() {
                     userName = name.name;
                     userProfileImg = name?.acf?.user_profile_picture;
                     }
+                    if (name?.acf?.user_profile_picture?.length == null) {
+                        setLoading(false);
+                        break;
+                    } 
+                    // console.log(name)
                 }
         
                 function commentCount() {
@@ -165,10 +143,10 @@ export default function AskQuestions() {
                                         <div className="d-flex flex-direction-row">
                                             <div className="d-flex" style={{marginRight: "6rem"}}>
                                                 <div>
-                                                    <img className="collaboration-details-name-img" src={userProfileImg} alt={userName} loading="lazy" />
+                                                    <img className="collaboration-details-name-img" src={userProfileImg?.length > 0 ? userProfileImg : defaultImage} alt={userName} loading="lazy" />
                                                 </div>
                                                 <div>
-                                                    <p className="my-0"><strong>{userName}</strong> | {user?.acf?.["user-job-Insitution"]}</p>
+                                                    <p className="my-0"><strong>{userName}</strong>{user?.acf?.["user-job-Insitution"]?.length > 0 ? " | " + user?.acf?.["user-job-Insitution"] :  ""}</p>
                                                     <div className="d-flex flex-row align-items-center" >
                                                         <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                                     </div>
@@ -220,10 +198,10 @@ export default function AskQuestions() {
                                             <div className="d-flex flex-direction-row">
                                                 <div className="d-flex" style={{marginRight: "6rem"}}>
                                                     <div>
-                                                        <img className="collaboration-details-name-img" src={userProfileImg} alt={userName} loading="lazy" />
+                                                        <img className="collaboration-details-name-img" src={userProfileImg?.length > 0 ? userProfileImg :  defaultImage} alt={userName} loading="lazy" />
                                                     </div>
                                                     <div>
-                                                        <p className="my-0"><strong>{userName}</strong> | {user?.acf?.["user-job-Insitution"]}</p>
+                                                        <p className="my-0"><strong>{userName}</strong>{user?.acf?.["user-job-Insitution"]?.length > 0 ? " | " + user?.acf?.["user-job-Insitution"] :  ""}</p>
                                                         <div className="d-flex flex-row align-items-center" >
                                                             <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                                         </div>
@@ -254,7 +232,7 @@ export default function AskQuestions() {
                                         </div>
                                         {/* Bottom Section */}
                                         <div className="row d-flex flex-row">
-                                            <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
+                                            <img src={UserComment?.length > 0 ? UserComment :  defaultImage} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} loading="lazy" /> 
                                             <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{numberOfComments[0].count} people responded to this</div>
                                             <div className="col-auto">
                                             <Link to={{ pathname: `/question/${question.id}/`}} className="btn btn-primary collab-btn">View</Link>

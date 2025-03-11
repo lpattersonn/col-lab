@@ -1313,6 +1313,10 @@ textarea[data-info=content] {
   border: 2px solid black !important;
   color: black !important;
 }
+.collab-btn:hover {
+  background: black !important;
+  color: white !important;
+}
 
 .collaboration-icon {
   width: 4rem;

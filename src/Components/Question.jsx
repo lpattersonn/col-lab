@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useParams } from "react-router-dom";
 import Navigation from "./Navigation";
 import defaultImage from '../Images/5402435_account_profile_user_avatar_man_icon.svg';
-import { Editor } from '@tinymce/tinymce-react';
+import { Editor } from '@tinymce/tinymce-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
 import axios from "axios";
+import imageCompression from "browser-image-compression";
 
 export default function Question() {
   const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-
+  const editorRef = useRef(null); // Reference for the TinyMCE editor
   const [ question, setQuestion ] = useState({}); 
   const [ comments, setComments ] = useState([]);
   const [ commentStatus, setCommentStatus ] = useState("not approved");
@@ -22,42 +23,27 @@ export default function Question() {
   const { param1 } = useParams();
   const [ createComment, setCreateComment ] = useState('');
   const [loading, setLoading] = useState(true);
-    
+
+    // API Calls
     useEffect(() => {
+      Promise.all([
+        // Single question
         axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions/${param1}`,
           {
             headers: {
               Authorization: `Bearer ${userDetails.token}`
             }
           }
-        )
-        .then((response) => {
-            setQuestion(response.data);
-            localStorage.setItem(`quesiton${param1}`, response.data.title.rendered.substring(0, 15));
-            localStorage.setItem(`quesiton${param1}count`, response.data.title.rendered.length);
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-    }, [comments])
-
-    useEffect(() => {
+        ),
+        // Comments
         axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}`,
           {
             headers: {
               Authorization: `Bearer ${userDetails.token}`
             }
           }
-        )
-        .then((response) => {
-            setComments(response.data);
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-    }, [comments])
-
-    useEffect(() => {
+        ),
+        // All users
         axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`,
           {
             headers: {
@@ -65,13 +51,21 @@ export default function Question() {
             }
           }
         )
-        .then((response) => {
-            setGetUsers(response.data);
-            setLoading(false);
-        })
-        .catch((err) => {
-            console.log(err)
-        })
+      ])
+      .then(([singleQuestion, allSingleComments, allUsers]) => {
+        // Single question
+        setQuestion(singleQuestion.data);
+        localStorage.setItem(`quesiton${param1}`, singleQuestion?.data?.title?.rendered?.substring(0, 15));
+        localStorage.setItem(`quesiton${param1}count`, singleQuestion?.data?.title?.rendered?.length);
+        // Comments
+        setComments(allSingleComments?.data);
+        // All users
+        setGetUsers(allUsers?.data);
+        setLoading(false);
+      })
+      .catch(error=>{
+        console.error(error);
+      });
     }, [comments])
 
     let userName = "";
@@ -95,11 +89,31 @@ export default function Question() {
     // Calculate remaining days after extracting months
     let days = remainingDaysAfterYears % 30;
 
+    // Find detial for user
     for (let name of getUsers) {
       if ( name.id == question.author) {
         userName = name.name;
         userProfileImg = name?.acf?.user_profile_picture;
         userJobInsitution = name['acf']['user-job-Insitution'];
+      }
+    }
+    
+    // Clear editor
+    function clearEditor() {
+      setCreateComment(""); // Reset text content
+      setCommentStatus("not approved");
+      setServerComment("");
+      setSuccessServerComment("");
+      setFile(null); // Reset file state
+      if (editorRef.current) {
+        editorRef.current.setContent(""); // Clear TinyMCE editor
+      }
+      setModalClass("hide");
+    
+      // Clear file input field
+      const fileInput = document.querySelector('input[type="file"]');
+      if (fileInput) {
+        fileInput.value = ""; // Reset file input value
       }
     }
 
@@ -157,7 +171,9 @@ export default function Question() {
               <div dangerouslySetInnerHTML={{ __html: question.content.rendered }} />
               {question['acf'] && question['acf']['answer_image'] && 
                 <div className="question-image mt-3">
-                  <img className="question-image-item" src={question.acf.answer_image} alt={question.acf.answer_image}  loading="lazy" />
+                  <a href={question.acf.answer_image} data-lightbox={userName + "image" + index}>
+                    <img className="question-image-item" src={question.acf.answer_image} alt={question.acf.answer_image}  loading="lazy" />
+                  </a>
                 </div>}
             </div>
           </div>
@@ -171,73 +187,114 @@ export default function Question() {
     }
 
     // TinyMC Handle Change
-    function handleChangeContent(e) {
-      setCreateComment(e.target.getContent());
-    }
+    // function handleChangeContent(e) {
+    //   setCreateComment(e.target.getContent());
+    // }
 
-    // Handle submit
+    // handle submit
     const handleSubmit = async (e) => {
       e.preventDefault();
+      
       try {
-          // Upload image if file exists
-          let imageUrl = '';
-          if (file && userDetails) {
-              const formData = new FormData();
-              formData.append('file', file);
-              const response = await axios.post(
-                  `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
-                  formData,
-                  {
-                      headers: {
-                          'Content-Type': 'multipart/form-data',
-                          Authorization: `Bearer ${userDetails.token}`
-                      }
-                  }
-              );
-              imageUrl = response.data.source_url;
-          }
-
-          // Create comment
-          const commentResponse = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
-              {
-                author: userDetails.id,
-                author_email: userDetails.email,
-                author_name: `${userDetails.firstName} ${userDetails.lastName}`,
-                content: `${createComment}`,
-                post: `${param1}`,
-                status: 'approved',
-                  acf: {
-                      'answer_image': imageUrl,
-                  }
-              },
-              {
-                headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                }
-              }
-          ).then((response) => {
-              setCommentStatus(response.data.status)
-              setSuccessServerComment("Success! Your comment has been published.")
-          })
-          // Update points
-          const updatePoints = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
-           {acf: {
-            "user-points": `${2 + JSON.parse(localStorage.getItem('userPoints'))}`
-          }
-        },
-        {
-          headers: {
-              Authorization: `Bearer ${userDetails.token}`
-          }
-        }
-          ).then(function (response) {
-           })
+        let imageUrl = "";
+        
+        if (file && userDetails) {
+          // Image compression options
+          const options = {
+            maxSizeMB: 1, // Max file size (1MB)
+            maxWidthOrHeight: 1024, // Resize image
+            useWebWorker: true,
+          };
+    
+          console.log("Compressing image...");
           
+          // Compress image before upload
+          const compressedFile = await imageCompression(file, options);
+          const finalFile = new File([compressedFile], file.name, { type: file.type });
+    
+          // Prepare form data
+          const formData = new FormData();
+          formData.append("file", finalFile);
+    
+          console.log("Uploading image...");
+    
+          // Upload the image
+          const response = await axios.post(
+            `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
+            formData,
+            {
+              headers: {
+                Authorization: `Bearer ${userDetails.token}`,
+              },
+            }
+          );
+          imageUrl = response.data.source_url;
+        }
+    
+        // Create comment
+        const commentResponse = await axios.post(
+          `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+          {
+            author: userDetails.id,
+            author_email: userDetails.email,
+            author_name: `${userDetails.firstName} ${userDetails.lastName}`,
+            content: createComment,
+            post: param1,
+            status: "approved",
+            acf: {
+              answer_image: imageUrl,
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userDetails.token}`,
+            },
+          }
+        );
+    
+        setCommentStatus(commentResponse.data.status);
+        setSuccessServerComment("Success! Your comment has been published.");
+        setCreateComment(""); 
+        // tinymce.get("editorId")?.setContent(""); // Clear TinyMCE after submission
+    
+        // Update user points
+        const currentPoints = JSON.parse(localStorage.getItem("userPoints")) || 0;
+        const updatedPoints = currentPoints + 2;
+    
+        console.log("Updating user points...");
+    
+        await axios.post(
+          `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`,
+          {
+            acf: {
+              "user-points": updatedPoints,
+            },
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userDetails.token}`,
+            },
+          }
+        );
+    
+        console.log("User points updated:", updatedPoints);
+        
       } catch (error) {
-        if (error.response.data.message === 'Duplicate comment detected; it looks as though you&#8217;ve already said that!')
-        setServerComment("Oops! You've already submitted this answer.");
+        console.error("Error:", error.response?.data || error);
+    
+        if (
+          error.response?.data?.message ===
+          "Duplicate comment detected; it looks as though you&#8217;ve already said that!"
+        ) {
+          setServerComment("Oops! You've already submitted this answer.");
+        } else {
+          setServerComment("Something went wrong. Please try again.");
+        }
       }
+    };
+
+    if (window.tinymce?.get("editorId")) {
+      window.tinymce.get("editorId").setContent("");
     }
 
   if ( userDetails != null) {
@@ -286,13 +343,7 @@ return (
                                   <div className="card-body question-box">
                                   <div className="modal-popup-icon question-icon-box">
                                     <svg
-                                    onClick={()=>{ 
-                                        setModalClass("hide");  
-                                        setCommentStatus("not approved");
-                                        setServerComment("");
-                                        setSuccessServerComment("");
-                                      }
-                                    }
+                                    onClick={clearEditor}                                    
                                     className="question-icon"
                                     width="12.103323mm"
                                     height="12.105565mm"
@@ -352,6 +403,7 @@ return (
                                     <form onSubmit={handleSubmit}>
                                       <Editor
                                         apiKey={process.env.REACT_APP_TINY_MCE_API_KEY}
+                                        onInit={(evt, editor) => (editorRef.current = editor)}
                                         data-info="content"
                                         className="form-control form-control-lg" 
                                         init={{
@@ -359,7 +411,9 @@ return (
                                           placeholder: 'Give a detailed description of your question. Attach pictures if necessary.',
                                         toolbar: 'undo redo | bold italic underline | superscript subscript | alignleft aligncenter alignright | bullist numlist',
                                         }}
-                                        onChange={handleChangeContent}
+                                        // onChange={handleChangeContent}
+                                        onEditorChange={(content) => setCreateComment(content)}
+
                                       />
                                       
                                       <div className="row">

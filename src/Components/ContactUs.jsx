@@ -27,7 +27,7 @@ if (userDetails != null) {
                         </div>
                         <div className="col-lg-6">
                             <p><strong>Please fill out the contact form below.</strong></p>
-                            <form className="form-create-job mx-auto" action='https://formsubmit.co/mercy@mapltech.com' method='POST'>
+                            <form className="form-create-job mx-auto shadow-lg" action='https://formsubmit.co/mercy@mapltech.com' method='POST'>
                                 <input
                                     type='hiden'
                                     name='_subject'
