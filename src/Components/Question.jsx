@@ -171,8 +171,8 @@ export default function Question() {
               <div dangerouslySetInnerHTML={{ __html: question.content.rendered }} />
               {question['acf'] && question['acf']['answer_image'] && 
                 <div className="question-image mt-3">
-                  <a href={question.acf.answer_image} data-lightbox={userName + "image" + index}>
-                    <img className="question-image-item" src={question.acf.answer_image} alt={question.acf.answer_image}  loading="lazy" />
+                  <a href={question?.acf?.answer_image} data-lightbox={userName + "image" + index}>
+                    <img className="question-image-item" src={question?.acf?.answer_image} alt={question?.acf?.answer_image}  loading="lazy" />
                   </a>
                 </div>}
             </div>
@@ -334,7 +334,9 @@ return (
                                 {question.content && ( <div dangerouslySetInnerHTML={{ __html: question.content.rendered }} />)}
                                 {question['acf'] && question['acf']['question_image'] && 
                                 <div className="question-image mt-3">
-                                  <img className="question-image-item" src={question.acf.question_image} loading='lazy'/>
+                                  <a href={question?.acf?.question_image} data-lightbox={userJobInsitution + "item"}>
+                                      <img className="question-image-item" src={question?.acf?.question_image} alt={question?.acf?.question_image} loading='lazy'/>
+                                  </a>
                                 </div>}
                                 <button className="btn btn-sm btn-outline-info ml-auto" onClick={()=>{setModalClass("show")}}>Answer</button>
                             </div>

@@ -116,7 +116,7 @@ if (userDetails != null) {
                             <img className="collaboration-page_image" src={SectionImage} alt="Image of scientist" role="presentation" />
                         </div>
                         <div className="col-lg-6">
-                        <form className="form-create-job" id="popup-form" onSubmit={handleSubmit}>
+                        <form className="form-create-job shadow-lg" id="popup-form" onSubmit={handleSubmit}>
                                     <div className="row">
                                         <div className="col-12 mb-4">
                                             <p className="lead"><strong>Have a technical question? Ask your peers</strong></p>
