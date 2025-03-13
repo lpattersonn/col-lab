@@ -125,7 +125,7 @@ if (userDetails != null) {
                             </div>
                         </div>
                     </div>
-                    <form className="form-create-job mx-auto" onSubmit={handleSubmit}>
+                    <form className="form-create-job mx-auto shadow-lg" onSubmit={handleSubmit}>
                         <div className="row">
                             <div className="col-12 mb-4">
                                 <p className="lead"><strong>Create a Job Posting</strong></p>

@@ -72,6 +72,7 @@ function ActiveItem({ currentItems }) {
     return (
       <>
         {currentItems.map((job, index) => {
+            console.log(job)
 
             let posted = Date.now() - new Date(job.date);
 
@@ -113,147 +114,159 @@ function ActiveItem({ currentItems }) {
             if (search.length > 0 && job.title.rendered.toLowerCase().includes(search.toLowerCase()) || job.acf.jobs_institution.toLowerCase().includes(search.toLowerCase())) {
                 let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
                 let userProfile = "";
-                let showOpportunity =  localStorage.getItem(`show_learning${index}`);
+                let showJob =  localStorage.getItem(`show_job${index}`);
                 for (let name of users) {
                     if ( name.id == job.author) {
                      userProfile = name;
                     }
-                }
+                 }
                 return (
-                    <Link to={"/job/"+job["id"]} key={index}>
-                        <div className="card get-help-item mb-4">{ seeIfchecked.includes(userDetails?.id?.toString()) ?
-                            (<div className="checked-mark">
-                                <FontAwesomeIcon icon={faSquareCheck} />
-                             </div>) : ''
-            }
-                            <div className="card-body job">
-                                <div className="row">
-                                    <div className='col-lg-3 d-flex align-items-center'>
-                                        <div className='get-help'>
-                                            <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job.title.rendered, search) : job.title.rendered}} /></strong>
+                    <div className={`mb-4 col-lg-6 ${showJob}`} key={index}>
+                    <div className="card collaboration">
+                        <div className="card-body">
+                        {/* Top Section */}
+                            <div className="collaboration-header" style={{marginBottom: "1rem",}}>
+                                <div className="d-flex flex-direction-row">
+                                    <div className="d-flex" style={{marginRight: "6rem"}}>
+                                        <div class="d-flex flex-row">
+                                        <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.title?.rendered, search) : job?.title?.rendered}} /></strong>
+                                            <div className="d-flex flex-row align-items-center" >
+                                                <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className='col-lg-3 d-flex align-items-center'>
-                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job.acf.jobs_institution, search) : job.acf.jobs_institution}} />
+                                </div>
+                                <div className="options-container">
+                                    <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
+                                        <div className="option-button"></div>
+                                        <div className="option-button"></div>
+                                        <div className="option-button"></div>
                                     </div>
-                                    <div className='col-lg-2 d-flex align-items-end'>
-                                        <strong><i>{job?.acf?.jobs_work_location}</i></strong>
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center'>
-                                    {job?.acf?.jobs_city}, {job?.acf?.jobs_country}
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                        {years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}
+                                    <div className={`option-items ${optionDisplay[index]}`}>
+                                        <div className="option-item" onClick={() => {
+                                            localStorage.setItem(`show_job${index}`, 'hide')
+                                            handleHideCollaboration(index)
+                                            }}>Hide</div>
+                                        <div className="option-item" onClick={()=>{
+                                            submitReport(job, userDetails);
+                                        }}>Report</div>
                                     </div>
                                 </div>
                             </div>
+                            {/* Middle Section */}
+                            <div style={{marginBottom: "1.8rem"}}>
+                                <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}} /></strong>
+                                <p class="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
+                                <div className="row d-flex align-items-center">
+                                    <div className="col-6">
+                                        <div className="d-flex flex-direction-row my-3">
+                                            <div className="designation-button">
+                                                <span className="small">{job?.acf?.["jobs_job_type"]}</span>
+                                            </div>
+                                            <div className="due-button">
+                                                <span className="small">Deadline {job?.acf?.["jobs_application_deadline"]}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-6 d-flex justify-content-end">
+                                        {seeIfchecked.includes(userDetails?.id?.toString()) ?
+                                        (<div className="checked-mark">
+                                        <FontAwesomeIcon icon={faSquareCheck} /> <span class="small grey">Applied</span>
+                                        </div>) : ''}
+                                    </div>
+                                </div>
+                                <div dangerouslySetInnerHTML={{ __html: job?.acf?.jobs_description?.length > 250 ? job?.acf?.jobs_description?.slice(0, 250)+"..." : job?.acf?.jobs_description}} />
+                            </div>
+                            {/* Bottom Section */}
+                            <div className="row d-flex justify-content-between flex-row">                                        
+        
+                                <div className="col-auto ml-auto">
+                                    <a href={"/job/"+job["id"]} className="btn btn-primary collab-btn">Explore Job</a>
+                                </div>
+                           
+                            </div>
                         </div>
-                    </Link>
+                    </div>
+                </div>
                 )
             }
             if (search.length == 0) {
                 let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
                 let userProfile = "";
-                let showOpportunity =  localStorage.getItem(`show_learning${index}`);
+                let showJob =  localStorage.getItem(`show_job${index}`);
                 for (let name of users) {
                     if ( name.id == job.author) {
                      userProfile = name;
                     }
                 }
                 return (
-                    <Link to={"/job/"+job["id"]} key={index}>
-                        <div className="card get-help-item mb-4">{ seeIfchecked.includes(userDetails?.id?.toString()) ?
-                            (<div className="checked-mark">
-                                <FontAwesomeIcon icon={faSquareCheck} />
-                             </div>) : ''
-            }
-                            <div className="card-body job">
-                                <div className="row">
-                                    <div className='col-lg-3 d-flex align-items-center'>
-                                        <div className='get-help'>
-                                            <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job.title.rendered, search) : job.title.rendered}} /></strong>
-                                        </div>
-                                    </div>
-                                    <div className='col-lg-3 d-flex align-items-center'>
-                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job.acf.jobs_institution, search) : job.acf.jobs_institution}} />
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center'>
-                                        <strong><i>{job?.acf?.jobs_work_location}</i></strong>
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center align-items-center'>
-                                    {job?.acf?.jobs_city}, {job?.acf?.jobs_country}
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                        {years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}
+            <div className={`mb-4 col-lg-6 ${showJob}`} key={index}>
+            <div className="card collaboration">
+                <div className="card-body">
+                {/* Top Section */}
+                    <div className="collaboration-header" style={{marginBottom: "1rem",}}>
+                        <div className="d-flex flex-direction-row">
+                            <div className="d-flex" style={{marginRight: "6rem"}}>
+                                <div class="d-flex flex-row">
+                                <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job.title.rendered, search) : job.title.rendered}} /></strong>
+                                    <div className="d-flex flex-row align-items-center" >
+                                        <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div className="options-container">
+                            <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
+                                <div className="option-button"></div>
+                                <div className="option-button"></div>
+                                <div className="option-button"></div>
+                            </div>
+                            <div className={`option-items ${optionDisplay[index]}`}>
+                                <div className="option-item" onClick={() => {
+                                    localStorage.setItem(`show_job${index}`, 'hide')
+                                    handleHideCollaboration(index)
+                                    }}>Hide</div>
+                                <div className="option-item" onClick={()=>{
+                                    submitReport(job, userDetails);
+                                }}>Report</div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Middle Section */}
+                    <div style={{marginBottom: "1.8rem"}}>
+                        <h3 style={{fontSize: "1.4rem", marginBottom: "1rem"}}>{search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}</h3>
+                        <p class="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
+                        <div className="row d-flex align-items-center">
+                            <div className="col-6">
+                                <div className="d-flex flex-direction-row my-3">
+                                    <div className="designation-button">
+                                        <span className="small">{job?.acf?.["jobs_job_type"]}</span>
+                                    </div>
+                                    <div className="due-button">
+                                        <span className="small">Deadline {job?.acf?.["jobs_application_deadline"]}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="col-6 d-flex justify-content-end">
+                                {seeIfchecked.includes(userDetails?.id?.toString()) ?
+                                (<div className="checked-mark">
+                                <FontAwesomeIcon icon={faSquareCheck} /> <span class="small grey">Applied</span>
+                                </div>) : ''}
+                            </div>
+                        </div>
+                        <div dangerouslySetInnerHTML={{ __html: job?.acf?.jobs_description?.length > 250 ? job?.acf?.jobs_description?.slice(0, 250)+"..." : job?.acf?.jobs_description}} />
+                    </div>
+                    {/* Bottom Section */}
+                    <div className="row d-flex justify-content-between flex-row">                                        
 
-                        {/* New Section */}
-                        <div className={`${showOpportunity} mb-4 col-lg-6`} key={index}>
-                            <div className="card collaboration">
-                                <div className="card-body">
-                                {/* Top Section */}
-                                    <div className="collaboration-header">
-                                        <div className="d-flex flex-direction-row">
-                                            <div className="d-flex" style={{marginRight: "6rem"}}>
-                                                <div>
-                                                    <img className="collaboration-details-name-img" src={userProfile?.acf?.user_profile_picture} alt={userProfile.name} loading="lazy" />
-                                                </div>
-                                                <div>
-                                                    <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]} | {userProfile?.acf?.["user-country-of-residence"]}</p>
-                                                    <div className="d-flex flex-row align-items-center" >
-                                                        <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="options-container">
-                                            <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
-                                                <div className="option-button"></div>
-                                                <div className="option-button"></div>
-                                                <div className="option-button"></div>
-                                            </div>
-                                            <div className={`option-items ${optionDisplay[index]}`}>
-                                                <div className="option-item" onClick={() => {
-                                                    localStorage.setItem(`show_learning${index}`, 'hide')
-                                                    handleHideCollaboration(index)
-                                                    }}>Hide</div>
-                                                <div className="option-item" onClick={()=>{
-                                                    submitReport(job, userDetails);
-                                                }}>Report</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Middle Section */}
-                                    <div style={{marginBottom: "1.8rem"}}>
-                                        <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}>{job?.acf?.learning_description}</h3>
-                                        <div>{job?.acf?.learning_features?.length > 250 ? job?.acf?.learning_features?.slice(0, 250)+"..." : job?.acf?.learning_features}</div>
-                                        <div className="d-flex flex-direction-row mt-4">
-                                            <div className="designation-button">
-                                                <span className="small">{job?.acf?.["learning_pay"]}</span>
-                                            </div>
-                                            <div className="due-button">
-                                                <span className="small">Deadline {job?.acf?.["learning_deadline"]}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Bottom Section */}
-                                    <div className="row d-flex justify-content-between flex-row">                                        
-                                        <div className="mt-2 col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {localStorage.getItem(`learning_count${index}`)} people responded to this</div>
-                                        {userDetails.id != job.author ?
-                                        <div className="col-auto ml-auto">
-                                            <a href={`/collaboration-chat/${job.id}`} className="btn btn-primary collab-btn">Chat</a>
-                                        </div>
-                                        : ""
-                                        }
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="col-auto ml-auto">
+                            <a href={"/job/"+job["id"]} className="btn btn-primary collab-btn">Explore Job</a>
                         </div>
-                        {/* New Section End*/}
-                    </Link>
+                   
+                    </div>
+                </div>
+            </div>
+        </div>
                 )
             }
         }
@@ -307,6 +320,19 @@ function ActiveItem({ currentItems }) {
 // Start paginated expired jobs
 
 function ExpiredItem({ currentItems }) {
+    const [optionDisplay, setOptionDisplay] = useState({});
+    let [buttonClick, setButtonClick] = useState(0);
+
+    const handleToggleOptions = (index) => {
+        setOptionDisplay(prevState => ({
+            ...prevState,
+            [index]: prevState[index] === 'show' ? 'hide' : 'show'
+        }));
+    };
+
+    const handleHideCollaboration = (index) => {
+        setButtonClick(prev => prev + 1); // Trigger a re-render by updating state
+    };
     return (
       <>
         {currentItems.map((job, index) => {
@@ -349,72 +375,148 @@ function ExpiredItem({ currentItems }) {
 
             if (search.length > 0 && job.title.rendered.toLowerCase().includes(search.toLowerCase()) || job.acf.jobs_institution.toLowerCase().includes(search.toLowerCase())) {
                 let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
-                let showOpportunity =  localStorage.getItem(`show_learning${index}`);
+                let showJob =  localStorage.getItem(`show_job${index}`);
                 return (
-                    <Link to={"/job/"+job["id"]} key={index}>
-                        <div className="card get-help-item mb-4">{ seeIfchecked.includes(userDetails?.id?.toString()) ?
-                            (<div className="checked-mark">
-                                <FontAwesomeIcon icon={faSquareCheck} />
-                             </div>) : ''
-            }
-                            <div className="card-body job">
-                                <div className="row">
-                                    <div className='col-lg-3 d-flex align-items-center'>
-                                        <div className='get-help'>
-                                            <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job.title.rendered, search) : job.title.rendered}} /></strong>
+                    <div className={`mb-4 col-lg-6 ${showJob}`} key={index}>
+                    <div className="card collaboration">
+                        <div className="card-body">
+                        {/* Top Section */}
+                            <div className="collaboration-header" style={{marginBottom: "1rem",}}>
+                                <div className="d-flex flex-direction-row">
+                                    <div className="d-flex" style={{marginRight: "6rem"}}>
+                                        <div class="d-flex flex-row">
+                                        <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.title?.rendered, search) : job?.title?.rendered}} /></strong>
+                                            <div className="d-flex flex-row align-items-center" >
+                                                <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className='col-lg-3 d-flex align-items-center'>
-                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job.acf.jobs_institution, search) : job.acf.jobs_institution}} />
+                                </div>
+                                <div className="options-container">
+                                    <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
+                                        <div className="option-button"></div>
+                                        <div className="option-button"></div>
+                                        <div className="option-button"></div>
                                     </div>
-                                    <div className='col-lg-2 d-flex align-items-center'>
-                                        <strong><i>{job?.acf?.jobs_work_location}</i></strong>
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center align-items-center'>
-                                        {job?.acf?.jobs_city}, {job?.acf?.jobs_country}
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center justify-content-end'>                            
-                                        {years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}
+                                    <div className={`option-items ${optionDisplay[index]}`}>
+                                        <div className="option-item" onClick={() => {
+                                            localStorage.setItem(`show_job${index}`, 'hide')
+                                            handleHideCollaboration(index)
+                                            }}>Hide</div>
+                                        <div className="option-item" onClick={()=>{
+                                            submitReport(job, userDetails);
+                                        }}>Report</div>
                                     </div>
                                 </div>
                             </div>
+                            {/* Middle Section */}
+                            <div style={{marginBottom: "1.8rem"}}>
+                                <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}} /></strong>
+                                <p class="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
+                                <div className="row d-flex align-items-center">
+                                    <div className="col-6">
+                                        <div className="d-flex flex-direction-row my-3">
+                                            <div className="designation-button">
+                                                <span className="small">{job?.acf?.["jobs_job_type"]}</span>
+                                            </div>
+                                            <div className="due-button">
+                                                <span className="small">Deadline {job?.acf?.["jobs_application_deadline"]}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-6 d-flex justify-content-end">
+                                        {seeIfchecked.includes(userDetails?.id?.toString()) ?
+                                        (<div className="checked-mark">
+                                        <FontAwesomeIcon icon={faSquareCheck} /> <span class="small grey">Applied</span>
+                                        </div>) : ''}
+                                    </div>
+                                </div>
+                                <div dangerouslySetInnerHTML={{ __html: job?.acf?.jobs_description?.length > 250 ? job?.acf?.jobs_description?.slice(0, 250)+"..." : job?.acf?.jobs_description}} />
+                            </div>
+                            {/* Bottom Section */}
+                            <div className="row d-flex justify-content-between flex-row">                                        
+        
+                                <div className="col-auto ml-auto">
+                                    <a href={"/job/"+job["id"]} className="btn btn-primary collab-btn">Explore Job</a>
+                                </div>
+                           
+                            </div>
                         </div>
-                    </Link>
+                    </div>
+                </div>
                 )
             }
             if (search.length == 0) {
                 let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
-                let showOpportunity =  localStorage.getItem(`show_learning${index}`);
+                let showJob =  localStorage.getItem(`show_job${index}`);
                 return (
-                    <Link to={"/job/"+job["id"]} key={index}>
-                        <div className="card get-help-item mb-4">{ seeIfchecked.includes(userDetails?.id?.toString()) ?
-                            (<div className="checked-mark">
-                                <FontAwesomeIcon icon={faSquareCheck} />
-                             </div>) : ''
-            }
-                            <div className="card-body job">
-                                <div className="row">
-                                    <div className='col-lg-3 d-flex align-items-center'>
-                                        <div className='get-help'>
-                                            <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job.title.rendered, search) : job.title.rendered}} /></strong>
+                    <div className={`mb-4 col-lg-6 ${showJob}`} key={index}>
+                    <div className="card collaboration">
+                        <div className="card-body">
+                        {/* Top Section */}
+                            <div className="collaboration-header" style={{marginBottom: "1rem",}}>
+                                <div className="d-flex flex-direction-row">
+                                    <div className="d-flex" style={{marginRight: "6rem"}}>
+                                        <div class="d-flex flex-row">
+                                        <strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.title?.rendered, search) : job?.title?.rendered}} /></strong>
+                                            <div className="d-flex flex-row align-items-center" >
+                                                <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className='col-lg-3 d-flex align-items-center'>
-                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job.acf.jobs_institution, search) : job.acf.jobs_institution}} />
+                                </div>
+                                <div className="options-container">
+                                    <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
+                                        <div className="option-button"></div>
+                                        <div className="option-button"></div>
+                                        <div className="option-button"></div>
                                     </div>
-                                    <div className='col-lg-2 d-flex align-items-center'>
-                                        <strong><i>{job?.acf?.jobs_work_location}</i></strong>
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center align-items-center'>
-                                    {job?.acf?.jobs_city}, {job?.acf?.jobs_country}
-                                    </div>
-                                    <div className='col-lg-2 d-flex align-items-center justify-content-end'>
-                                        {years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}
+                                    <div className={`option-items ${optionDisplay[index]}`}>
+                                        <div className="option-item" onClick={() => {
+                                            localStorage.setItem(`show_job${index}`, 'hide')
+                                            handleHideCollaboration(index)
+                                            }}>Hide</div>
+                                        <div className="option-item" onClick={()=>{
+                                            submitReport(job, userDetails);
+                                        }}>Report</div>
                                     </div>
                                 </div>
                             </div>
+                            {/* Middle Section */}
+                            <div style={{marginBottom: "1.8rem"}}>
+                                <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}} /></strong>
+                                <p class="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
+                                <div className="row d-flex align-items-center">
+                                    <div className="col-6">
+                                        <div className="d-flex flex-direction-row my-3">
+                                            <div className="designation-button">
+                                                <span className="small">{job?.acf?.["jobs_job_type"]}</span>
+                                            </div>
+                                            <div className="due-button">
+                                                <span className="small">Deadline {job?.acf?.["jobs_application_deadline"]}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-6 d-flex justify-content-end">
+                                        {seeIfchecked.includes(userDetails?.id?.toString()) ?
+                                        (<div className="checked-mark">
+                                        <FontAwesomeIcon icon={faSquareCheck} /> <span class="small grey">Applied</span>
+                                        </div>) : ''}
+                                    </div>
+                                </div>
+                                <div dangerouslySetInnerHTML={{ __html: job?.acf?.jobs_description?.length > 250 ? job?.acf?.jobs_description?.slice(0, 250)+"..." : job?.acf?.jobs_description}} />
+                            </div>
+                            {/* Bottom Section */}
+                            <div className="row d-flex justify-content-between flex-row">                                        
+        
+                                <div className="col-auto ml-auto">
+                                    <a href={"/job/"+job["id"]} className="btn btn-primary collab-btn">Explore Job</a>
+                                </div>
+                           
+                            </div>
                         </div>
-                    </Link>
+                    </div>
+                </div>
                 )
             }
         }
@@ -506,12 +608,14 @@ function ExpiredItem({ currentItems }) {
                     </ul>
                     <div className="tab-content" id="ex1-content">
                         <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-                            {/* {localStorage.getItem('countActiveJobs') > 0 ? <ActivePaginatedItems itemsPerPage={15} /> : <p><strong>Nothing to show here.</strong></p>} */}
-                            <ActivePaginatedItems itemsPerPage={15} />
+                            <div className="row">
+                                <ActivePaginatedItems itemsPerPage={15} />
+                            </div>
                         </div>
                         <div className="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-                            {/* {localStorage.getItem('countExpiredJobs') > 0 ? < ExpiredPaginatedItems itemsPerPage={15} />: <p><strong>Nothing to show here.</strong></p>} */}
-                            <ExpiredPaginatedItems itemsPerPage={15} />
+                            <div className="row">
+                                <ExpiredPaginatedItems itemsPerPage={15} />
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1326,10 +1326,12 @@ textarea[data-info=content] {
   margin-left: auto;
   position: relative;
   width: fit-content;
+  position: relative;
+  z-index: 999999;
 }
 .options-container .options {
   position: relative;
-  z-index: 10;
+  z-index: 999999;
   height: fit-content;
   cursor: pointer;
 }

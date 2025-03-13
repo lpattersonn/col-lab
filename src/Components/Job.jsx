@@ -77,7 +77,7 @@ export default function CreateJob() {
                             </div>
                         </div>
                     </div>
-                    <form className="form-create-job mx-auto" >
+                    <form className="form-create-job mx-auto shadow-lg" >
                         <div className="row">
                             <div className="col-12 mb-4">
                                 <h1>{jobDetails?.title?.rendered}</h1>
