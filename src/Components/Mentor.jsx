@@ -131,7 +131,7 @@ export default function Mentor() {
                     <div className="page-filter">
                         <div className="row mb-5">
                             <div className="col-12 d-flex">
-                            <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">></span><Link to="/mentorship-opportunities" className="link-dark small d-flex align-items-center">Mentorship Opportunities</Link><span className="breadcrumb-slash d-flex align-items-center">>></span><span className="small d-flex align-items-center">{mentorDetails?.name}</span>
+                                <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">></span><Link to="/mentorship-opportunities" className="link-dark small d-flex align-items-center">Mentorship Opportunities</Link><span className="breadcrumb-slash d-flex align-items-center">>></span><span className="small d-flex align-items-center">{mentorDetails?.name}</span>
                             </div>
                         </div>
                     </div>

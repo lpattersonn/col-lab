@@ -6,10 +6,8 @@ import { Tab, initMDB } from "mdb-ui-kit";
 import { renderedQuestion } from "../helper"
 import ReactPaginate from 'react-paginate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquareCheck, faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
-import UserComment from "../Images/user-comment.svg";
+import { faSquareCheck, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { submitReport } from '../helper';
-
 
 export default function Jobs() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -560,7 +558,6 @@ export default function Jobs() {
   }
   
 // End paginated expired jobs
-
 
   if (userDetails != null) {
     return(
