@@ -1,6 +1,26 @@
-.job {
-    padding-top: 2.5rem !important;
-    padding-bottom: 2.5rem !important;
+// Jobs
+.tab-items {
+    // Single Job
+    .jobs-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4rem 3rem;        
+        @media screen and (max-width: 999px) {
+            grid-template-columns: 1fr;
+        }
+        .job {
+            width: 100%;
+            height: 100%;
+            .card {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}
+
+.postedDate {
+    white-space: nowrap;
 }
 
 .form-create-job {

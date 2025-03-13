@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquareCheck, faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import { Editor } from '@tinymce/tinymce-react';
 
 export default function CreateJob() {
@@ -25,6 +27,7 @@ export default function CreateJob() {
         jobs_application_deadline: '',
         jobs_exptected_start_date: '',
         jobs_applied_users: '',
+        short_description: '',
     })
     const [ getCountries, setGetCountries ] = useState([]);
 
@@ -57,7 +60,7 @@ export default function CreateJob() {
                 {   
                     'title':  createJob.title,
                     'content': createComment,
-                    'excerpt': createJob.title,
+                    'excerpt': createJob.short_description,
                     'author': userDetails.id,
                     'status': 'publish',
                     'acf' : {
@@ -121,7 +124,7 @@ if (userDetails != null) {
                     <div className="page-filter">
                         <div className="row mb-5">
                             <div className="col-12 d-flex">
-                                <Link to="/" className="link-dark small d-flex align-items-center"><svg className="back-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>Home</Link><span className="breadcrumb-slash">/</span><Link className="link-dark small d-flex align-items-center" to="/jobs">Jobs</Link><span className="breadcrumb-slash">/</span><span className="small">Create Job</span>
+                            <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash">></span><Link to="/jobs" className="link-dark small">Jobs</Link><span className="breadcrumb-slash">>></span><span className="small d-flex align-items-center">Create Job</span>
                             </div>
                         </div>
                     </div>
@@ -197,6 +200,12 @@ if (userDetails != null) {
                             </div>
                             <div className="col-lg-6  mb-4">
                                 <input className="form-control form-control-lg" type="text" name="jobs_city"  value={createJob.jobs_city} onChange={handleChange} aria-label='Job City' placeholder="City" autoComplete='on' disabled={ jobStatus === 'publish' ? true : false} required />
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col-lg-12  mb-4">
+                                <p className="mb-2"><strong>Short Description:</strong></p>
+                                <textarea className="form-control form-control-lg" type="text" name="short_description" rows="3"  value={createJob.short_description} onChange={handleChange} aria-label='Job Short Description' placeholder="Short Description" autoComplete='on' disabled={ jobStatus === 'publish' ? true : false} required />
                             </div>
                         </div>
                         <div className="row">
