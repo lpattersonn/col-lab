@@ -346,3 +346,7 @@ a {
   justify-content: center;
   align-items: center;
 }
+
+.slide-pane__content {
+  padding: 10rem 3rem !important;
+}
