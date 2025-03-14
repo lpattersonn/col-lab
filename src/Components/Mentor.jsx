@@ -135,7 +135,7 @@ export default function Mentor() {
                             </div>
                         </div>
                     </div>
-                    <div className="form-create-job mx-auto" >
+                    <div className="form-create-job mx-auto shadow-lg" >
                         <div className="row mb-4 d-flex align-items-center">
                             <div className="col-auto mb-4">
                                 <img className="mentor-details-img" src={mentorDetails?.acf?.user_profile_picture} alt={mentorDetails?.name} />
