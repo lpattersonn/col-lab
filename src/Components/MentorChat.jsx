@@ -283,7 +283,7 @@ if (userDetails !== null) {
                                     </div>
                                     <div className={"search-chats-container"+" "+"row"+" "+`${searchBarStatus}`}>
                                         <div className="col">
-                                            <input className="form-control" value={searchValue} onChange={(e) => {setSearchValue(e.target.value)}} type="search" placeholder="Search chats"/>
+                                            <input className="form-control" value={searchValue} onChange={(e) => {setSearchValue(e.target.value)}} type="search" placeholder="Type a name"/>
                                         </div>
                                     </div>
                                     <hr className="mb-0"></hr>
