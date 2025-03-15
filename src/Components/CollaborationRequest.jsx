@@ -87,7 +87,7 @@ if (userDetails != null) {
                             <img className="collaboration-page_image" src={SectionImage} alt="Image of scientist" role="presentation" />
                         </div>
                         <div className="col-lg-6">
-                            <form className="form-create-job points mx-auto" onSubmit={handleSubmit}>
+                            <form className="form-create-job points mx-auto shadow-lg" onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
                                         <label htmlFor="collaborations_description"><strong>Type your request briefly (150 characters max).</strong></label>

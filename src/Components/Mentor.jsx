@@ -103,7 +103,7 @@ export default function Mentor() {
                     'mentors_id': `${param1}`,
                     'mentee_id': `${userDetails.id}`,
                     'mentors_image': `${mentorDetails?.acf?.user_profile_picture}`,
-                    'mentee_id': `${mentorDetails?.acf?.user_profile_picture}`,
+                    'mentee_image': `${mentorDetails?.acf?.user_profile_picture}`,
                 }
             },
             {

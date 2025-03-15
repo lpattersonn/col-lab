@@ -116,49 +116,49 @@ if (userDetails != null) {
                             <img className="collaboration-page_image" src={SectionImage} alt="Image of scientist" role="presentation" />
                         </div>
                         <div className="col-lg-6">
-                        <form className="form-create-job shadow-lg" id="popup-form" onSubmit={handleSubmit}>
-                                    <div className="row">
-                                        <div className="col-12 mb-4">
-                                            <p className="lead"><strong>Have a technical question? Ask your peers</strong></p>
-                                        </div>
-                                        <div className="col-12 mb-4">
-                                            <input className="form-control" type="text" name="title"  disabled={askQuestionStatus === 'published' ? true : false} value={askQuestionApi.title} onChange={handleChange} aria-label='Question field' placeholder="Type your question briefly (140 characters max.)" autoComplete='off' required />
-                                            { askQuestionApi?.title?.length == 140 ?
-                                            <p className="small red">Maximum characters reached!</p> : '' }
-                                        </div>
-                                        <div className="col-12 mb-4">
-                                            <Editor
-                                              apiKey={process.env.REACT_APP_TINY_MCE_API_KEY}
-                                              data-info="content"
-                                              className="form-control" 
-                                              init={{
-                                                readOnly: askQuestionStatus === 'published' ? true : false,
-                                                selector: 'textarea',
-                                                placeholder: 'Give a detailed description of your question. Attach pictures if necessary.',
-                                              toolbar: 'undo redo | bold italic underline | superscript subscript | alignleft aligncenter alignright | bullist numlist',
-                                              }}
-                                              onChange={handleChangeContent}
-                                            />
-                                        </div>
-                                        <div className="col-lg-12 mb-4">
-                                            <p className="m-0 small"><strong>Subject area:</strong></p>
-                                            <select className="form-control form-select" name="question_subject_area"  onChange={handleChange} disabled={askQuestionStatus === 'published' ? true : false} required>
-                                            <option defaultValue selected value="">Choose subject</option>
-                                                {optionsArray}
-                                            </select>
-                                        </div>
-                                        <div className="col-12 mb-4">
-                                            <input className="form-control" type="file" onChange={handleFileChange} disabled={askQuestionStatus === 'published' ? true : false} />
-                                        </div>
+                            <form className="form-create-job shadow-lg points" id="popup-form" onSubmit={handleSubmit}>
+                                <div className="row">
+                                    <div className="col-12 mb-4">
+                                        <p className="lead"><strong>Have a technical question? Ask your peers</strong></p>
                                     </div>
-                                    { askQuestionStatus === "published" ? 
-                                    <div className="alert alert-success" role="alert">
-                                        <p>Success! Your question has been published!</p>
+                                    <div className="col-12 mb-4">
+                                        <input className="form-control" type="text" name="title"  disabled={askQuestionStatus === 'published' ? true : false} value={askQuestionApi.title} onChange={handleChange} aria-label='Question field' placeholder="Type your question briefly (140 characters max.)" autoComplete='off' required />
+                                        { askQuestionApi?.title?.length == 140 ?
+                                        <p className="small red">Maximum characters reached!</p> : '' }
                                     </div>
-                                    : ''    
-                                    }
-                                    <button className="btn btn-info btn-lg" disabled={askQuestionStatus === 'published' ? true : false} type="submit">Submit</button>
-                                </form>      
+                                    <div className="col-12 mb-4">
+                                        <Editor
+                                            apiKey={process.env.REACT_APP_TINY_MCE_API_KEY}
+                                            data-info="content"
+                                            className="form-control" 
+                                            init={{
+                                            readOnly: askQuestionStatus === 'published' ? true : false,
+                                            selector: 'textarea',
+                                            placeholder: 'Give a detailed description of your question. Attach pictures if necessary.',
+                                            toolbar: 'undo redo | bold italic underline | superscript subscript | alignleft aligncenter alignright | bullist numlist',
+                                            }}
+                                            onChange={handleChangeContent}
+                                        />
+                                    </div>
+                                    <div className="col-lg-12 mb-4">
+                                        <p className="m-0 small"><strong>Subject area:</strong></p>
+                                        <select className="form-control form-select" name="question_subject_area"  onChange={handleChange} disabled={askQuestionStatus === 'published' ? true : false} required>
+                                        <option defaultValue selected value="">Choose subject</option>
+                                            {optionsArray}
+                                        </select>
+                                    </div>
+                                    <div className="col-12 mb-4">
+                                        <input className="form-control" type="file" onChange={handleFileChange} disabled={askQuestionStatus === 'published' ? true : false} />
+                                    </div>
+                                </div>
+                                { askQuestionStatus === "published" ? 
+                                <div className="alert alert-success" role="alert">
+                                    <p>Success! Your question has been published!</p>
+                                </div>
+                                : ''    
+                                }
+                                <button className="btn btn-info btn-lg" disabled={askQuestionStatus === 'published' ? true : false} type="submit">Submit</button>
+                            </form>      
                         </div>           
                     </div>
                 </div>

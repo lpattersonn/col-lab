@@ -1,190 +1,150 @@
-import React, { Component, useState, useEffect } from 'react';
-import { render } from "react-dom";
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navigation from './Navigation';
 import axios from 'axios';
 import SendIcon from '../Images/send_icon.svg';
-import WinkIcon from '../Images/grinning-face-with-smiling-eyes-emoji-icon.svg';
 import SearchIcon from '../Images/search_icon.svg';
-import Attachment from '../Images/attachment_office_paperclip_supplies_icon.svg';
-import Schedule from '../Images/calendar.svg';
-import Notification from '../Images/bell.svg';
-import EmojiPicker from 'emoji-picker-react';
 import SlidingPane from "react-sliding-pane";
 import { TailSpin } from "react-loader-spinner";
-import BookAMentor from "./BookAMentor.jsx";
 import "react-sliding-pane/dist/react-sliding-pane.css";
 
 export default function CollaborationChat() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const { param1 } = useParams();
     const [ user, setUser ] =  useState({})
-    const [ mentor, setMentor ] =  useState({})
-    const [ mentee, setMentee ] =  useState({})
-    const [ allMentorChats, setAllMentorChats ] =  useState([])
-    const [ mentorChatDetails, setMentorChatDetails ] =  useState({})
+    const [ requestor, setRequestor ] =  useState({})
+    const [ participant, setParticipant ] =  useState({})
+    const [ allChats, setAllChats ] =  useState([])
+    const [ chatDetails, setChatDetails ] =  useState({})
     const [ comments, setComments ] =  useState([])
     const [ comment, setComment ] =  useState('')
     const [ searchBarStatus, setSearchBarStatus ] =  useState('hide')
-    const [ calenderModal, setCalenderModal ] = useState('hide');
-    const [ emojiPicker, setEmojiPicker ] = useState(true);
+    const [searchValue, setSearchValue ] = useState("");
     const [overFLow, setOverFlow] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [request, setRequest] = useState(0);
     const [state, setState] = useState({
         isPaneOpen: false,
         isPaneOpenLeft: false,
       });
+
     const Navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
-            {
-                headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                }
-            }
-        ).then((response) => {
-            let objects = response?.data?.filter((item) => {
-                return item?.acf?.mentor_agree === "Not chosen";
-            })?.filter((item) => {
-                return item?.acf?.mentor_chat_id == Number(param1);
-            })
-            setRequest(objects?.length)
-        }).catch((err) => {})
-    });
-
-    // Set user information
-    // useEffect(() => {
-    //         axios({
-    //             method: 'GET',
-    //             url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats/${param1}`,
-    //             headers: {
-    //                 Authorization: `Bearer ${userDetails.token}`
-    //               }
-    //         }
-    //     ).then((res) => {
-    //         setMentorChatDetails(res?.data)
-    //     }).catch((err) => {
-    //         Navigate('/mentorship-opportunities')
-    //     })
-    // }, [param1])
-
-    // Get all mentor chats
-    useEffect(() => {
-            axios({
-                method: 'GET',
-                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`,
-                headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                  }
-            }
-        ).then((res) => {
-            setAllMentorChats(res.data);
-        }).catch((err) => {
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`, {
+            headers: { Authorization: `Bearer ${userDetails?.token}` }
         })
-    }, [])
+        .then((response) => {
+            let filteredData = response?.data;
+    
+            if (searchValue?.length > 0) {
+                const searchLower = searchValue.toLowerCase();
+                filteredData = response.data.filter((chat) => {
+                    const requestorName = chat?.acf?.requestor_name?.toLowerCase();
+                    const participantName = chat?.acf?.participant_name?.toLowerCase();
+    
+                    return requestorName.includes(searchLower) || participantName.includes(searchLower);
+                });
+            }
+    
+            setAllChats(filteredData);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    }, [searchValue, userDetails]); // Ensure `userDetails` is included if `token` is used
+    
 
-    // Set mentor information
     useEffect(() => {
+    if (!userDetails?.token || !param1) return;
+
+    const fetchData = async () => {
+        try {
+            const [allMentorRequests, singleChat, singleUserDetails, allComments] = await Promise.all([
+                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`, {
+                    headers: { Authorization: `Bearer ${userDetails?.token}` }
+                }),
+                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats/${param1}`, {
+                    headers: { Authorization: `Bearer ${userDetails?.token}` }
+                }),
+                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`, {
+                    headers: { Authorization: `Bearer ${userDetails?.token}` }
+                }),
+                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}&per_page=100`, {
+                    headers: { Authorization: `Bearer ${userDetails?.token}` }
+                }),
+            ]);
+
+            setChatDetails(singleChat?.data);
+            setUser(singleUserDetails?.data);
+            setComments(allComments?.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchData(); // Fetch immediately
+    const interval = setInterval(fetchData, 2000);
+
+    return () => clearInterval(interval);
+}, [userDetails?.token, param1]);
+
+// Fetch Mentor & Mentee Details Separately
+useEffect(() => {
+    if (!chatDetails?.acf || !chatDetails?.acf?.requestor_id || !chatDetails?.acf?.participant_id || !userDetails?.token) return;
+
+    const fetchMentorMentee = async () => {
+        try {
+            const [requestorDetails, participantDetails] = await Promise.all([
+                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${chatDetails.acf.requestor_id}`, {
+                    headers: { Authorization: `Bearer ${userDetails?.token}` }
+                }),
+                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${chatDetails.acf.participant_id}`, {
+                    headers: { Authorization: `Bearer ${userDetails?.token}` }
+                })
+            ]);
+
+            setRequestor(requestorDetails.data);
+            setParticipant(participantDetails.data);
+        } catch (error) {
+            console.error("Error fetching mentor/mentee details:", error);
+        }
+    };
+
+    fetchMentorMentee();
+}, [chatDetails?.acf?.requestor_id, chatDetails?.acf?.participant_id, userDetails?.token]);
+ 
+    const SideBarChats = allChats.map((chat, index) => {
+        if (userDetails?.id === chat?.acf?.requestor_id || userDetails?.id === chat?.acf?.participant_id) {
             axios({
                 method: 'GET',
-                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${mentorChatDetails?.acf?.mentors_id}`,
+                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${chat.id}&per_page=100`,
                 headers: {
                     Authorization: `Bearer ${userDetails?.token}`
-                  }
-            }
-        ).then((res) => {
-            setMentor(res.data)
-        }).catch((err) => {
-        })
-    }, [mentorChatDetails])
+                    }
+            })
+            .then((response) => {
+                localStorage.setItem(`sideBarCollaborationChat${index}`, JSON.stringify(response.data))
+            })
+            .catch((err) => {
+            })
 
-    // Set mentees information
-    useEffect(() => {
-        axios({
-            method: 'GET',
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${mentorChatDetails?.acf?.mentee_id}`,
-            headers: {
-                Authorization: `Bearer ${userDetails?.token}`
-              }
-        }
-        ).then((res) => {
-            setMentee(res.data)
-        }).catch((err) => {
-        })
-    }, [mentorChatDetails])
+            let array = JSON.parse(localStorage.getItem(`sideBarCollaborationChat${index}`));
+            let firstMessage = []
 
-    // Set user information
-    useEffect(() => {
-        axios({
-            method: 'GET',
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
-            headers: {
-                Authorization: `Bearer ${userDetails.token}`
-                }
-        }
-        ).then((res) => {
-            setUser(res.data)
-        }).catch((err) => {
-        })
-    }, [userDetails])
+            if (array !== null) { 
+                firstMessage = array.find(message => userDetails.id !== message.author);
 
-    // Get comments
-    useEffect(() => {
-        axios({
-            method: 'GET',
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}&per_page=100`,
-            headers: {
-                Authorization: `Bearer ${userDetails.token}`
-              }
-        }
-    ).then((response) => {
-            setComments(response.data);
-            setLoading(false);
-        })
-        .catch((err) => {
-        })
-    })
+                let dateTime = new Date(firstMessage?.date);
 
-    const updateParentState = (newValue) => {
-        setCalenderModal(newValue);
-    };
- 
-    const updateCount = (arg) => {
-            setRequest(arg);
-    };
- 
-        const SideBarChats = allMentorChats.map((mentorChat, index) => {
-            if (userDetails?.id === mentorChat?.acf?.mentors_id || userDetails?.id === mentorChat?.acf?.mentee_id) {
-                axios({
-                    method: 'GET',
-                    url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${mentorChat.id}&per_page=100`,
-                    headers: {
-                        Authorization: `Bearer ${userDetails.token}`
-                      }
-                }
-            ).then((response) => {
-                    localStorage.setItem(`sideBarChat${index}`, JSON.stringify(response.data))
-                })
-                .catch((err) => {
-                })
+                // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+                let dayOfWeek = dateTime.getDay();
 
-                let array = JSON.parse(localStorage.getItem(`sideBarChat${index}`));
-                let firstMessage = []
+                // Array of days of the week for reference
+                let daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-                if (array !== null) { 
-                    firstMessage = array.find(message => userDetails.id !== message.author);
-
-                    let dateTime = new Date(firstMessage?.date);
-
-                    // Get the day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
-                    let dayOfWeek = dateTime.getDay();
-
-                    // Array of days of the week for reference
-                    let daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-                  // Extract components of the date
+                // Extract components of the date
                 let year = dateTime.getFullYear();
                 let month = dateTime.getMonth() + 1; // getMonth() returns 0-based index, so add 1 to get the correct month
                 let day = dateTime.getDate();
@@ -197,34 +157,33 @@ export default function CollaborationChat() {
                 // Format the components into a human-readable date
                 let formattedDate = `${year}-${formattedMonth}-${formattedDay}`;
 
-                    // Get the day name from the array
-                    let dayName = daysOfWeek[dayOfWeek];
+                // Get the day name from the array
+                let dayName = daysOfWeek[dayOfWeek];
 
-                    let formattedDateTime = ((new Date()) - (dateTime.getTime())) / (1000 * 60 * 60); 
-                 
-                    return (
-                        <a href={`/mentor-chat/${mentorChat.id}`} key={index} target="_self" titl={`Link to chat with ${mentorChat?.acf?.mentors_name}`}>
-                            <div className={"mentors-chat-item-header"+" "+"chat-item"+" "+`${Number(param1) === mentorChat.id ? "current-chat" : 'no'}`}>
-                                <div className='row d-flex align-items-center flex-row justify-content-center'>
-                                    <div className="col-auto">
-                                        <img className='chat-item-header-img' src={ userDetails.id === mentorChat?.acf?.mentors_id ? mentorChat?.acf?.mentee_image : mentorChat?.acf?.mentors_image } alt={user?.name} loading="eager" /> 
-                                    </div>
-                                    <div className="col-9 d-flex align-items-center">
-                                        <div className="chat-item-detials">                                
-                                            <div className="chat-item-detials-text">
-                                                <p className='small m-0'><strong>{ userDetails.id === mentorChat?.acf?.mentors_id ? mentorChat?.acf?.mentee_name : mentorChat?.acf?.mentors_name} </strong></p>       
-                                                <span className="small sidebar-lastchat-date">{formattedDateTime <= 24 ? 'Today' : formattedDateTime <= 48 && formattedDateTime > 24 ? "Yesterday" : formattedDateTime <= 168 && formattedDateTime > 48 ? dayName : formattedDateTime > 168 ? formattedDate : '' }</span>
-                                            </div>
-                                            <div className={"sidebare-lastchat" + " " + "m-0" + " " + `${firstMessage?.content?.rendered?.length > 30 ? 'side-chat-dots' : ''}`} dangerouslySetInnerHTML={{ __html: firstMessage?.content?.rendered?.slice(0, 30)  }}/>      
-                                        </div>                       
-                                    </div>
+                let formattedDateTime = ((new Date()) - (dateTime.getTime())) / (1000 * 60 * 60); 
+                return (
+                    <a href={`/collaboration-chat/${chat.id}`} key={index} target="_self" titl={`Link to chat with ${chat?.acf?.requestor_name}`}>
+                        <div className={"mentors-chat-item-header"+" "+"chat-item"+" "+`${Number(param1) === chat.id ? "current-chat" : 'no'}`}>
+                            <div className='row d-flex align-items-center flex-row justify-content-center'>
+                                <div className="col-auto">
+                                    <img className='chat-item-header-img' src={ userDetails.id === chat?.acf?.requestor_id ? chat?.acf?.participant_image : chat?.acf?.requestor_image } alt={user?.name} loading="eager" /> 
+                                </div>
+                                <div className="col-9 d-flex align-items-center">
+                                    <div className="chat-item-detials">                                
+                                        <div className="chat-item-detials-text">
+                                            <p className='small m-0'><strong>{ userDetails.id === chat?.acf?.requestor_id ? chat?.acf?.participant_name : chat?.acf?.requestor_name} </strong></p>       
+                                            <span className="small sidebar-lastchat-date">{formattedDateTime <= 24 ? 'Today' : formattedDateTime <= 48 && formattedDateTime > 24 ? "Yesterday" : formattedDateTime <= 168 && formattedDateTime > 48 ? dayName : formattedDateTime > 168 ? formattedDate : '' }</span>
+                                        </div>
+                                        <div className={"sidebare-lastchat" + " " + "m-0" + " " + `${firstMessage?.content?.rendered?.length > 30 ? 'side-chat-dots' : ''}`} dangerouslySetInnerHTML={{ __html: firstMessage?.content?.rendered?.slice(0, 30)  }}/>      
+                                    </div>                       
                                 </div>
                             </div>
-                        </a>
-                    );
-                }
+                        </div>
+                    </a>
+                );
             }
-        });
+        }
+    });
     
 
     const conversation = comments.map((comment, index) => {
@@ -241,7 +200,7 @@ export default function CollaborationChat() {
                 </div>
                 <div className='image d-flex align-items-center'>
                     <span className='chat-date date'>{humanReadableTime}</span>
-                    <img className='chat-img' src={ comment?.acf?.user_profile_picture} alt={comment?.author_name} loading="eager" /> 
+                    <img className='chat-img' src={ comment?.['author_avatar_urls']?.['48'] } alt={comment?.author_name} loading="lazy" /> 
                 </div>
             </div>
         )
@@ -250,31 +209,35 @@ export default function CollaborationChat() {
     // Submit chat 
     function handleClick(e) {
         e.preventDefault();
+        
+        if (!userDetails?.id || !comment.trim()) return; // Prevent empty comments
+    
         axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
-        {
-          author: userDetails?.id,
-          author_email: userDetails?.email,
-          author_name: `${userDetails?.firstName} ${userDetails?.lastName}`,
-          content: `${comment}`,
-          post: `${param1}`,
-          status: 'approved',
-        },
-        {
-          headers: {
-              Authorization: `Bearer ${userDetails?.token}`
-          }
-        }
-        ).then((res) => {
-            setComment('');
-        }).catch((error) => {
+            {
+                post: param1, // Ensure it's a valid post ID (Number, not String)
+                content: comment,
+                author: userDetails.id, // Only pass this if the user is logged in
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${userDetails?.token}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        )
+        .then((res) => {
+            setComment(""); // Clear input field after success
         })
+        .catch((error) => {
+            console.error("Error submitting comment:", error.response?.data || error.message);
+        });
     }
 
-    let nameFormentorRequest =  userDetails.id === mentor?.acf?.mentors_id ? mentor?.acf?.firstName : mentee?.acf?.firstName;
+// let nameFormentorRequest =  userDetails.id === requestor?.acf?.requestor_id ? requestor?.acf?.firstName : participant?.acf?.firstName;
 
 if (userDetails !== null) {
     if (loading === false) {
-    // if (userDetails.id  !== mentorChatDetails?.acf?.mentors_id || userDetails.id  !== mentorChatDetails?.acf?.mentee_id) {
+    if (userDetails.id  !== chatDetails?.acf?.requestor_id || userDetails.id  !== chatDetails?.acf?.participant_id) {
         return (
             <>
                 <Navigation />
@@ -285,7 +248,7 @@ if (userDetails !== null) {
                                 <div className='mentors-chat-item-header'>
                                     <div className='row d-flex align-items-center justify-content-between'>
                                         <div className="col-auto">
-                                            <img className='chat-item-header-img' src={user?.acf?.user_profile_picture} alt={user?.name} loading="eager" /> 
+                                            <img className='chat-item-header-img' src={participant?.acf?.user_profile_picture} alt={participant?.name} loading="eager" /> 
                                         </div>
                                         <div className="col-auto ml-auto">
                                             <img className='chat-icons' src={SearchIcon} alt="Home icon" loading="eager" onClick={() => {
@@ -299,7 +262,7 @@ if (userDetails !== null) {
                                     </div>
                                     <div className={"search-chats-container"+" "+"row"+" "+`${searchBarStatus}`}>
                                         <div className="col">
-                                            <input className="form-control" type="search" placeholder="Search chats"/>
+                                            <input className="form-control" value={searchValue} onChange={(e) => {setSearchValue(e.target.value)}} type="search" placeholder="Type a name"/>
                                         </div>
                                     </div>
                                     <hr className="mb-0"></hr>
@@ -312,30 +275,16 @@ if (userDetails !== null) {
                                 <div className='mentors-chat-item-header mentors-chat-item-header-main'>
                                     <div className='row d-flex align-items-center'>
                                         <div className="col-auto">
-                                            <img className='chat-item-header-img' src={userDetails.id === mentee.id ? mentor?.acf?.user_profile_picture : mentee?.acf?.user_profile_picture} alt={ userDetails.id === mentee.id ? mentor?.name : mentee?.name} loading="eager" /> 
+                                            <img className='chat-item-header-img' src={userDetails.id === participant.id ? requestor?.acf?.user_profile_picture : participant?.acf?.user_profile_picture} alt={ userDetails.id === participant.id ? requestor?.name : participant?.name} loading="eager" /> 
                                         </div>
                                         <div className="col-auto d-flex align-items-center">
                                             <div>
-                                                <p className='m-0'><strong>{userDetails.id === mentee.id ? mentor?.name : mentee?.name} </strong></p>
-                                                <p className='small m-0'>{userDetails.id === mentee.id ? mentor?.acf?.['user_mentor_current_position'] : mentee?.acf?.['user-job-title']} at {userDetails?.id === mentee.id ? mentor?.acf?.['user_mentor_current_company'] : mentee?.acf?.['user-job-Insitution']}</p>         
+                                                <p className='m-0'><strong>{userDetails.id === participant.id ? requestor?.name : participant?.name} </strong></p>
+                                                <p className='small m-0'>{userDetails.id === participant.id ? requestor?.acf?.['user_mentor_current_position'] : participant?.acf?.['user-job-title']} at {userDetails?.id === participant.id ? requestor?.acf?.['user_mentor_current_company'] : participant?.acf?.['user-job-Insitution']}</p>         
                                             </div>                       
                                         </div>
                                     </div>
                                     <div className='row d-flex align-items-center'>
-                                        <div className="col-auto">
-                                            <div className="chat-instructions">
-                                            {userDetails?.id === mentor?.id && request > 0 ? <div className="mentor-cotification-count">{request}</div> : ""}
-                                                <img className='send-chat-extra-icon send-chat-extra-icon-schedule' src={userDetails?.id != mentor?.id ? Schedule : Notification} onClick={() => {
-                                                    if (calenderModal === 'hide') {
-                                                        setCalenderModal('show');
-                                                        setOverFlow(true)
-                                                    } else {
-                                                        setCalenderModal('hide');
-                                                        setOverFlow(false)
-                                                    }
-                                                }} loading="eager" />
-                                            </div>
-                                        </div>
                                         <div className="col-auto">
                                             <div className="chat-instructions">
                                                 <button className="btn btn-outline-info btn-lg" onClick={() => setState({ isPaneOpen: true })}>
@@ -345,10 +294,16 @@ if (userDetails !== null) {
                                         </div>
                                     </div>
                                 </div>
-                                    <hr className="mb-0"></hr>
+                                {/* <div className='mentors-chat-item-header mentors-chat-item-header-main pt-0'>
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <strong><p>{chatDetails?.acf?.request_title}</p></strong>
+                                        </div>
+                                    </div>
+                                </div> */}
+                                <hr className="mb-0"></hr>
                                 <div className={`mentors-chat-item-body ${overFLow === false ? 'overflow-scroll' : 'overflow-hidden'}`}>
                                     {conversation}
-                                    <BookAMentor prop1={calenderModal} prop2={mentor.name} mentor_id={mentor.id} mentee_id={mentee.id} chat_id={param1} updateParentState={updateParentState} request={request} updateCount={updateCount} />
                                 </div>
                                 <div className='mentors-chat-item-keyboard'>
                                     <div className='row d-flex align-items-center'>
@@ -362,17 +317,7 @@ if (userDetails !== null) {
                                                     <button className='send-chat-icon' type="submit">
                                                         <img className='send-icon' src={SendIcon} alt="Send icon" loading="eager" />
                                                     </button>
-                                                </div>
-                                                <img className='send-chat-extra-icon' src={Attachment} loading="eager" />
-                                                {/* <img className='send-chat-extra-icon send-chat-extra-icon-emoji' src={WinkIcon} /> */}
-                                                <div className='test'>
-                                                    <div className="emoji-picker">
-                                                        <EmojiPicker className="emoji-picker-picker" reactionsDefaultOpen={emojiPicker} width={700} onEmojiClick={(emojiData, event) => { 
-                                                            setComment(prevInput => prevInput + emojiData?.emoji);
-                                                            setEmojiPicker(true);
-                                                            }} />
-                                                    </div>
-                                                </div>
+                                                </div>                                              
                                             </form>
                                         </div>
                                         <div className='col-2'></div>
@@ -383,6 +328,7 @@ if (userDetails !== null) {
                                 {/* Guideline Slideout */}
                                 <SlidingPane
                                     className="some-custom-class"
+                                    style={{padding: "10rem 3rem"}}
                                     overlayClassName="some-custom-overlay-class"
                                     isOpen={state.isPaneOpen}
                                     title="Hey, it is optional pane title.  I can be React component too."
@@ -394,34 +340,24 @@ if (userDetails !== null) {
                                     }}
                                 >
                                     <div>  
-                                        <p><strong>Chat Guidelines:</strong></p>
+                                        <p style={{paddingTop: "9.5rem"}}><strong>Chat Guidelines:</strong></p>
                                         <ol>
                                             <li className="mb-4 small">
-                                                Indicate scheduled date/time. Account for time zone. Send both meeting links
+                                                Indicate scheduled date/time. Account for time zone. Send both meeting links.
                                             </li>
                                             <li className="mb-4 small">
                                                 Make payment (include 10% fee for us). Money will be held until confirmation that meeting occurred or will be refunded. 
                                             </li>
                                             <li className="mb-4 small">
-                                                After meeting time send confirmation message to both users to confirm that meeting occured 
+                                                After meeting time send confirmation message to both users to confirm that meeting occured.
                                             </li>
                                             <li className="mb-4 small">
-                                                Yes? Pay mentor. No? refund mentee.
+                                                Yes? Pay mentor. No? refund participant.
                                             </li>
                                         </ol>
                                     </div>
                                     <br />
                                 </SlidingPane>
-                                {/* <SlidingPane
-                                    closeIcon={<div>Some div containing custom close icon.</div>}
-                                    isOpen={state.isPaneOpenLeft}
-                                    title="Hey, it is optional pane title.  I can be React component too."
-                                    from="left"
-                                    width="200px"
-                                    onRequestClose={() => setState({ isPaneOpenLeft: false })}
-                                >
-                                    <div>And I am pane content on left.</div>
-                                </SlidingPane> */}
                             </div>
                             
                         </div>
@@ -429,9 +365,9 @@ if (userDetails !== null) {
                 </main>
             </>
         )
-    // } else {
-    //     window.location.replace('/mentorship-opportunities')
-    // }
+    } else {
+        window.location.replace('/collaborations')
+    }
 } else {
     return (
       <TailSpin

@@ -136,7 +136,7 @@ if (userDetails != null) {
                     </div>
                     <div className="row">
                         <div className="col-12">
-                            <form className="form-create-job mx-auto shadow-lg" onSubmit={handleSubmit}>
+                            <form className="form-create-job points mx-auto shadow-lg" onSubmit={handleSubmit}>
                                 <div className="row  mb-2">
                                     <div className="col-12">
                                         <h2><strong>Mentorship Application Form</strong></h2>

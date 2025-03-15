@@ -4,14 +4,12 @@ import defaultImage from '../Images/5402435_account_profile_user_avatar_man_icon
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
-import { renderedQuestion } from '../helper';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import { TailSpin } from "react-loader-spinner";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import UserComment from "../Images/user-comment.svg";
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
-import { submitReport } from '../helper';
-
+import { submitReport, renderedQuestion } from '../helper';
 
 export default function AskQuestions() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails')); // Get user details and turn it in to a object
@@ -250,43 +248,42 @@ export default function AskQuestions() {
     );
     }
 
-function PaginatedItems({ itemsPerPage }) {
-  // Here we use item offsets; we could also use page offsets
-  // following the API or data you're working with.
-  const [itemOffset, setItemOffset] = useState(0);
+    function PaginatedItems({ itemsPerPage }) {
+    // Here we use item offsets; we could also use page offsets
+    // following the API or data you're working with.
+    const [itemOffset, setItemOffset] = useState(0);
 
-  // Simulate fetching items from another resources.
-  // (This could be items from props; or items loaded in a local state
-  // from an API endpoint with useEffect and useState)
-  const endOffset = itemOffset + itemsPerPage;
-  
-  const currentItems = question.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(question.length / itemsPerPage);
+    // Simulate fetching items from another resources.
+    // (This could be items from props; or items loaded in a local state
+    // from an API endpoint with useEffect and useState)
+    const endOffset = itemOffset + itemsPerPage;
+    
+    const currentItems = question.slice(itemOffset, endOffset);
+    const pageCount = Math.ceil(question.length / itemsPerPage);
 
-  // Invoke when user click to request another page.
-  const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % question.length;
-    setItemOffset(newOffset);
-  };
+    // Invoke when user click to request another page.
+    const handlePageClick = (event) => {
+        const newOffset = (event.selected * itemsPerPage) % question.length;
+        setItemOffset(newOffset);
+    };
 
-  return (
-    <>
-      <Items currentItems={currentItems} />
-      <ReactPaginate
-        breakLabel="..."
-        nextLabel="»"
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={3}
-        pageCount={pageCount}
-        previousLabel="«"
-        renderOnZeroPageCount={null}
-      />
-    </>
-  );
+    return (
+        <>
+        <Items currentItems={currentItems} />
+        <ReactPaginate
+            breakLabel="..."
+            nextLabel="»"
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={3}
+            pageCount={pageCount}
+            previousLabel="«"
+            renderOnZeroPageCount={null}
+        />
+        </>
+    );
   
 }
 // End pagination
-
     if ( userDetails != null) {
         if (loading === false) {
         return (
