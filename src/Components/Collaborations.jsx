@@ -370,57 +370,6 @@ function ExpiredItem({ currentItems }) {
                     return;
                 }
             });
-            
-            // Create Collaboration chat 
-            const createMentorChat = async (e) => {
-                try {
-                    const createChat = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`,
-                        {
-                            author: userDetails.id,
-                            title: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,
-                            content: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,
-                            excerpt: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,
-                            status: 'publish',
-                            acf: {
-                                'requestor_id': collaboration?.author,
-                                'requestor_name': requestorProfile?.name,
-                                'requestor_image': requestorProfile?.avatar_urls?.['48'],
-                                'participant_id': userProfile?.id,
-                                'participant_name': userProfile?.name,
-                                'participant_image': userProfile?.avatar_urls?.['48'],
-                                'request_id': collaboration?.id,
-                                'request_title': collaboration?.acf?.collaborations_description,
-                            }
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${userDetails.token}`
-                            }
-                        }
-                    ).then((response) => {
-                            Naviagte(`/collaboration-chat/${response?.data?.id}`);
-                        }
-                    ).catch((err) => {})
-            
-                } catch (err) {
-            
-                }
-              };
-            
-            // Show the currect action
-            let collaborationButton = () => {
-                if (userDetails.id != collaboration.author) { 
-                    if (chatID != undefined) {
-                        return (<div className="col-auto">
-                            <a href={`/collaboration-chat/${chatID}`} className="btn btn-primary collab-btn">Return To Chat</a>
-                        </div>);
-                    } else {
-                        return (<div className="col-auto">
-                            <button className="btn btn-primary collab-btn" onClick={createMentorChat} aria-label="Collaboration button">Collaborate</button>
-                        </div>);
-                    }
-                };
-            }
 
             // Get date
             let dateNow = new Date();
@@ -439,8 +388,7 @@ function ExpiredItem({ currentItems }) {
                                                 <img className="collaboration-details-name-img" src={requestorProfile?.acf?.user_profile_picture} alt={requestorProfile.name} loading="lazy" />
                                             </div>
                                             <div>
-                                                <div className="d-flex flex-row my-0"><strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(requestorProfile?.name, search) : requestorProfile?.name}} /></strong><span>&nbsp;| {requestorProfile?.acf?.["user-job-Insitution"]} | {requestorProfile?.acf?.["user-country-of-residence"]}</span></div>
-                                                {/* <p className="my-0"><strong>{requestorProfile?.name}</strong> | {requestorProfile?.acf?.["user-job-Insitution"]} | {requestorProfile?.acf?.["user-country-of-residence"]}</p> */}
+                                                <div className="d-flex flex-row my-0"><strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(requestorProfile?.name, search) : requestorProfile?.name}} /></strong><span>&nbsp;| {requestorProfile?.acf?.["user-job-Insitution"]} | {requestorProfile?.acf?.["user-country-of-residence"]}</span></div>                                                
                                                 <div className="d-flex flex-row align-items-center" >
                                                     <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                                 </div>
@@ -481,7 +429,6 @@ function ExpiredItem({ currentItems }) {
                                 <div className="row d-flex flex-row">
                                     <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
                                     <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{localStorage.getItem(`collaboration_count${index}`)} people responded to this</div>
-                                    { collaborationButton() }
                                 </div>
                             </div>
                         </div>
