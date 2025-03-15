@@ -268,7 +268,7 @@ if (userDetails !== null) {
                                     <hr className="mb-0"></hr>
                                 </div>
                                 <div className='mentors-chat-sidebar-body'>
-                                        {SideBarChats}
+                                    {SideBarChats}
                                 </div>
                             </aside>
                             <div className='col-lg-9 mentors-chat-item p-0'>
@@ -284,23 +284,12 @@ if (userDetails !== null) {
                                             </div>                       
                                         </div>
                                     </div>
-                                    <div className='row d-flex align-items-center'>
-                                        <div className="col-auto">
-                                            <div className="chat-instructions">
-                                                <button className="btn btn-outline-info btn-lg" onClick={() => setState({ isPaneOpen: true })}>
-                                                    See Chat Guidelines
-                                                </button>
-                                            </div>
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <strong><p>Collaboration: {chatDetails?.acf?.request_title}</p></strong>
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className='mentors-chat-item-header mentors-chat-item-header-main pt-0'>
-                                    <div className="row">
-                                        <div className="col-12">
-                                            <strong><p>{chatDetails?.acf?.request_title}</p></strong>
-                                        </div>
-                                    </div>
-                                </div> */}
                                 <hr className="mb-0"></hr>
                                 <div className={`mentors-chat-item-body ${overFLow === false ? 'overflow-scroll' : 'overflow-hidden'}`}>
                                     {conversation}
