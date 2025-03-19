@@ -523,10 +523,14 @@ function ExpiredItem({ currentItems }) {
                         </ul>
                         <div className="tab-content" id="ex1-content">
                             <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-                                <ActivePaginatedmentors itemsPerPage={15} />
+                                <div className="tab-items">
+                                    <ActivePaginatedmentors itemsPerPage={15} />
+                                </div>
                             </div>
                             <div className="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-                                <ExpiredPaginatedmentors itemsPerPage={15} />
+                                <div className="tab-items">
+                                    <ExpiredPaginatedmentors itemsPerPage={15} />
+                                </div>
                             </div>
                         </div>
                     </div>
