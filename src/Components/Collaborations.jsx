@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
 import ReactPaginate from 'react-paginate';
 import { Tab, initMDB } from "mdb-ui-kit";
@@ -78,7 +78,6 @@ function ActiveItem({ currentItems }) {
     const handleHideCollaboration = (index) => {
         setButtonClick(prev => prev + 1); // Trigger a re-render by updating state
     };
-
 
     return (
       <>

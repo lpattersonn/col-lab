@@ -284,14 +284,10 @@ if (userDetails !== null) {
                                             </div>                       
                                         </div>
                                     </div>
-                                    <div className="row">
-                                        <div className="col-12">
-                                            <strong><p>Collaboration: {chatDetails?.acf?.request_title}</p></strong>
-                                        </div>
-                                    </div>
                                 </div>
                                 <hr className="mb-0"></hr>
                                 <div className={`mentors-chat-item-body ${overFLow === false ? 'overflow-scroll' : 'overflow-hidden'}`}>
+                                    <div class="collaboration-title">Collaboration: {chatDetails?.acf?.request_title}</div>
                                     {conversation}
                                 </div>
                                 <div className='mentors-chat-item-keyboard'>

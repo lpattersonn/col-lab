@@ -48,6 +48,18 @@
     flex-direction: column-reverse;
     background-color: #fafafa;
     position: relative;
+    .collaboration-title {
+        position: absolute;
+        font-size: 1.6rem;
+        font-weight: 700;
+        top: 0;
+        padding: 1rem 2rem;
+        background: rgba(255, 255, 255, 0.8);
+        width: 100%;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+    }
 }
 .mentors-chat-item-keyboard {
     border-top: 1px solid #d0cccc;
