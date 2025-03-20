@@ -320,6 +320,7 @@ if (userDetails !== null) {
                                                 }} loading="eager" />
                                             </div>
                                         </div>
+                                        {/* See Chat Guidelines */}
                                         <div className="col-auto">
                                             <div className="chat-instructions">
                                                 <button className="btn btn-outline-info btn-lg" onClick={() => setState({ isPaneOpen: true })}>

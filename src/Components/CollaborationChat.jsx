@@ -282,6 +282,16 @@ if (userDetails !== null) {
                                                 <p className='m-0'><strong>{userDetails.id === participant.id ? requestor?.name : participant?.name} </strong></p>
                                                 <p className='small m-0'>{userDetails.id === participant.id ? requestor?.acf?.['user_mentor_current_position'] : participant?.acf?.['user-job-title']} at {userDetails?.id === participant.id ? requestor?.acf?.['user_mentor_current_company'] : participant?.acf?.['user-job-Insitution']}</p>         
                                             </div>                       
+                                        </div>                                 
+                                    </div>
+                                    <div className='row d-flex align-items-center'>
+                                        {/* See Chat Guidelines */}
+                                        <div className="col-auto">
+                                            <div className="chat-instructions">
+                                                <button className="btn btn-outline-info btn-lg" onClick={() => setState({ isPaneOpen: true })}>
+                                                    See Chat Guidelines
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
