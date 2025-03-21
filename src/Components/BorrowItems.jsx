@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
@@ -14,46 +14,47 @@ import axios from 'axios';
 export default function BorrowItems() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const [ search, setSearch ] = useState('');
-    const [ collaborations, setCollaborations ] = useState([]);
+    const [ borrowItemsChats, setBorrowItemsChats ] = useState([]);
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState([]);
+
+    const Naviagte = useNavigate()
 
     useEffect(() => {
         initMDB({ Tab });
     }, []);
 
     useEffect(() => {
-        axios({
-          url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items`,
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${userDetails.token}`
-          }
-        })
-        .then((response) => {
-            setCollaborations(response?.data);
-            setLoading(false);
-        })
-        .catch((err) => {
-          // Handle error
-        });
-      }, []);
-
-         // Return users
-    useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
-            {
+        Promise.all([
+            // Borrow items
+            axios({
+                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items`,
+                method: 'GET',
                 headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                  }
-            }
-        )
-            .then((response) => {
-                setUsers(response.data);
-            }).catch((err) => {
-                console.error(err);
-            });
-    }, []);
+                  Authorization: `Bearer ${userDetails.token}`
+                }
+              }),
+            // Users
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${userDetails.token}`
+                        }
+                })
+        ])
+        .then(([allBorrowItems, allUsers]) => {
+            // Borrow items
+            setBorrowItemsChats(allBorrowItems?.data);
+            setLoading(false);
+             // All users
+            setUsers(allUsers?.data);
+            // Tabs
+            initMDB({ Tab });
+        })
+        .catch(error => {
+            console.error(error);
+        })
+    })
     
     // Start paginated active jobs
 
@@ -97,11 +98,17 @@ function ActiveItem({ currentItems }) {
                     // Calculate remaining days after extracting months
                     let days = remainingDaysAfterYears % 30;
 
-                   let userProfile = "";
-           
+                   let requestorProfile = "";
                    for (let name of users) {
                        if ( name.id == collaboration.author) {
-                        userProfile = name;
+                           requestorProfile = name;
+                       }
+                   }
+       
+                   let userProfile = "";
+                   for (let name of users) {
+                       if ( name?.id == userDetails?.id) {
+                           userProfile = name;
                        }
                    }
 
@@ -114,8 +121,68 @@ function ActiveItem({ currentItems }) {
 
                     commentCount();
 
-                    // Toggle option display
+                          // Get the ID
+            let chatID = undefined;
+            borrowItemsChats?.map((chat) => {
+                // if(userDetails?.id === chat?.acf?.participant_id && Number(collaboration?.author) === chat?.acf?.requestor_id) {
+                if (chat?.acf?.request_id == collaboration?.id && userDetails?.id === chat?.acf?.participant_id && Number(collaboration?.author) === chat?.acf?.requestor_id) {
+                    chatID = chat?.id
+                    return;
+                }
+            });
+            
+            // Create Collaboration chat 
+            const createBorrowItemChat = async (e) => {
+                try {
+                    const createChat = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items-chats`,
+                        {
+                            author: userDetails.id,
+                            title: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,
+                            content: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,
+                            excerpt: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,
+                            status: 'publish',
+                            acf: {
+                                'requestor_id': collaboration?.author,
+                                'requestor_name': requestorProfile?.name,
+                                'requestor_image': requestorProfile?.avatar_urls?.['48'],
+                                'participant_id': userProfile?.id,
+                                'participant_name': userProfile?.name,
+                                'participant_image': userProfile?.avatar_urls?.['48'],
+                                'request_id': collaboration?.id,
+                                'request_title': collaboration?.acf?.collaborations_description,
+                            }
+                        },
+                        {
+                            headers: {
+                                Authorization: `Bearer ${userDetails.token}`
+                            }
+                        }
+                    ).then((response) => {
+                            Naviagte(`/collaboration-chat/${response?.data?.id}`);
+                        }
+                    ).catch((err) => {})
+            
+                } catch (err) {
+            
+                }
+            };
+         
+            // Show the currect action
+            let borrowItemButton = () => {
+                if (userDetails.id != collaboration.author) { 
+                    if (chatID != undefined) {
+                        return (<div className="col-auto">
+                            <a href={`/collaboration-chat/${chatID}`} className="btn btn-primary collab-btn">Return To Chat</a>
+                        </div>);
+                    } else {
+                        return (<div className="col-auto">
+                            <button className="btn btn-primary collab-btn" onClick={createBorrowItemChat} aria-label="Collaboration button">Collaborate</button>
+                        </div>);
+                    }
+                };
+            }
 
+            // Toggle option display
             if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.borrow_pay?.toLowerCase().includes(search?.toLowerCase())) {     
                 return ( 
                         <div className={`${showOpportunity} mb-4 col-lg-6`} key={index}>
@@ -168,13 +235,7 @@ function ActiveItem({ currentItems }) {
                                     </div>
                                     {/* Bottom Section */}
                                     <div className="row d-flex justify-content-between flex-row">                                        
-                                        <div className="mt-2 col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {localStorage.getItem(`borrow_count${index}`)} people responded to this</div>
-                                        {userDetails.id != collaboration.author ?
-                                        <div className="col-auto ml-auto">
-                                            <a href={`/collaboration-chat/${collaboration.id}`} className="btn btn-primary collab-btn">Chat</a>
-                                        </div>
-                                        : ""
-                                        }
+                                        {borrowItemButton}
                                     </div>
                                 </div>
                             </div>
@@ -198,12 +259,12 @@ function ActiveItem({ currentItems }) {
     const endOffset = itemOffset + itemsPerPage;
 
     
-    const currentItems = collaborations.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(collaborations.length / itemsPerPage);
+    const currentItems = borrowItemsChats.slice(itemOffset, endOffset);
+    const pageCount = Math.ceil(borrowItemsChats.length / itemsPerPage);
   
     // Invoke when user click to request another page.
     const handlePageClick = (event) => {
-      const newOffset = (event.selected * itemsPerPage) % collaborations.length;
+      const newOffset = (event.selected * itemsPerPage) % borrowItemsChats.length;
 
       setItemOffset(newOffset);
     };

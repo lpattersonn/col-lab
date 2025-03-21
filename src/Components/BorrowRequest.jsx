@@ -86,7 +86,7 @@ if (userDetails != null) {
                             <img className="collaboration-page_image" src={SectionImage} alt="Image of scientist" role="presentation" />
                         </div>
                         <div className="col-lg-6">
-                            <form className="form-create-job mx-auto" onSubmit={handleSubmit}>
+                            <form className="form-create-job mx-auto shadow-lg" onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
                                         <label htmlFor="borrow_description"><strong>What item do you need?</strong></label>
@@ -98,8 +98,8 @@ if (userDetails != null) {
                                     <div className="col-lg-12 mb-4">
                                         <label htmlFor="borrow_features"><strong>Item Description</strong></label>
                                         <textarea name="borrow_features" id="borrow_features" rows="7" value={createLearningRequest.borrow_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Give a detailed description of item as necessary (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
-                                        <label htmlFor="learning_features"><strong>Item Description</strong></label>
-                                        <textarea name="learning_features" id="learning_features" rows="4" value={createLearningRequest.learning_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Give a detailed description of item as necessary (150 characters max)." type="text" disabled={ requestSent === 201 ? true : false} required />
+                                        <label htmlFor="learning_features"><strong>Learning Description</strong></label>
+                                        <textarea name="learning_features" id="learning_features" rows="4" value={createLearningRequest.learning_features} onChange={handleChange} className='form-control form-control-lg' aria-label='Descritpion' placeholder="Give a detailed description of your desired learning outcome." type="text" disabled={ requestSent === 201 ? true : false} required />
                                     </div>    
                                 </div>
                                 <div className="row">

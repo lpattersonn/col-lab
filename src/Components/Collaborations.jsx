@@ -21,6 +21,10 @@ export default function Collaborations() {
     const Naviagte = useNavigate()
 
     useEffect(() => {
+        initMDB({ Tab });
+    }, []);
+
+    useEffect(() => {
         Promise.all([
             // All collaborations
             axios({
