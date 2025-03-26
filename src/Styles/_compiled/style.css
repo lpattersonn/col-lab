@@ -812,7 +812,7 @@ textarea[data-info=content] {
 .tab-items .jobs-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 4rem 3rem;
+  gap: 3.5rem 3rem;
 }
 @media screen and (max-width: 999px) {
   .tab-items .jobs-grid {
