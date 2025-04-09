@@ -21,10 +21,6 @@ export default function Collaborations() {
     const Naviagte = useNavigate()
 
     useEffect(() => {
-        initMDB({ Tab });
-    }, []);
-
-    useEffect(() => {
         Promise.all([
             // All collaborations
             axios({
@@ -51,6 +47,8 @@ export default function Collaborations() {
               }),
         ])
         .then(([allCollaboations, allUsers, allChats]) => {
+            // Tabs
+            initMDB({ Tab });
             // All collaborations
             setCollaborations(allCollaboations?.data);
             setLoading(false);
@@ -58,8 +56,6 @@ export default function Collaborations() {
             setUsers(allUsers?.data);
             // All chats
             setCollaborationChats(allChats?.data);
-            // Tabs
-            initMDB({ Tab });
         })
         .catch(error => {
             console.error(error);

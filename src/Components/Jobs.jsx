@@ -150,7 +150,7 @@ export default function Jobs() {
                                     <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}} /></strong>
                                     <p className="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
                                     <div className="row mb-1 d-flex align-items-center">
-                                        <div className="col-6">
+                                        <div className="col-10">
                                             <div className="d-flex flex-direction-row my-3">
                                                 <div className="designation-button">
                                                     <span className="small">{job?.acf?.["jobs_job_type"]}</span>
@@ -160,7 +160,7 @@ export default function Jobs() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-6 d-flex justify-content-end">
+                                        <div className="col-2 d-flex justify-content-end">
                                             {seeIfchecked.includes(userDetails?.id?.toString()) ?
                                             (<div className="checked-mark">
                                             <FontAwesomeIcon icon={faSquareCheck} /> <span className="small grey">Applied</span>
@@ -229,7 +229,7 @@ export default function Jobs() {
                             <h3 style={{fontSize: "1.4rem", marginBottom: "1rem"}}>{search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}</h3>
                             <p className="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
                             <div className="row mb-1 d-flex align-items-center">
-                                <div className="col-6">
+                                <div className="col-10">
                                     <div className="d-flex flex-direction-row my-3">
                                         <div className="designation-button">
                                             <span className="small">{job?.acf?.["jobs_job_type"]}</span>
@@ -239,7 +239,7 @@ export default function Jobs() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-6 d-flex justify-content-end">
+                                <div className="col-2 d-flex justify-content-end">
                                     {seeIfchecked.includes(userDetails?.id?.toString()) ?
                                     (<div className="checked-mark">
                                     <FontAwesomeIcon icon={faSquareCheck} /> <span className="small grey">Applied</span>
@@ -408,7 +408,7 @@ export default function Jobs() {
                                     <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}} /></strong>
                                     <p className="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
                                     <div className="row mb-1 d-flex align-items-center">
-                                        <div className="col-6">
+                                        <div className="col-10">
                                             <div className="d-flex flex-direction-row my-3">
                                                 <div className="designation-button">
                                                     <span className="small">{job?.acf?.["jobs_job_type"]}</span>
@@ -418,7 +418,7 @@ export default function Jobs() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-6 d-flex justify-content-end">
+                                        <div className="col-2 d-flex justify-content-end">
                                             {seeIfchecked.includes(userDetails?.id?.toString()) ?
                                             (<div className="checked-mark">
                                             <FontAwesomeIcon icon={faSquareCheck} /> <span className="small grey">Applied</span>
@@ -481,7 +481,7 @@ export default function Jobs() {
                                     <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}} /></strong>
                                     <p className="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
                                     <div className="row mb-1 d-flex align-items-center">
-                                        <div className="col-6">
+                                        <div className="col-10">
                                             <div className="d-flex flex-direction-row my-3">
                                                 <div className="designation-button">
                                                     <span className="small">{job?.acf?.["jobs_job_type"]}</span>
@@ -491,7 +491,7 @@ export default function Jobs() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="col-6 d-flex justify-content-end">
+                                        <div className="col-2 d-flex justify-content-end">
                                             {seeIfchecked.includes(userDetails?.id?.toString()) ?
                                             (<div className="checked-mark">
                                             <FontAwesomeIcon icon={faSquareCheck} /> <span className="small grey">Applied</span>

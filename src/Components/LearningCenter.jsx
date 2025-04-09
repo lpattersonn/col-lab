@@ -6,10 +6,9 @@ import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/f
 import { TailSpin } from "react-loader-spinner";
 import ReactPaginate from 'react-paginate';
 import { Tab, initMDB } from "mdb-ui-kit";
-import { renderedQuestion } from '../helper';
 import UserComment from "../Images/user-comment.svg";
 import axios from 'axios';
-import { submitReport } from '../helper';
+import { submitReport, renderedQuestion } from '../helper';
 
 export default function LearningCenter() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -19,40 +18,35 @@ export default function LearningCenter() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        initMDB({ Tab });
-    }, []);
-
-    useEffect(() => {
-        axios({
-          url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center`,
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${userDetails.token}`
-          }
-        })
-        .then((response) => {
-            setCollaborations(response?.data);
-            setLoading(false);
-        })
-        .catch((err) => {
-          // Handle error
-        });
-      }, []);
-
-         // Return users
-    useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
-            {
+        Promise.all([
+            axios({
+                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center`,
+                method: 'GET',
                 headers: {
                     Authorization: `Bearer ${userDetails.token}`
-                  }
-            }
-        )
-            .then((response) => {
-                setUsers(response.data);
-            }).catch((err) => {
-                console.error(err);
-            });
+                }
+            }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
+                {
+                    headers: {
+                        Authorization: `Bearer ${userDetails.token}`
+                      }
+                }
+            )
+        ])
+        .then(([allLearningItems, allUsers]) => {
+            initMDB({ Tab });
+            // Set learning center items
+            setCollaborations(allLearningItems?.data);
+
+            // Set all users
+            setUsers(allUsers.data);
+
+            setLoading(false);
+        })
+        .catch((error) => {
+            console.error(error);
+        })
     }, []);
     
     // Start paginated active jobs
