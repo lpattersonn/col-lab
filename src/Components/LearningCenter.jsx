@@ -443,17 +443,17 @@ function ActiveItem({ currentItems }) {
                     <div className="mentors mt-5">
                         <ul className="nav nav-tabs mb-5" id="ex1" role="tablist">
                             <li className="nav-item" role="presentation">
-                                <a data-mdb-tab-init className="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true" >Active Requests</a>
+                                <a data-mdb-tab-init className="nav-link active" id="learning-tab-1" href="#learning-tabs-1" role="tab" aria-controls="learning-tabs-1" aria-selected="true" >Active Requests</a>
                             </li>
                             <li className="nav-item" role="presentation">
-                                <a data-mdb-tab-init className="nav-link" id="ex1-tab-2" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false" >Archived</a>
+                                <a data-mdb-tab-init className="nav-link" id="learning-tab-2" href="#learning-tabs-2" role="tab" aria-controls="learning-tabs-2" aria-selected="false" >Archived</a>
                             </li>
                         </ul>
                         <div className="tab-content" id="ex1-content">
-                            <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                            <div className="tab-pane fade show active" id="learning-tabs-1" role="tabpanel" aria-labelledby="learning-tab-1">
                                 <ActivePaginatedLearning itemsPerPage={15} />
                             </div>
-                            <div className="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                            <div className="tab-pane fade" id="learning-tabs-2" role="tabpanel" aria-labelledby="learning-tab-2">
                                 <ExpiredPaginatedLearning itemsPerPage={15} />
                             </div>
                         </div>

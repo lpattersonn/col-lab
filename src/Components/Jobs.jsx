@@ -41,7 +41,7 @@ export default function Jobs() {
         }).catch(error => {
             console.error(error);
         })
-    }, [search, ]);
+    }, [search]);
 
     // Start paginated active jobs
 
