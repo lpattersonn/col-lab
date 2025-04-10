@@ -50,7 +50,6 @@ export default function LearningCenter() {
     }, []);
     
     // Start paginated active jobs
-
 function ActiveItem({ currentItems }) {
     const [optionDisplay, setOptionDisplay] = useState({});
     let [buttonClick, setButtonClick] = useState(0);
@@ -70,109 +69,114 @@ function ActiveItem({ currentItems }) {
       <>
         {currentItems.map((collaboration, index) => {
 
-                let showOpportunity =  localStorage.getItem(`show_learning${index}`);
-          
-                   let posted = Date.now() - new Date(collaboration.date);
-                //    let days = Math.floor(posted/(86400 * 1000));
+            let showOpportunity =  localStorage.getItem(`show_learning${index}`);
+        
+            let posted = Date.now() - new Date(collaboration.date);
+            // let days = Math.floor(posted/(86400 * 1000));
 
-                   // Calculate total days
-                    let totalDays = Math.floor(posted / (86400 * 1000));
+            // Calculate total days
+            let totalDays = Math.floor(posted / (86400 * 1000));
 
-                    // Calculate years
-                    let years = Math.floor(totalDays / 365);
+            // Calculate years
+            let years = Math.floor(totalDays / 365);
 
-                    // Calculate remaining days after extracting years
-                    let remainingDaysAfterYears = totalDays % 365;
+            // Calculate remaining days after extracting years
+            let remainingDaysAfterYears = totalDays % 365;
 
-                    // Calculate months
-                    let months = Math.floor(remainingDaysAfterYears / 30);
+            // Calculate months
+            let months = Math.floor(remainingDaysAfterYears / 30);
 
-                    // Calculate remaining days after extracting months
-                    let days = remainingDaysAfterYears % 30;
+            // Calculate remaining days after extracting months
+            let days = remainingDaysAfterYears % 30;
 
-                   let userProfile = "";
-           
-                   for (let name of users) {
-                       if ( name.id == collaboration.author) {
-                        userProfile = name;
-                       }
-                   }
+            let userProfile = "";
+    
+            for (let name of users) {
+                if ( name.id == collaboration.author) {
+                userProfile = name;
+                }
+            }
 
-                   function commentCount() {
-                    return axios.get(`${collaboration._links.replies['0'].href}`)
-                    .then((response) => {
-                      localStorage.setItem(`learning_count${index}`, response.data.length);
-                    }).catch((err) => {});
-                    }
+            function commentCount() {
+            return axios.get(`${collaboration._links.replies['0'].href}`)
+            .then((response) => {
+                localStorage.setItem(`learning_count${index}`, response.data.length);
+            }).catch((err) => {});
+            }
 
-                    commentCount();
+            commentCount();
 
-                    // Toggle option display
+            // Toggle option display
 
-            if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.learning_pay?.toLowerCase().includes(search?.toLowerCase())) {     
-                return ( 
-                        <div className={`${showOpportunity} mb-4 col-lg-6`} key={index}>
-                            <div className="card collaboration">
-                                <div className="card-body">
-                                {/* Top Section */}
-                                    <div className="collaboration-header">
-                                        <div className="d-flex flex-direction-row">
-                                            <div className="d-flex" style={{marginRight: "6rem"}}>
-                                                <div>
-                                                    <img className="collaboration-details-name-img" src={userProfile?.acf?.user_profile_picture} alt={userProfile.name} loading="lazy" />
-                                                </div>
-                                                <div>
-                                                    <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]} | {userProfile?.acf?.["user-country-of-residence"]}</p>
-                                                    <div className="d-flex flex-row align-items-center" >
-                                                        <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+            let dateNow = new Date();
+            let deadLine = new Date(collaboration?.acf?.learning_deadline);
+
+            if (dateNow < deadLine) {
+                if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.learning_pay?.toLowerCase().includes(search?.toLowerCase())) {     
+                    return ( 
+                            <div className={`${showOpportunity} mb-4 col-lg-6`} key={index}>
+                                <div className="card collaboration">
+                                    <div className="card-body">
+                                    {/* Top Section */}
+                                        <div className="collaboration-header">
+                                            <div className="d-flex flex-direction-row">
+                                                <div className="d-flex" style={{marginRight: "6rem"}}>
+                                                    <div>
+                                                        <img className="collaboration-details-name-img" src={userProfile?.acf?.user_profile_picture} alt={userProfile.name} loading="lazy" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]} | {userProfile?.acf?.["user-country-of-residence"]}</p>
+                                                        <div className="d-flex flex-row align-items-center" >
+                                                            <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="options-container">
-                                            <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
-                                                <div className="option-button"></div>
-                                                <div className="option-button"></div>
-                                                <div className="option-button"></div>
-                                            </div>
-                                            <div className={`option-items ${optionDisplay[index]}`}>
-                                                <div className="option-item" onClick={() => {
-                                                    localStorage.setItem(`show_learning${index}`, 'hide')
-                                                    handleHideCollaboration(index)
-                                                    }}>Hide</div>
-                                                <div className="option-item" onClick={()=>{
-                                                    submitReport(collaboration, userDetails);
-                                                }}>Report</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Middle Section */}
-                                    <div style={{marginBottom: "1.8rem"}}>
-                                        <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}>{collaboration?.acf?.learning_description}</h3>
-                                        <div>{collaboration?.acf?.learning_features?.length > 250 ? collaboration?.acf?.learning_features?.slice(0, 250)+"..." : collaboration?.acf?.learning_features}</div>
-                                        <div className="d-flex flex-direction-row mt-4">
-                                            <div className="designation-button">
-                                                <span className="small">{collaboration?.acf?.["learning_pay"]}</span>
-                                            </div>
-                                            <div className="due-button">
-                                                <span className="small">Deadline {collaboration?.acf?.["learning_deadline"]}</span>
+                                            <div className="options-container">
+                                                <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
+                                                    <div className="option-button"></div>
+                                                    <div className="option-button"></div>
+                                                    <div className="option-button"></div>
+                                                </div>
+                                                <div className={`option-items ${optionDisplay[index]}`}>
+                                                    <div className="option-item" onClick={() => {
+                                                        localStorage.setItem(`show_learning${index}`, 'hide')
+                                                        handleHideCollaboration(index)
+                                                        }}>Hide</div>
+                                                    <div className="option-item" onClick={()=>{
+                                                        submitReport(collaboration, userDetails);
+                                                    }}>Report</div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    {/* Bottom Section */}
-                                    <div className="row d-flex justify-content-between flex-row">                                        
-                                        <div className="mt-2 col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {localStorage.getItem(`learning_count${index}`)} people responded to this</div>
-                                        {userDetails.id != collaboration.author ?
-                                        <div className="col-auto ml-auto">
-                                            <a href={`/collaboration-chat/${collaboration.id}`} className="btn btn-primary collab-btn">Chat</a>
+                                        {/* Middle Section */}
+                                        <div style={{marginBottom: "1.8rem"}}>
+                                            <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}>{collaboration?.acf?.learning_description}</h3>
+                                            <div>{collaboration?.acf?.learning_features?.length > 250 ? collaboration?.acf?.learning_features?.slice(0, 250)+"..." : collaboration?.acf?.learning_features}</div>
+                                            <div className="d-flex flex-direction-row mt-4">
+                                                <div className="designation-button">
+                                                    <span className="small">{collaboration?.acf?.["learning_pay"]}</span>
+                                                </div>
+                                                <div className="due-button">
+                                                    <span className="small">Deadline {collaboration?.acf?.["learning_deadline"]}</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        : ""
-                                        }
+                                        {/* Bottom Section */}
+                                        <div className="row d-flex justify-content-between flex-row">                                        
+                                            <div className="mt-2 col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {localStorage.getItem(`learning_count${index}`)} people responded to this</div>
+                                            {userDetails.id != collaboration.author ?
+                                            <div className="col-auto ml-auto">
+                                                <a href={`/collaboration-chat/${collaboration.id}`} className="btn btn-primary collab-btn">Chat</a>
+                                            </div>
+                                            : ""
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                )
+                    )
+                }
             }
          }
     )}
@@ -180,7 +184,7 @@ function ActiveItem({ currentItems }) {
     );
   }
   
-  function ActivePaginatedmentors({ itemsPerPage }) {
+  function ActivePaginatedLearning({ itemsPerPage }) {
     // Here we use item offsets; we could also use page offsets
     // following the API or data you're working with.
     const [itemOffset, setItemOffset] = useState(0);
@@ -223,6 +227,185 @@ function ActiveItem({ currentItems }) {
   }
   
 // End paginated active jobs
+
+    // Start paginated expired jobs
+    function ExpiredItem({ currentItems }) {
+        const [optionDisplay, setOptionDisplay] = useState({});
+        let [buttonClick, setButtonClick] = useState(0);
+    
+        const handleToggleOptions = (index) => {
+            setOptionDisplay(prevState => ({
+                ...prevState,
+                [index]: prevState[index] === 'show' ? 'hide' : 'show'
+            }));
+        };
+    
+        const handleHideCollaboration = (index) => {
+            setButtonClick(prev => prev + 1); // Trigger a re-render by updating state
+        };
+    
+        return (
+          <>
+            {currentItems.map((collaboration, index) => {
+    
+                let showOpportunity =  localStorage.getItem(`show_learning${index}`);
+            
+                let posted = Date.now() - new Date(collaboration.date);
+                // let days = Math.floor(posted/(86400 * 1000));
+    
+                // Calculate total days
+                let totalDays = Math.floor(posted / (86400 * 1000));
+    
+                // Calculate years
+                let years = Math.floor(totalDays / 365);
+    
+                // Calculate remaining days after extracting years
+                let remainingDaysAfterYears = totalDays % 365;
+    
+                // Calculate months
+                let months = Math.floor(remainingDaysAfterYears / 30);
+    
+                // Calculate remaining days after extracting months
+                let days = remainingDaysAfterYears % 30;
+    
+                let userProfile = "";
+        
+                for (let name of users) {
+                    if ( name.id == collaboration.author) {
+                    userProfile = name;
+                    }
+                }
+    
+                function commentCount() {
+                return axios.get(`${collaboration._links.replies['0'].href}`)
+                .then((response) => {
+                    localStorage.setItem(`learning_count${index}`, response.data.length);
+                }).catch((err) => {});
+                }
+    
+                commentCount();
+    
+                // Toggle option display
+    
+                let dateNow = new Date();
+                let deadLine = new Date(collaboration?.acf?.learning_deadline);
+    
+                if (dateNow > deadLine) {
+                    if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.learning_pay?.toLowerCase().includes(search?.toLowerCase())) {     
+                        return ( 
+                                <div className={`${showOpportunity} mb-4 col-lg-6`} key={index}>
+                                    <div className="card collaboration">
+                                        <div className="card-body">
+                                        {/* Top Section */}
+                                            <div className="collaboration-header">
+                                                <div className="d-flex flex-direction-row">
+                                                    <div className="d-flex" style={{marginRight: "6rem"}}>
+                                                        <div>
+                                                            <img className="collaboration-details-name-img" src={userProfile?.acf?.user_profile_picture} alt={userProfile.name} loading="lazy" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="my-0"><strong>{userProfile?.name}</strong> | {userProfile?.acf?.["user-job-Insitution"]} | {userProfile?.acf?.["user-country-of-residence"]}</p>
+                                                            <div className="d-flex flex-row align-items-center" >
+                                                                <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="options-container">
+                                                    <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
+                                                        <div className="option-button"></div>
+                                                        <div className="option-button"></div>
+                                                        <div className="option-button"></div>
+                                                    </div>
+                                                    <div className={`option-items ${optionDisplay[index]}`}>
+                                                        <div className="option-item" onClick={() => {
+                                                            localStorage.setItem(`show_learning${index}`, 'hide')
+                                                            handleHideCollaboration(index)
+                                                            }}>Hide</div>
+                                                        <div className="option-item" onClick={()=>{
+                                                            submitReport(collaboration, userDetails);
+                                                        }}>Report</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* Middle Section */}
+                                            <div style={{marginBottom: "1.8rem"}}>
+                                                <h3 style={{fontSize: "1.4rem", marginBottom: "1.5rem"}}>{collaboration?.acf?.learning_description}</h3>
+                                                <div>{collaboration?.acf?.learning_features?.length > 250 ? collaboration?.acf?.learning_features?.slice(0, 250)+"..." : collaboration?.acf?.learning_features}</div>
+                                                <div className="d-flex flex-direction-row mt-4">
+                                                    <div className="designation-button">
+                                                        <span className="small">{collaboration?.acf?.["learning_pay"]}</span>
+                                                    </div>
+                                                    <div className="due-button">
+                                                        <span className="small">Deadline {collaboration?.acf?.["learning_deadline"]}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/* Bottom Section */}
+                                            <div className="row d-flex justify-content-between flex-row">                                        
+                                                <div className="mt-2 col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {localStorage.getItem(`learning_count${index}`)} people responded to this</div>
+                                                {userDetails.id != collaboration.author ?
+                                                <div className="col-auto ml-auto">
+                                                    <a href={`/collaboration-chat/${collaboration.id}`} className="btn btn-primary collab-btn">Chat</a>
+                                                </div>
+                                                : ""
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        )
+                    }
+                }
+             }
+        )}
+          </>
+        );
+      }
+      
+      function ExpiredPaginatedLearning({ itemsPerPage }) {
+        // Here we use item offsets; we could also use page offsets
+        // following the API or data you're working with.
+        const [itemOffset, setItemOffset] = useState(0);
+      
+        // Simulate fetching items from another resources.
+        // (This could be items from props; or items loaded in a local state
+        // from an API endpoint with useEffect and useState)
+        const endOffset = itemOffset + itemsPerPage;
+    
+        
+        const currentItems = collaborations.slice(itemOffset, endOffset);
+        const pageCount = Math.ceil(collaborations.length / itemsPerPage);
+      
+        // Invoke when user click to request another page.
+        const handlePageClick = (event) => {
+          const newOffset = (event.selected * itemsPerPage) % collaborations.length;
+    
+          setItemOffset(newOffset);
+        };
+      
+        return (
+          <>
+            <div className='row d-flex'>
+                <ExpiredItem currentItems={currentItems} />
+            </div>
+            <div className="col-12">
+                <ReactPaginate
+                breakLabel="..."
+                nextLabel="»"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={3}
+                pageCount={pageCount}
+                previousLabel="«"
+                renderOnZeroPageCount={null}
+                />
+            </div>
+          </>
+        );
+        
+      }
+      
+    // End paginated active jobs
 
     if (userDetails !== null) {
         if (loading === false) {
@@ -268,12 +451,10 @@ function ActiveItem({ currentItems }) {
                         </ul>
                         <div className="tab-content" id="ex1-content">
                             <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-                                {/* {localStorage.getItem('countActiveJobs') > 0 ? <ActivePaginatedItems itemsPerPage={15} /> : <p><strong>Nothing to show here.</strong></p>} */}
-                                <ActivePaginatedmentors itemsPerPage={15} />
+                                <ActivePaginatedLearning itemsPerPage={15} />
                             </div>
                             <div className="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-                                {/* {localStorage.getItem('countExpiredJobs') > 0 ? < ExpiredPaginatedItems itemsPerPage={15} />: <p><strong>Nothing to show here.</strong></p>} */}
-                                {/* <ActivePaginatedmentors itemsPerPage={15} /> */}
+                                <ExpiredPaginatedLearning itemsPerPage={15} />
                             </div>
                         </div>
                     </div>
