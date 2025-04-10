@@ -5,6 +5,7 @@ import './Styles/_compiled/style.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'mdb-ui-kit'; // ← This is often all you need
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
