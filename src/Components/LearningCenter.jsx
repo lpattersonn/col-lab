@@ -18,6 +18,13 @@ export default function LearningCenter() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
+    const tabEl = document.querySelectorAll('[data-mdb-tab-init]');
+    tabEl.forEach(el => {
+        new Tab(el);
+    });
+    }, []);
+
+    useEffect(() => {
         Promise.all([
             axios({
                 url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center`,
