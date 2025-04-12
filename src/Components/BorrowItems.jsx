@@ -16,14 +16,11 @@ export default function BorrowItems() {
     const [ search, setSearch ] = useState('');
     const [ borrowItemsChats, setBorrowItemsChats ] = useState([]);
     const [ allBorrowChats, setAllBorrowChats ] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [users, setUsers] = useState([]);
+    const [ loading, setLoading ] = useState(true);
+    const [ users, setUsers ] = useState([]);
+    const [ activeTab, setActiveTab ] = useState("active");
 
     const Naviagte = useNavigate()
-
-    useEffect(() => {
-        initMDB({ Tab });
-    }, []);
 
     useEffect(() => {
         Promise.all([
@@ -68,8 +65,6 @@ export default function BorrowItems() {
                 });
             }
             setBorrowItemsChats(filteredData);
-            // Tabs
-            initMDB({ Tab });
         })
         .catch(error => {
             console.error(error);
@@ -573,27 +568,40 @@ function ExpiredItem({ currentItems }) {
                             </div>
                         </div>
                     </div>
-
-                    <div className="mentors mt-5">
-                        <ul className="nav nav-tabs mb-5" id="ex1" role="tablist">
+                    <div className="borrow-item list mt-5">
+                        <ul className="nav nav-tabs mb-5" role="tablist">
                             <li className="nav-item" role="presentation">
-                                <a data-mdb-tab-init className="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true" >Active Requests</a>
+                            <button
+                                className={`nav-link ${activeTab === "active" ? "active" : ""}`}
+                                onClick={() => setActiveTab("active")}
+                            >
+                                Active Requests
+                            </button>
                             </li>
                             <li className="nav-item" role="presentation">
-                                <a data-mdb-tab-init className="nav-link" id="ex1-tab-2" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false" >Archived</a>
+                            <button
+                                className={`nav-link ${activeTab === "archived" ? "active" : ""}`}
+                                onClick={() => setActiveTab("archived")}
+                            >
+                                Archived
+                            </button>
                             </li>
                         </ul>
-                        <div className="tab-content" id="ex1-content">
-                            <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                        <div className="tab-content">
+                            {activeTab === "active" && (
+                            <div className="tab-pane fade show active">
                                 <div className="tab-items">
-                                    <ActivePaginatedItem itemsPerPage={15} />
+                                <ActivePaginatedItem itemsPerPage={15} />
                                 </div>
                             </div>
-                            <div className="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                            )}
+                            {activeTab === "archived" && (
+                            <div className="tab-pane fade show active">
                                 <div className="tab-items">
-                                    <ExpiredPaginatedItems itemsPerPage={15} />
+                                <ExpiredPaginatedItems itemsPerPage={15} />
                                 </div>
                             </div>
+                            )}
                         </div>
                     </div>
                 </div>

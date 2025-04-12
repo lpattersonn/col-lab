@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
 import ReactPaginate from 'react-paginate';
-// import { Tab, initMDB } from "mdb-ui-kit";
 import UserComment from "../Images/user-comment.svg";
 import axios from 'axios';
 import { submitReport, renderedQuestion } from '../helper';
@@ -17,13 +16,6 @@ export default function LearningCenter() {
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState([]);
     const [activeTab, setActiveTab] = useState("active");
-
-    // useEffect(() => {
-    // const tabEl = document.querySelectorAll('[data-mdb-tab-init]');
-    // tabEl.forEach(el => {
-    //     new Tab(el);
-    // });
-    // }, []);
 
     useEffect(() => {
         Promise.all([
@@ -43,13 +35,10 @@ export default function LearningCenter() {
             )
         ])
         .then(([allLearningItems, allUsers]) => {
-            // initMDB({ Tab });
             // Set learning center items
             setCollaborations(allLearningItems?.data);
-
             // Set all users
             setUsers(allUsers.data);
-
             setLoading(false);
         })
         .catch((error) => {
@@ -447,45 +436,38 @@ function ActiveItem({ currentItems }) {
                             </div>
                         </div>
                     </div>
-
-               
-
-
-  <div className="mentors mt-5">
-    <ul className="nav nav-tabs mb-5" id="ex1" role="tablist">
-      <li className="nav-item" role="presentation">
-        <button
-          className={`nav-link ${activeTab === "active" ? "active" : ""}`}
-          onClick={() => setActiveTab("active")}
-        >
-          Active Requests
-        </button>
-      </li>
-      <li className="nav-item" role="presentation">
-        <button
-          className={`nav-link ${activeTab === "archived" ? "active" : ""}`}
-          onClick={() => setActiveTab("archived")}
-        >
-          Archived
-        </button>
-      </li>
-    </ul>
-
-    <div className="tab-content">
-      {activeTab === "active" && (
-        <div className="tab-pane fade show active">
-          <ActivePaginatedLearning itemsPerPage={15} />
-        </div>
-      )}
-      {activeTab === "archived" && (
-        <div className="tab-pane fade show active">
-          <ExpiredPaginatedLearning itemsPerPage={15} />
-        </div>
-      )}
-    </div>
-  </div>
-
-
+                        <div className="mentors mt-5">
+                            <ul className="nav nav-tabs mb-5" id="ex1" role="tablist">
+                                <li className="nav-item" role="presentation">
+                                    <button
+                                    className={`nav-link ${activeTab === "active" ? "active" : ""}`}
+                                    onClick={() => setActiveTab("active")}
+                                    >
+                                    Active Requests
+                                    </button>
+                                </li>
+                                <li className="nav-item" role="presentation">
+                                    <button
+                                    className={`nav-link ${activeTab === "archived" ? "active" : ""}`}
+                                    onClick={() => setActiveTab("archived")}
+                                    >
+                                    Archived
+                                    </button>
+                                </li>
+                            </ul>
+                            <div className="tab-content">
+                            {activeTab === "active" && (
+                                <div className="tab-pane fade show active">
+                                <ActivePaginatedLearning itemsPerPage={15} />
+                                </div>
+                            )}
+                            {activeTab === "archived" && (
+                                <div className="tab-pane fade show active">
+                                <ExpiredPaginatedLearning itemsPerPage={15} />
+                                </div>
+                            )}
+                            </div>
+                        </div>
                 </div>
             </main>
         </>

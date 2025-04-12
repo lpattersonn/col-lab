@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Tab, initMDB } from "mdb-ui-kit";
 import { renderedQuestion } from "../helper"
 import ReactPaginate from 'react-paginate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,6 +13,7 @@ export default function Jobs() {
     const [search, setSearch] = useState('');
     const [users, setUsers] = useState([]);
     const [jobs, setJobs] = useState([]);
+    const [activeTab, setActiveTab] = useState("active");
     
     useEffect(() => {
         Promise.all([
@@ -33,7 +33,6 @@ export default function Jobs() {
             )
         ])
         .then(([allJobs, allUsers]) => {
-            initMDB({ Tab }); // Initiate tabs
             setJobs(allJobs?.data); // Set jobs
             setUsers(allUsers.data); // Set users
             localStorage.setItem('countActiveJobs', 0);
@@ -590,26 +589,37 @@ export default function Jobs() {
                         </div>
                     </div>
                 </div>
-                <div className="jobs-section mt-5">
-                    <ul className="nav nav-tabs mb-5" id="ex1" role="tablist">
+                <div className="mentors mt-5">
+                    <ul className="nav nav-tabs mb-5" role="tablist">
                         <li className="nav-item" role="presentation">
-                            <a data-mdb-tab-init className="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true" > Active Job Postings </a>
+                        <button
+                            className={`nav-link ${activeTab === "active" ? "active" : ""}`}
+                            onClick={() => setActiveTab("active")}
+                        >
+                            Active Requests
+                        </button>
                         </li>
                         <li className="nav-item" role="presentation">
-                            <a data-mdb-tab-init className="nav-link" id="ex1-tab-2" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false" >Expired Job Postings </a>
+                        <button
+                            className={`nav-link ${activeTab === "archived" ? "active" : ""}`}
+                            onClick={() => setActiveTab("archived")}
+                        >
+                            Archived
+                        </button>
                         </li>
                     </ul>
-                    <div className="tab-content" id="ex1-content">
-                        <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-                            <div className="tab-items">
-                                <ActivePaginatedItems itemsPerPage={15} />
-                            </div>
+
+                    <div className="tab-content">
+                        {activeTab === "active" && (
+                        <div className="tab-pane fade show active">
+                            <ActivePaginatedItems itemsPerPage={15} />
                         </div>
-                        <div className="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-                            <div className="tab-items">
-                                <ExpiredPaginatedItems itemsPerPage={15} />
-                            </div>
+                        )}
+                        {activeTab === "archived" && (
+                        <div className="tab-pane fade show active">
+                            <ExpiredPaginatedItems itemsPerPage={15} />
                         </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
 import ReactPaginate from 'react-paginate';
-import { Tab, initMDB } from "mdb-ui-kit";
 import UserComment from "../Images/user-comment.svg";
 import { submitReport, renderedQuestion } from '../helper';
 import axios from 'axios';
@@ -17,6 +16,7 @@ export default function Collaborations() {
     const [ collaborationChats, setCollaborationChats ] = useState([]);
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState([]);
+    const [ activeTab, setActiveTab ] = useState("active");
 
     const Naviagte = useNavigate()
 
@@ -47,8 +47,6 @@ export default function Collaborations() {
               }),
         ])
         .then(([allCollaboations, allUsers, allChats]) => {
-            // Tabs
-            initMDB({ Tab });
             // All collaborations
             setCollaborations(allCollaboations?.data);
             setLoading(false);
@@ -511,27 +509,41 @@ function ExpiredItem({ currentItems }) {
                             </div>
                         </div>
                     </div>
-
                     <div className="mentors mt-5">
-                        <ul className="nav nav-tabs mb-5" id="ex1" role="tablist">
+                        <ul className="nav nav-tabs mb-5" role="tablist">
                             <li className="nav-item" role="presentation">
-                                <a data-mdb-tab-init className="nav-link active" id="ex1-tab-1" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true" >Active Requests</a>
+                            <button
+                                className={`nav-link ${activeTab === "active" ? "active" : ""}`}
+                                onClick={() => setActiveTab("active")}
+                            >
+                                Active Requests
+                            </button>
                             </li>
                             <li className="nav-item" role="presentation">
-                                <a data-mdb-tab-init className="nav-link" id="ex1-tab-2" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false" >Archived</a>
+                            <button
+                                className={`nav-link ${activeTab === "archived" ? "active" : ""}`}
+                                onClick={() => setActiveTab("archived")}
+                            >
+                                Archived
+                            </button>
                             </li>
                         </ul>
-                        <div className="tab-content" id="ex1-content">
-                            <div className="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+
+                        <div className="tab-content">
+                            {activeTab === "active" && (
+                            <div className="tab-pane fade show active">
                                 <div className="tab-items">
-                                    <ActivePaginatedmentors itemsPerPage={15} />
+                                <ActivePaginatedmentors itemsPerPage={15} />
                                 </div>
                             </div>
-                            <div className="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                            )}
+                            {activeTab === "archived" && (
+                            <div className="tab-pane fade show active">
                                 <div className="tab-items">
-                                    <ExpiredPaginatedmentors itemsPerPage={15} />
+                                <ExpiredPaginatedmentors itemsPerPage={15} />
                                 </div>
                             </div>
+                            )}
                         </div>
                     </div>
                 </div>
