@@ -252,7 +252,7 @@ export default function LearningCenter() {
                                         </div>
                                         {/* Bottom Section */}
                                         <div className="row d-flex justify-content-between flex-row">                                        
-                                            <div className="mt-2 col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {count} {count == 1 ? "person responded to this." : "people responded to this."}</div>
+                                            <div className="col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {count} {count == 1 ? "person responded to this." : "people responded to this."}</div>
                                             { LearningButton() }
                                         </div>
                                     </div>
@@ -435,7 +435,7 @@ export default function LearningCenter() {
                                         </div>
                                         {/* Bottom Section */}
                                         <div className="row d-flex justify-content-between flex-row">                                        
-                                            <div className="mt-2 col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {count} {count == 1 ? "person responded to this." : "people responded to this."}</div>
+                                            <div className="col-auto d-flex flex-row align-items-center p-0" style={{marginRight: "6rem"}}><img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "3rem", paddingRight: ".3rem"}} /> {count} {count == 1 ? "person responded to this." : "people responded to this."}</div>
                                         </div>
                                     </div>
                                 </div>
