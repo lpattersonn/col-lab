@@ -25,6 +25,7 @@ import BorrowItems from './Components/BorrowItems';
 import BorrowRequest from './Components/BorrowRequest';
 import CreateQuestion from './Components/CreateQuestion';
 import BorrowItemsChat from './Components/BorrowItemsChat';
+import LearningCenterChat from './Components/LearnCenterChat';
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
         <Route path="/borrow-items-chat/:param1" element={<BorrowItemsChat />} />
         <Route path="/borrow-request" element={<BorrowRequest />} />
         <Route path="/create-question" element={<CreateQuestion />} />
+        <Route path="/learning-center-chat/:param1" element={<LearningCenterChat />} />
       </Routes>
    </Router>
   );

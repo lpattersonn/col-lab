@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { scienceBrnaches } from '../helper';
+import { scienceBranches } from '../helper';
 
 
 export default function Registration() {
@@ -149,7 +149,7 @@ export default function Registration() {
     }
 
     const optionsArray = 
-    scienceBrnaches().map((options, index) => {
+    scienceBranches().map((options, index) => {
         return (<option key={index}>{options}</option>);
     });
 

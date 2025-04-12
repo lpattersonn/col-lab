@@ -9,6 +9,9 @@ import axios from "axios";
 
 export default function LearningRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+
+    console.log(userDetails);
+
     const [requestSent, setRequestSent] = useState("No");
     const [createLearningRequest, setCreateLearningRequest]  = useState({
         'learning_description': '',

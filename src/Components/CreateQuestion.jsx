@@ -3,7 +3,7 @@ import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
-import { scienceBrnaches } from '../helper';
+import { scienceBranches } from '../helper';
 import { Editor } from '@tinymce/tinymce-react';
 import SectionImage from "../Images/rb_2582.png";
 import axios from "axios";
@@ -89,7 +89,7 @@ export default function CreateQuestion() {
     }
 
     const optionsArray = 
-        scienceBrnaches().map((options, index) => {
+        scienceBranches().map((options, index) => {
             return (<option key={index}>{options}</option>);
         });
 

@@ -6,13 +6,12 @@ export function userFirstName(prop) {
     // return nameArray[0];
   }
 
-
-  export function test(prop) {
-    return axios.get(`${prop}`)
-    .then((response) => {
-      return response.data;
-    }).catch((err) => {})
-  }
+export function test(prop) {
+  return axios.get(`${prop}`)
+  .then((response) => {
+    return response.data;
+  }).catch((err) => {})
+}
 
 // Highlight search words
 export function renderedQuestion(param, param2) {
@@ -28,7 +27,7 @@ export function renderedQuestion(param, param2) {
   return array.join(' ');
 }
 
-export function scienceBrnaches() {
+export function scienceBranches() {
   return ([
     "Agriculture",
     "Biochemistry",
