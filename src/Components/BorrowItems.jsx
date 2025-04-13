@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
 import ReactPaginate from 'react-paginate';
-import { Tab, initMDB } from "mdb-ui-kit";
 import { renderedQuestion } from '../helper';
-import UserComment from "../Images/user-comment.svg";
-import { submitReport } from '../helper';
+import { submitReport, humanReadableDate } from '../helper';
 import axios from 'axios';
 
 export default function BorrowItems() {
@@ -249,7 +247,7 @@ function ActiveItem({ currentItems }) {
                                                 <span className="small">{collaboration?.acf?.["borrow_pay"]}</span>
                                             </div>
                                             <div className="due-button">
-                                                <span className="small">Deadline {collaboration?.acf?.["borrow_deadline"]}</span>
+                                                <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["borrow_deadline"])}</span>
                                             </div>
                                         </div>
                                         <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.borrow_features, search) : collaboration?.acf?.borrow_features?.split(0, 340) } } />
@@ -475,7 +473,7 @@ function ExpiredItem({ currentItems }) {
                                                 <span className="small">{collaboration?.acf?.["borrow_pay"]}</span>
                                             </div>
                                             <div className="due-button">
-                                                <span className="small">Deadline {collaboration?.acf?.["borrow_deadline"]}</span>
+                                                <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["borrow_deadline"])}</span>
                                             </div>
                                         </div>
                                         <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.borrow_features, search) : collaboration?.acf?.borrow_features?.split(0, 340) } } />

@@ -9,7 +9,7 @@ import { TailSpin } from "react-loader-spinner";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import UserComment from "../Images/user-comment.svg";
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
-import { submitReport, renderedQuestion } from '../helper';
+import { submitReport, renderedQuestion, humanReadableDate } from '../helper';
 
 export default function AskQuestions() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails')); // Get user details and turn it in to a object
@@ -144,7 +144,7 @@ export default function AskQuestions() {
                                                     <img className="collaboration-details-name-img" src={userProfileImg?.length > 0 ? userProfileImg : defaultImage} alt={userName} loading="lazy" />
                                                 </div>
                                                 <div>
-                                                    <p className="my-0"><strong>{userName}</strong>{user?.acf?.["user-job-Insitution"]?.length > 0 ? " | " + user?.acf?.["user-job-Insitution"] :  ""}</p>
+                                                    <p className="my-0"><strong>{userName}</strong>{user?.acf?.["user-job-Insitution"]?.length > 0 ? " | " + user?.acf?.["user-job-Insitution"] : ""}</p>
                                                     <div className="d-flex flex-row align-items-center" >
                                                         <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                                     </div>

@@ -6,7 +6,7 @@ import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
 import ReactPaginate from 'react-paginate';
 import UserComment from "../Images/user-comment.svg";
-import { submitReport, renderedQuestion } from '../helper';
+import { submitReport, renderedQuestion, humanReadableDate } from '../helper';
 import axios from 'axios';
 
 export default function Collaborations() {
@@ -209,7 +209,6 @@ function ActiveItem({ currentItems }) {
                                             </div>
                                             <div>
                                                 <div className="d-flex flex-row my-0"><strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(requestorProfile?.name, search) : requestorProfile?.name}} /></strong><span>&nbsp;| {requestorProfile?.acf?.["user-job-Insitution"]} | {requestorProfile?.acf?.["user-country-of-residence"]}</span></div>
-                                                {/* <p className="my-0"><strong>{requestorProfile?.name}</strong> | {requestorProfile?.acf?.["user-job-Insitution"]} | {requestorProfile?.acf?.["user-country-of-residence"]}</p> */}
                                                 <div className="d-flex flex-row align-items-center" >
                                                     <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                                 </div>
@@ -220,7 +219,7 @@ function ActiveItem({ currentItems }) {
                                                 <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
                                             </div>
                                             <div className="due-button">
-                                            <span className="small">Deadline {collaboration?.acf?.["collaborations_deadline"]}</span>
+                                            <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["collaborations_deadline"])}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -403,7 +402,7 @@ function ExpiredItem({ currentItems }) {
                                                 <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
                                             </div>
                                             <div className="due-button">
-                                            <span className="small">Deadline {collaboration?.acf?.["collaborations_deadline"]}</span>
+                                            <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["collaborations_deadline"])}</span>
                                             </div>
                                         </div>
                                     </div>

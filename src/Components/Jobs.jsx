@@ -6,7 +6,7 @@ import { renderedQuestion } from "../helper"
 import ReactPaginate from 'react-paginate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquareCheck, faHouse } from '@fortawesome/free-solid-svg-icons';
-import { submitReport } from '../helper';
+import { submitReport, humanReadableDate } from '../helper';
 
 export default function Jobs() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -155,7 +155,7 @@ export default function Jobs() {
                                                     <span className="small">{job?.acf?.["jobs_job_type"]}</span>
                                                 </div>
                                                 <div className="due-button">
-                                                    <span className="small">Deadline {job?.acf?.["jobs_application_deadline"]}</span>
+                                                    <span className="small">Deadline {humanReadableDate(job?.acf?.["jobs_application_deadline"])}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -191,7 +191,7 @@ export default function Jobs() {
                         }
                     }
                     return (
-                <div className={`job ${showJob}`} key={index}>
+                <div className={`job ${showJob} mb-5`} key={index}>
                 <div className="card collaboration">
                     <div className="card-body">
                     {/* Top Section */}
@@ -370,7 +370,7 @@ export default function Jobs() {
                     let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
                     let showJob =  localStorage.getItem(`show_job${index}`);
                     return (
-                        <div className={`job ${showJob}`} key={index}>
+                        <div className={`job ${showJob} mb-5`} key={index}>
                         <div className="card collaboration">
                             <div className="card-body">
                             {/* Top Section */}
@@ -413,7 +413,7 @@ export default function Jobs() {
                                                     <span className="small">{job?.acf?.["jobs_job_type"]}</span>
                                                 </div>
                                                 <div className="due-button">
-                                                    <span className="small">Deadline {job?.acf?.["jobs_application_deadline"]}</span>
+                                                    <span className="small">Deadline {humanReadableDate(job?.acf?.["jobs_application_deadline"])}</span>
                                                 </div>
                                             </div>
                                         </div>

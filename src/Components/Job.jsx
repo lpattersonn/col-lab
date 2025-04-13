@@ -3,7 +3,7 @@ import Navigation from "./Navigation";
 import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { TailSpin } from "react-loader-spinner";
-import { faSuitcase, faLanguage, faClock, faMoneyBill, faCalendarDays, faDesktop, faLocationDot, faHouse } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faLocationDot, faHouse } from '@fortawesome/free-solid-svg-icons';
 import axios from "axios";
 
 
@@ -135,19 +135,19 @@ export default function CreateJob() {
                             </div> 
                         </div>
                         <div className="row mb-4">
-    <div className="col-lg-6 mb-4 d-flex align-items-center">
-        <input 
-            className="form-check-input form-control m-0" 
-            checked={seeIfchecked?.includes(userDetails?.id?.toString())} 
-            disabled={seeIfchecked?.includes(jobDetails?.id.toString())}
-            onChange={handelCheckedChange} 
-            type="checkbox" 
-            aria-label="Applied to job checkbox" 
-            id="appliedCheck" 
-        />
-        <span className="form-check-label mx-2" style={{color: '#000'}} htmlFor="appliedCheck">I have applied to this job.</span>
-    </div> 
-</div> 
+                            <div className="col-lg-6 mb-4 d-flex align-items-center">
+                                <input 
+                                    className="form-check-input form-control m-0" 
+                                    checked={seeIfchecked?.includes(userDetails?.id?.toString())} 
+                                    disabled={seeIfchecked?.includes(jobDetails?.id.toString())}
+                                    onChange={handelCheckedChange} 
+                                    type="checkbox" 
+                                    aria-label="Applied to job checkbox" 
+                                    id="appliedCheck" 
+                                />
+                                <span className="form-check-label mx-2" style={{color: '#000'}} htmlFor="appliedCheck">I have applied to this job.</span>
+                            </div> 
+                        </div> 
                         <div className="row mb-4">
                             <div className="col-lg-6 mr-3 mb-4 d-flex align-items-center">
                                 <Link to="/jobs"><button className="btn btn-danger btn-lg"><strong>Back</strong></button></Link>
