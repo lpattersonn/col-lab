@@ -15,80 +15,110 @@ import axios from 'axios';
 import defaultImage from '../Images/user-profile.svg';
 
 export default function Dashboard() {
+  // Can be a context
   let userDetails = JSON.parse(localStorage.getItem("userDetails"));
-  const [getHelpQuestions, setGetHelpQuestions] = useState([]);
-  const [getUsers, setGetUsers] = useState([]); // Do I Need?
-  const [usersAccountDetails, setUsersAccountDetails] = useState({});
-  const [notifications, setNotifications] = useState(0);
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  // Api for questions
+  const Navigate = useNavigate();
+
+  const [ getHelpQuestions, setGetHelpQuestions ] = useState([]);
+  const [ getUsers, setGetUsers ] = useState([]); // Do I Need?
+  const [ usersAccountDetails, setUsersAccountDetails ] = useState({});
+  const [ notifications, setNotifications ] = useState(0);
+  const [ events, setEvents ] = useState([]);
+  const [ collaborations, setCollaborations ] = useState()
+  const [ mentorships, setMentorships ] = useState()
+  const [ loading, setLoading ] = useState(true);
+
+  // Api calls
   useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`, 
-      {
+    Promise.all([
+      // Api for questions
+      axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`, 
+        {
+          headers: {
+            Authorization: `Bearer ${userDetails.token}`
+          }
+        }
+      ),
+      // Api for users
+      axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${userDetails.token}`
+          }
+        }
+      ),
+      // Api for current user
+      axios({
+        url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${userDetails.token}`
         }
-      }
-    )
-    .then((response) => {
-      setGetHelpQuestions(response.data);
-    })
-    .catch(err => {})
-  }, [])
-
-  // Api for users
-  useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`,
-      {
+      }),
+      // Get mentor requests
+      axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+        {
+            headers: {
+                Authorization: `Bearer ${userDetails.token}`
+            }
+        }
+      ),
+      // Collaborations
+      axios({
+        url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`,
+        method: 'GET',
         headers: {
           Authorization: `Bearer ${userDetails.token}`
         }
-      }
-    )
-    .then((response) => {
-     setGetUsers(response.data);
-    })
-    .catch(err => {})
-  }, [])
-
-  // Api for current user
-  useEffect(() => {
-    axios({
-      url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${userDetails.token}`
-      }
-    })
-    .then((response) => {
-      localStorage.setItem('userPoints', JSON.stringify(response.data['acf']['user-points']));
-      setUsersAccountDetails(response.data);
+      }),
+      // Mentorship Chat
+      axios({
+        url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${userDetails.token}`
+        }
+      }),
+    ])
+    .then(([apiQuestion, apiUsers, currentUserApi, mentorRequest, allCollaborations, allMentorChats]) => {
+      // Api for questions
+      setGetHelpQuestions(apiQuestion?.data);
+      // Api for users
+      setGetUsers(apiUsers?.data);
+      // Api for current user
+      localStorage.setItem('userPoints', JSON.stringify(currentUserApi.data['acf']['user-points']));
+      setUsersAccountDetails(currentUserApi.data);
+      // Get mentor requests
+      let relatedResponse = mentorRequest?.data?.filter((item) => {
+        return item?.acf?.mentor_id === userDetails?.id || item?.acf?.mentee_id === userDetails?.id ;
+      }).filter((item) => {
+        return item?.acf?.mentor_agree === "Agree";
+      });
+      setEvents(relatedResponse);
+      // Set collaborations
+      let userCollaborations = 0
+      allCollaborations?.data?.map((chat) => {
+        if (chat?.acf?.participant_id == userDetails?.id || chat?.acf?.requestor_id == userDetails?.id) {
+          userCollaborations++;
+        }
+      })
+      setCollaborations(userCollaborations)
+       // Set mentorships
+       let userMentorships = 0
+       allMentorChats?.data?.map((chat) => {
+          if (chat?.acf?.mentee_id == userDetails?.id || chat?.acf?.mentor_id == userDetails?.id) {
+            userMentorships++;
+         }
+       })
+       setMentorships(userMentorships)
+      // Loading
       setLoading(false);
     })
-    .catch((err) => {
-      // Handle error
-    });
+    .catch((error) => {
+      console.error(error)
+    })
   }, []);
-
-    // Get mentor requests
-    useEffect(() => {
-      axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
-          {
-              headers: {
-                  Authorization: `Bearer ${userDetails.token}`
-              }
-          }
-      ).then((response) => {
-        let relatedResponse = response?.data?.filter((item) => {
-          return item?.acf?.mentor_id === userDetails?.id || item?.acf?.mentee_id === userDetails?.id ;
-        }).filter((item) => {
-          return item?.acf?.mentor_agree === "Agree";
-        });
-        setEvents(relatedResponse);
-      }).catch((err) => {})
-    }, []);
 
       const questions = getHelpQuestions.map((question, index) => {
         let userName = "";
@@ -115,7 +145,6 @@ export default function Dashboard() {
         for (let name of getUsers) {
           if ( name.id == question.author) {
             userName = name.name;
-            console.log(name)
             userProfileImg = name?.acf?.user_profile_picture;
             userJobInsitution = name?.['acf']?.['user-job-Insitution'];
           }
@@ -144,7 +173,7 @@ export default function Dashboard() {
             <div className='card-body'>
               <div className="questions-details">
                 <div className="questions-details-name">
-                  <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} loading="eager" />
+                  <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} loading="lazy" />
                   <div className="questions-details-name-info">
                     <p><strong>{userName}</strong></p>
                     <div className="questions-details-posted">
@@ -222,11 +251,11 @@ export default function Dashboard() {
                       </div>
                       <div className="link-item">
                         <p>Current collaborations</p>
-                        <a href="#">0</a>
+                        <a href="#">{collaborations}</a>
                       </div>
                       <div className="link-item">
                         <p>Current mentorships</p>
-                        <a href="#">0</a>
+                        <a href="#">{mentorships}</a>
                       </div>
                       <div className="dashboard-calender mt-3">
                         <p><strong>Scheduled meetings</strong></p>
@@ -246,10 +275,10 @@ export default function Dashboard() {
                   <div className="dashboard-options">
                     <div className='dashboard-options-buttons'>
                       <Link to="/collaborations" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={HandShake} loading="lazy"/>Find Collaborations</button></Link>
-                      <Link to="/ask-questions" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Ask_Question}/>Ask Questions</button></Link>
-                      <Link to="/mentorship-opportunities" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Teach}/>Mentorships</button></Link>
+                      <Link to="/ask-questions" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Ask_Question} loading="lazy"/>Ask Questions</button></Link>
+                      <Link to="/mentorship-opportunities" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Teach} loading="lazy"/>Mentorships</button></Link>
                       <Link to="/borrow-items" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Borrow} loading="lazy"/>Borrow Items</button></Link>
-                      <Link to="/jobs" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Job}/>Jobs</button></Link>
+                      <Link to="/jobs" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={Job} loading="lazy"/>Jobs</button></Link>
                       <Link to="/learning-center" className="dashboard-options-buttons-link"><button className='btn-main'><img className="btn-main-icon" src={LearningCenter} loading="lazy"/>Learning Center</button></Link>
                     </div>
                   </div>

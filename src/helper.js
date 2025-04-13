@@ -137,7 +137,7 @@ export async function reducePoints(user, fee, required) {
 
       // Check if user has enough points
       if (currentPoints < Number(required)) {
-          alert(`⚠️ You don\’t have enough points to submit a learning request.Visit the Points Center to earn more points and try again!`);
+          alert(`⚠️ You don\’t have enough points to submit this request.Visit the Points Center to earn more points and try again!`);
           return;
       }
 

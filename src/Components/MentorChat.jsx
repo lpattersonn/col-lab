@@ -413,6 +413,6 @@ if (userDetails !== null) {
     )
   }
 } else {
-    window.location.replace('/')
+    Navigate('/')
 }
 };

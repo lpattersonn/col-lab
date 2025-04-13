@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
@@ -12,6 +12,9 @@ export default function Mentors() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
     const [ search, setSearch ] = useState('');
     const [ mentorsList, setMentorsList ] = useState([]);
+
+    const Navigate = useNavigate;
+    
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
