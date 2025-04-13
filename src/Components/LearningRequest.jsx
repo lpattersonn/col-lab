@@ -2,15 +2,13 @@ import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import SectionImage from "../Images/rb_2582.png";
+import { reducePoints } from "../helper";
 import axios from "axios";
-
 
 export default function LearningRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-
-    console.log(userDetails);
 
     const [requestSent, setRequestSent] = useState("No");
     const [createLearningRequest, setCreateLearningRequest]  = useState({
@@ -21,51 +19,52 @@ export default function LearningRequest() {
         'learning_deadline': ''
     });
 
-    //   Handle Change
-  function handleChange(e) {
-    const {name, value} = e.target
-    setCreateLearningRequest(prev => {
-        return (
-            { ...prev, [name]: value}
-        )
-    })
-}
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        // Upload image if file exists
-            const response = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center/`,
-                {   
-                    'title':  createLearningRequest.learning_description,
-                    'content': "",
-                    'excerpt': "",
-                    'author': userDetails.id,
-                    'status': 'publish',
-                    'acf' : {
-                        'learning_description': createLearningRequest.learning_description,
-                        'learning_features': createLearningRequest.learning_features,
-                        'learning_pay': createLearningRequest.learning_pay,
-                        'learning_perk': createLearningRequest.learning_perk,
-                        'learning_deadline': createLearningRequest.learning_deadline
-                    }
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${userDetails.token}`
-                    }
-                }
+    // Handle Change
+    function handleChange(e) {
+        const {name, value} = e.target
+        setCreateLearningRequest(prev => {
+            return (
+                { ...prev, [name]: value}
             )
-            .then((response) => {
-                setRequestSent(response.status);
-            })
-            .catch((error) => {
-            });
-    } catch (error) {
-        console.error('Error submitting question:', error);
+        })
     }
-}
+
+    // Create learning request
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        const success = await reducePoints(userDetails, 5, 5); // ✅ wait for the result
+        if (success === true) {
+            try {
+                const response = await axios.post(
+                    `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center/`,
+                    {   
+                        'title':  createLearningRequest.learning_description,
+                        'content': "",
+                        'excerpt': "",
+                        'author': userDetails.id,
+                        'status': 'publish',
+                        'acf' : {
+                            'learning_description': createLearningRequest.learning_description,
+                            'learning_features': createLearningRequest.learning_features,
+                            'learning_pay': createLearningRequest.learning_pay,
+                            'learning_perk': createLearningRequest.learning_perk,
+                            'learning_deadline': createLearningRequest.learning_deadline
+                        }
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${userDetails.token}`
+                        }
+                    }
+                );
+                setRequestSent(response.status);
+            } catch (error) {
+                console.error('Error submitting request:', error);
+            }
+        }
+    }
+    
 
 if (userDetails != null) {
     return(
@@ -132,9 +131,9 @@ if (userDetails != null) {
                     </div>
                 </div>
             </main>
-    </>
-        );
+        </>
+    );
     } else {
         window.location.replace("/");
-      }
+    }
 };

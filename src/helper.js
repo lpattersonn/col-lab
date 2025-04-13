@@ -117,3 +117,55 @@ export function submitReport(argPostType, userDetails) {
       console.log(error)
     });
 }
+
+// Reduce user points
+export async function reducePoints(user, fee, required) {
+  try {
+      // Fetch user data
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${user.id}`, {
+          headers: {
+              Authorization: `Bearer ${user.token}`,
+          },
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to fetch user details');
+      }
+
+      const userDetails = await response.json();
+      const currentPoints = Number(userDetails?.acf?.["user-points"]) || 0;
+
+      // Check if user has enough points
+      if (currentPoints < Number(required)) {
+          alert(`⚠️ You don\’t have enough points to submit a learning request. Visit the Points Center to earn more points and try again!`);
+          return;
+      }
+
+      const updatedPoints = currentPoints - Number(fee);
+
+      // Update user points via POST
+      const updateResponse = await fetch(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${user.id}`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({
+              acf: {
+                  "user-points": updatedPoints,
+              },
+          }),
+      });
+
+      if (!updateResponse.ok) {
+          throw new Error('Failed to update user points');
+      } else {
+        const updatedUser = await updateResponse.json();
+
+        console.log("User points updated successfully:", updatedUser);
+        return true;
+      }
+  } catch (error) {
+      console.error("Error reducing points:", error);
+  }
+}

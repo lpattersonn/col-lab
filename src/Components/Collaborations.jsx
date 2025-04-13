@@ -10,12 +10,19 @@ import { submitReport, renderedQuestion } from '../helper';
 import axios from 'axios';
 
 export default function Collaborations() {
+    // Can add in context
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+
+    // Could make a component
     const [ search, setSearch ] = useState('');
+
+    // Turn in to a global item
     const [ collaborations, setCollaborations ] = useState([]);
     const [ collaborationChats, setCollaborationChats ] = useState([]);
+
     const [loading, setLoading] = useState(true);
     const [users, setUsers] = useState([]);
+    
     const [ activeTab, setActiveTab ] = useState("active");
 
     const Naviagte = useNavigate()
