@@ -3,6 +3,7 @@ import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse } from '@fortawesome/free-solid-svg-icons';
+import { reducePoints } from '../helper';
 import axios from "axios";
 
 export default function MentorSignup() {
@@ -66,6 +67,9 @@ export default function MentorSignup() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const success = await reducePoints(userDetails, 5, 5);
+    
+        if (success === true) {
         try {
             // Upload image if file exists
                 const response = await axios.post(
@@ -103,6 +107,7 @@ export default function MentorSignup() {
         } catch (error) {
             console.error('Error submitting question:', error);
         }
+    }    
 }
 
 const countries = getCountries

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import SectionImage from "../Images/rb_2582.png";
+import { reducePoints } from '../helper';
 import axios from "axios";
-
 
 export default function BorrowRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -30,36 +30,40 @@ export default function BorrowRequest() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-        // Upload image if file exists
-            const response = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items`,
-                {   
-                    'title':  createLearningRequest.borrow_description,
-                    'content': "",
-                    'excerpt': "",
-                    'author': userDetails.id,
-                    'status': 'publish',
-                    'acf' : {
-                        'borrow_description': createLearningRequest.borrow_description,
-                        'borrow_features': createLearningRequest.borrow_features,
-                        'borrow_pay': createLearningRequest.borrow_pay,
-                        'borrow_deadline': createLearningRequest.borrow_deadline
+    const success = await reducePoints(userDetails, 5, 5);
+    
+    if (success === true) {
+        try {
+            // Upload image if file exists
+                const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items`,
+                    {   
+                        'title':  createLearningRequest.borrow_description,
+                        'content': "",
+                        'excerpt': "",
+                        'author': userDetails.id,
+                        'status': 'publish',
+                        'acf' : {
+                            'borrow_description': createLearningRequest.borrow_description,
+                            'borrow_features': createLearningRequest.borrow_features,
+                            'borrow_pay': createLearningRequest.borrow_pay,
+                            'borrow_deadline': createLearningRequest.borrow_deadline
+                        }
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${userDetails.token}`
+                        }
                     }
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${userDetails.token}`
-                    }
-                }
-            )
-            .then((response) => {
-                setRequestSent(response.status);
-            })
-            .catch((error) => {
-            });
-    } catch (error) {
-        console.error('Error submitting question:', error);
+                )
+                .then((response) => {
+                    setRequestSent(response.status);
+                })
+                .catch((error) => {
+                });
+        } catch (error) {
+            console.error('Error submitting question:', error);
+        }
     }
 }
 
@@ -86,7 +90,7 @@ if (userDetails != null) {
                             <img className="collaboration-page_image" src={SectionImage} alt="Image of scientist" role="presentation" />
                         </div>
                         <div className="col-lg-6">
-                            <form className="form-create-job mx-auto shadow-lg" onSubmit={handleSubmit}>
+                            <form className="form-create-job points mx-auto shadow-lg" onSubmit={handleSubmit}>
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
                                         <label htmlFor="borrow_description"><strong>What item do you need?</strong></label>

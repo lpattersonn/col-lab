@@ -32,8 +32,8 @@ export default function LearningRequest() {
     // Create learning request
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
         const success = await reducePoints(userDetails, 5, 5); 
+        
         if (success === true) {
             try {
                 const response = await axios.post(

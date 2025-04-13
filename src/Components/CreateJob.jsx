@@ -3,7 +3,8 @@ import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquareCheck, faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
+import { reducePoints } from "../helper";
 import { Editor } from '@tinymce/tinymce-react';
 
 export default function CreateJob() {
@@ -53,47 +54,51 @@ export default function CreateJob() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-        // Upload image if file exists
-            const response = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/jobs`,
-                {   
-                    'title':  createJob.title,
-                    'content': createComment,
-                    'excerpt': createJob.short_description,
-                    'author': userDetails.id,
-                    'status': 'publish',
-                    'acf' : {
-                        'jobs_institution': createJob.jobs_institution,
-                        'jobs_description': createComment,
-                        'jobs_job_type': createJob.jobs_job_type,
-                        'jobs_benefits': createJob.jobs_benefits,
-                        'jobs_languages': createJob.jobs_languages,
-                        'jobs_work_location': createJob.jobs_work_location,
-                        'jobs_street_address': createJob.jobs_street_address,
-                        'jobs_address_line_2': createJob.jobs_address_line_2,
-                        'jobs_city': createJob.jobs_city,
-                        'jobs_country': createJob.jobs_country,
-                        'jobs_schedule': createJob.jobs_schedule,
-                        'jobs_instructions_to_apply': createCommentDetails,
-                        'jobs_application_deadline': createJob.jobs_application_deadline,
-                        'jobs_exptected_start_date': createJob.jobs_exptected_start_date,
-                        'jobs_applied_users': '',
+    const success = await reducePoints(userDetails, 5, 5);
+    
+    if (success === true) {
+        try {
+            // Upload image if file exists
+                const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/jobs`,
+                    {   
+                        'title':  createJob.title,
+                        'content': createComment,
+                        'excerpt': createJob.short_description,
+                        'author': userDetails.id,
+                        'status': 'publish',
+                        'acf' : {
+                            'jobs_institution': createJob.jobs_institution,
+                            'jobs_description': createComment,
+                            'jobs_job_type': createJob.jobs_job_type,
+                            'jobs_benefits': createJob.jobs_benefits,
+                            'jobs_languages': createJob.jobs_languages,
+                            'jobs_work_location': createJob.jobs_work_location,
+                            'jobs_street_address': createJob.jobs_street_address,
+                            'jobs_address_line_2': createJob.jobs_address_line_2,
+                            'jobs_city': createJob.jobs_city,
+                            'jobs_country': createJob.jobs_country,
+                            'jobs_schedule': createJob.jobs_schedule,
+                            'jobs_instructions_to_apply': createCommentDetails,
+                            'jobs_application_deadline': createJob.jobs_application_deadline,
+                            'jobs_exptected_start_date': createJob.jobs_exptected_start_date,
+                            'jobs_applied_users': '',
+                        }
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${userDetails.token}`
+                        }
                     }
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${userDetails.token}`
-                    }
-                }
-            )
-            .then((response) => {
-                setJobStatus("publish")
-            })
-            .catch((error) => {
-            });
-    } catch (error) {
-        console.error('Error submitting question:', error);
+                )
+                .then((response) => {
+                    setJobStatus("publish")
+                })
+                .catch((error) => {
+                });
+        } catch (error) {
+            console.error('Error submitting question:', error);
+        }
     }
 }
 

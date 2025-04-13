@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { scienceBranches } from '../helper';
 import { Editor } from '@tinymce/tinymce-react';
 import SectionImage from "../Images/rb_2582.png";
+import { reducePoints } from '../helper';
 import axios from "axios";
 
 export default function CreateQuestion() {
@@ -42,49 +43,53 @@ export default function CreateQuestion() {
     // Handle submit
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            // Upload image if file exists
-            let imageUrl = '';
-            if (file && userDetails) {
-                const formData = new FormData();
-                formData.append('file', file);
-                const response = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
-                    formData,
+        const success = await reducePoints(userDetails, 5, 5);
+    
+        if (success === true) {
+            try {
+                // Upload image if file exists
+                let imageUrl = '';
+                if (file && userDetails) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    const response = await axios.post(
+                        `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
+                        formData,
+                        {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                Authorization: `Bearer ${userDetails.token}`
+                            }
+                        }
+                    );
+                    imageUrl = response.data.source_url;
+                }
+
+                // Create comment
+                const commentResponse = await axios.post(
+                    `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`,
+                    {
+                        author: userDetails.id,
+                        title: askQuestionApi.title,
+                        content: askQuestionContent,
+                        excerpt: askQuestionContent,
+                        status: 'publish',
+                        acf: {
+                            'question_image': imageUrl,
+                            'question_subject_area': askQuestionApi.question_subject_area,
+                        }
+                    },
                     {
                         headers: {
-                            'Content-Type': 'multipart/form-data',
                             Authorization: `Bearer ${userDetails.token}`
                         }
                     }
-                );
-                imageUrl = response.data.source_url;
+                ).then((response) => {
+                }).catch((err) => {})
+                setAskQuestionStatus('published');
+            } catch (error) {
+                console.error('Error submitting question:', error);
             }
-
-            // Create comment
-            const commentResponse = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`,
-                {
-                    author: userDetails.id,
-                    title: askQuestionApi.title,
-                    content: askQuestionContent,
-                    excerpt: askQuestionContent,
-                    status: 'publish',
-                    acf: {
-                        'question_image': imageUrl,
-                        'question_subject_area': askQuestionApi.question_subject_area,
-                    }
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${userDetails.token}`
-                    }
-                }
-            ).then((response) => {
-            }).catch((err) => {})
-            setAskQuestionStatus('published');
-        } catch (error) {
-            console.error('Error submitting question:', error);
         }
     }
 

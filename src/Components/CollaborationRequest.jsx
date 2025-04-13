@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import SectionImage from "../Images/rb_2582.png";
+import { reducePoints } from '../helper';
 import axios from "axios";
-
 
 export default function CollaborationRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -19,7 +19,7 @@ export default function CollaborationRequest() {
     });
 
     //   Handle Change
-  function handleChange(e) {
+    function handleChange(e) {
     const {name, value} = e.target
     setCreateCollaborationRequest(prev => {
         return (
@@ -30,37 +30,41 @@ export default function CollaborationRequest() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-        // Upload image if file exists
-            const response = await axios.post(
-              `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations/`,
-                {   
-                    'title':  createCollaborationRequest.collaborations_description,
-                    'content': "",
-                    'excerpt': "",
-                    'author': userDetails.id,
-                    'status': 'publish',
-                    'acf' : {
-                        'collaborations_description': createCollaborationRequest.collaborations_description,
-                        'collaborations_features': createCollaborationRequest.collaborations_features,
-                        'collaborations_pay': createCollaborationRequest.collaborations_pay,
-                        'collaborations_perk': createCollaborationRequest.collaborations_perk,
-                        'collaborations_deadline': createCollaborationRequest.collaborations_deadline
+    const success = await reducePoints(userDetails, 5, 5);
+    
+    if (success === true) {
+        try {
+            // Upload image if file exists
+                const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations/`,
+                    {   
+                        'title':  createCollaborationRequest.collaborations_description,
+                        'content': "",
+                        'excerpt': "",
+                        'author': userDetails.id,
+                        'status': 'publish',
+                        'acf' : {
+                            'collaborations_description': createCollaborationRequest.collaborations_description,
+                            'collaborations_features': createCollaborationRequest.collaborations_features,
+                            'collaborations_pay': createCollaborationRequest.collaborations_pay,
+                            'collaborations_perk': createCollaborationRequest.collaborations_perk,
+                            'collaborations_deadline': createCollaborationRequest.collaborations_deadline
+                        }
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${userDetails.token}`
+                        }
                     }
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${userDetails.token}`
-                    }
-                }
-            )
-            .then((response) => {
-                setRequestSent(response.status);
-            })
-            .catch((error) => {
-            });
-    } catch (error) {
-        console.error('Error submitting question:', error);
+                )
+                .then((response) => {
+                    setRequestSent(response.status);
+                })
+                .catch((error) => {
+                });
+        } catch (error) {
+            console.error('Error submitting question:', error);
+        }
     }
 }
 
