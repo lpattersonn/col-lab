@@ -132,7 +132,13 @@ function ActiveItem({ currentItems }) {
 
             // Get the ID
             let chatID = undefined;
+            
+            // Get chat message counts
+            let count = 0;
             collaborationChats?.map((chat) => {
+                if (chat?.acf?.requestor_id == requestorProfile?.id) {
+                    count++;
+                }
                 // if(userDetails?.id === chat?.acf?.participant_id && Number(collaboration?.author) === chat?.acf?.requestor_id) {
                 if (chat?.acf?.request_id == collaboration?.id && userDetails?.id === chat?.acf?.participant_id && Number(collaboration?.author) === chat?.acf?.requestor_id) {
                     chatID = chat?.id
@@ -248,7 +254,7 @@ function ActiveItem({ currentItems }) {
                                 {/* Bottom Section */}
                                 <div className="row d-flex flex-row">
                                     <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
-                                    <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{localStorage.getItem(`collaboration_count${index}`)} people responded to this</div>
+                                    <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{count} {count == 1 ? "person responded to this." : "people responded to this."}</div>
                                     { collaborationButton() }
                                 </div>
                             </div>
@@ -366,7 +372,14 @@ function ExpiredItem({ currentItems }) {
 
             // Get the ID
             let chatID = undefined;
+
+            // Get chat message counts
+            let count = 0;
+
             collaborationChats?.map((chat) => {
+                if (chat?.acf?.requestor_id == requestorProfile?.id) {
+                    count++;
+                }
                 // if(userDetails?.id === chat?.acf?.participant_id && Number(collaboration?.author) === chat?.acf?.requestor_id) {
                 if (chat?.acf?.request_id == collaboration?.id && userDetails?.id === chat?.acf?.participant_id && Number(collaboration?.author) === chat?.acf?.requestor_id) {
                     chatID = chat?.id
@@ -431,7 +444,7 @@ function ExpiredItem({ currentItems }) {
                                 {/* Bottom Section */}
                                 <div className="row d-flex flex-row">
                                     <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
-                                    <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{localStorage.getItem(`collaboration_count${index}`)} people responded to this</div>
+                                    <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{count} {count == 1 ? "person responded to this." : "people responded to this."}</div>
                                 </div>
                             </div>
                         </div>
