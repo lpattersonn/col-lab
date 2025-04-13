@@ -33,7 +33,7 @@ export default function LearningRequest() {
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        const success = await reducePoints(userDetails, 5, 5); // ✅ wait for the result
+        const success = await reducePoints(userDetails, 5, 5); 
         if (success === true) {
             try {
                 const response = await axios.post(
@@ -112,7 +112,7 @@ if (userDetails != null) {
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
                                         <label htmlFor="learning_pay"><strong>Meeting Preference</strong></label>
-                                        <select name="learning_pay" id="learning_pay" value={createLearningRequest.learning_pay} onChange={handleChange} aria-label="Compensation" className="form-control form-control-lg form-select" required>
+                                        <select name="learning_pay" id="learning_pay" value={createLearningRequest.learning_pay} onChange={handleChange} aria-label="Compensation" disabled={requestSent === 201 ? true : false} className="form-control form-control-lg form-select" required>
                                             <option defaultValue disabled value="">Choose an option</option>
                                             <option>Virtual</option>
                                             <option>In Person</option>
@@ -121,7 +121,7 @@ if (userDetails != null) {
                                 </div>
                                 <button className="btn btn-info btn-lg" type="submit" disabled={ requestSent === 201 ? true : false} >Submit</button>
                                 { requestSent === 201 ? 
-                                <div className="alert alert-success mt-5" role="alert">
+                                <div className="alert alert-success mt-4" role="alert">
                                     <p>Success! Your training request has been created!</p>
                                 </div>
                                 : ''    
