@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-import {humanReadableDate} from "../helper.js";
+import { humanReadableDate,reducePoints } from "../helper.js";
 
 export default function BookAMentor(prop) {
 const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -43,33 +43,37 @@ useEffect(() => {
 }, [triggerRerender, prop.prop1, mentorAgree]);
 
 // Handle submit
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
-    axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
-        { 
-        title: `Mentor chat between ${userDetails.firstName} and ${prop.prop2}`,
-        content: `Mentor chat between ${userDetails.firstName} and ${prop.prop2}`,
-        status: 'publish',
-            'acf' : {
-                'mentor_request_date': mentorRequest?.mentor_request_date,
-                'mentor_request_time': `${mentorRequest?.mentor_request_time}:00`,
-                'mentor_request_hours': mentorRequest?.mentor_request_hours,
-                'mentor_request_notes': mentorRequest?.mentor_request_notes,
-                'mentor_id': prop?.mentor_id,
-                'mentee_id': prop?.mentee_id,
-                'mentor_chat_id': prop?.chat_id,
+    const success = await reducePoints(userDetails, 5, 5); 
+        
+    if (success === true) {
+        axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+            { 
+            title: `Mentor chat between ${userDetails.firstName} and ${prop.prop2}`,
+            content: `Mentor chat between ${userDetails.firstName} and ${prop.prop2}`,
+            status: 'publish',
+                'acf' : {
+                    'mentor_request_date': mentorRequest?.mentor_request_date,
+                    'mentor_request_time': `${mentorRequest?.mentor_request_time}:00`,
+                    'mentor_request_hours': mentorRequest?.mentor_request_hours,
+                    'mentor_request_notes': mentorRequest?.mentor_request_notes,
+                    'mentor_id': prop?.mentor_id,
+                    'mentee_id': prop?.mentee_id,
+                    'mentor_chat_id': prop?.chat_id,
+                }
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${userDetails.token}`
+                }
             }
-        },
-        {
-            headers: {
-                Authorization: `Bearer ${userDetails.token}`
-            }
-        }
-    ).then(function(response) {
-        setRequestSubmitted('submitted');
-    }).catch((error) => {
+        ).then(function(response) {
+            setRequestSubmitted('submitted');
+        }).catch((error) => {
 
-    });
+        });
+    }
 }
 
 
@@ -207,7 +211,7 @@ return (
                                         </svg>
                                     </div>
                 <div className='card-body'>
-                    <form onSubmit={handleSubmit}>
+                    <form className="points" onSubmit={handleSubmit}>
                         <h4>Mentor Request Form</h4>
                         <div className='row mb-3'>
                             <div className='col-12'>
