@@ -96,6 +96,7 @@ export default function Dashboard() {
         return item?.acf?.mentor_agree === "Agree";
       });
       setEvents(relatedResponse);
+      console.log(events);
       // Set collaborations
       let userCollaborations = 0
       allCollaborations?.data?.map((chat) => {
@@ -259,7 +260,13 @@ export default function Dashboard() {
                       </div>
                       <div className="dashboard-calender mt-3">
                         <p><strong>Scheduled meetings</strong></p>
-                        <p className="small"><strong>{`${events.length}`}</strong> interviews/meetings scheduled</p>
+                        <p className="small"><strong>{`${events.filter((event) => {
+                          const currentDate = new Date();
+                          const eventDate = new Date(event?.acf?.mentor_request_date);
+
+                          return currentDate?.getFullYear() == eventDate?.getFullYear() && currentDate?.getMonth() == eventDate?.getMonth();
+
+                        }).length}`}</strong> events scheduled this month.</p>
                       </div>
                       <div className="link-item">
                         <Calendar tileClassName={({date}) => {
