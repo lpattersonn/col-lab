@@ -266,7 +266,13 @@ export default function Dashboard() {
 
                           return currentDate?.getFullYear() == eventDate?.getFullYear() && currentDate?.getMonth() == eventDate?.getMonth();
 
-                        }).length}`}</strong> events scheduled this month.</p>
+                        }).length}`}</strong> {events.filter((event) => {
+                          const currentDate = new Date();
+                          const eventDate = new Date(event?.acf?.mentor_request_date);
+
+                          return currentDate?.getFullYear() == eventDate?.getFullYear() && currentDate?.getMonth() == eventDate?.getMonth();
+
+                        }).length == 1 ? "event scheduled this month." : "events scheduled this month."}</p>
                       </div>
                       <div className="link-item">
                         <Calendar tileClassName={({date}) => {
