@@ -277,9 +277,12 @@ export default function Dashboard() {
                       <div className="link-item">
                         <Calendar tileClassName={({date}) => {
                           let scheduledEvents = events.some((item) => dateFormat(date) === item?.acf?.mentor_request_date)
-                          return scheduledEvents ? "scheduled-event" : null;
-                          
-                        }} firstDayOfWeek={0}/>
+                          return scheduledEvents ? "scheduled-event" : null;                          
+                        }} firstDayOfWeek={0}
+                        onClickDay={(value, event) => {
+                          alert(value, event);
+                        }}
+                        />
                       </div>
                     </div>
                   </div>
