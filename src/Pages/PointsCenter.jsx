@@ -5,6 +5,7 @@ import axios from 'axios';
 
 export default function PointsCenter() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+    const [checkout, setCheckout] = useState(0);
     const [loading, setLoading] = useState(true);
     let [userProfile, setUserProfile] = useState({});
 
@@ -79,6 +80,23 @@ export default function PointsCenter() {
                                     </tr>
                                 </tbody>
                             </table>
+                            <div className="add-points">
+                                <p>We encourage participation in order to gain points. However, below are alternative ways to score points:</p>
+                                <p>Watch <a href="#">ad</a> for 1 point.</p>
+                                <p><span>Buy</span> points ($5 for 50 points).</p>
+                                <div className="points-checkout">
+                                    <div className='input'>
+                                        <p>How many points would you like to buy? (Minimum of 50)</p>
+                                        <input type="number" min="50" onChange={(e) => {
+                                            setCheckout(e.target.value / 10);
+                                        }} on />
+                                    </div>
+                                    <div className="checkout">
+                                        <span className="total">${checkout}</span>
+                                        <button className="btn btn-primary collab-btn">Checkout</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div className="points-center__pay">
                             <h2>Pay with Points</h2>
@@ -87,8 +105,8 @@ export default function PointsCenter() {
                                 <thead>
                                     <tr>
                                         <th>Action</th>
-                                        <th>Points Earned (Free Plan)</th>
-                                        <th>Points Earned (Subscription Plan)</th>
+                                        <th>Points Required (Free Plan)</th>
+                                        <th>Points Required (Subscription Plan)</th>
                                     </tr>
                                 </thead>
                                 <tbody>

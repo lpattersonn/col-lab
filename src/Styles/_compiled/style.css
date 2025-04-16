@@ -1875,6 +1875,38 @@ label {
 .points-center__participation {
   margin: 2rem 0 10rem 0;
 }
+.points-center .add-points {
+  margin-top: 4rem;
+}
+.points-center .add-points .points-checkout {
+  max-width: 81.8rem;
+  background: rgba(217, 217, 217, 0.5);
+  padding: 4rem 3rem;
+}
+.points-center .add-points .points-checkout .input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3rem 7rem;
+}
+.points-center .add-points .points-checkout .input p {
+  margin: 0;
+}
+.points-center .add-points .points-checkout .input input {
+  font-size: 1.6rem;
+  height: 4.5rem;
+  width: 8.5rem;
+}
+.points-center .add-points .points-checkout .checkout {
+  display: flex;
+  align-items: center;
+}
+.points-center .add-points .points-checkout .checkout .total {
+  font-size: 3.6rem;
+  font-weight: 700;
+  margin: 0 3rem 0 0;
+}
 .points-center table {
   margin: 1.6rem 0 0 0;
   width: 100%;
