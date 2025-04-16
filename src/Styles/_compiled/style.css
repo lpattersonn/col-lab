@@ -375,9 +375,6 @@ a {
 .grey {
   color: grey;
 }
-.grey:hover {
-  color: inherit !important;
-}
 
 .overflow-hidden {
   overflow-y: hidden;
@@ -1135,9 +1132,6 @@ a {
 .grey {
   color: grey;
 }
-.grey:hover {
-  color: inherit !important;
-}
 
 .overflow-hidden {
   overflow-y: hidden;
@@ -1879,28 +1873,28 @@ label {
   font-weight: 700;
 }
 .points-center__participation {
-  margin: 2rem 0 0 0;
+  margin: 2rem 0 10rem 0;
 }
-.points-center__participation table {
+.points-center table {
   margin: 1.6rem 0 0 0;
   width: 100%;
   font-size: 1.8rem;
 }
-.points-center__participation table thead th {
+.points-center table thead th {
   padding: 2rem 1rem;
   background: linear-gradient(to right, #00AAFF, #000000);
   color: #ffffff;
 }
-.points-center__participation table tbody tr th, .points-center__participation table tbody tr td {
+.points-center table tbody tr th, .points-center table tbody tr td {
   padding: 1rem 1rem 2rem;
 }
-.points-center__participation table tbody tr .highlight1 {
+.points-center table tbody tr .highlight1 {
   background-color: rgba(0, 170, 255, 0.07) !important;
 }
-.points-center__participation table tbody tr .highlight2 {
+.points-center table tbody tr .highlight2 {
   background-color: rgba(0, 0, 0, 0.04) !important;
 }
-.points-center__participation table, .points-center__participation th, .points-center__participation td {
+.points-center table, .points-center th, .points-center td {
   border: 3px solid #ffffff;
   border-collapse: collapse;
 }

@@ -80,6 +80,61 @@ export default function PointsCenter() {
                                 </tbody>
                             </table>
                         </div>
+                        <div className="points-center__pay">
+                            <h2>Pay with Points</h2>
+                            <p className="grey">Our points system is designed to foster genuine engagement, and ensure our platform is respected and used responsibly.</p>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Action</th>
+                                        <th>Points Earned (Free Plan)</th>
+                                        <th>Points Earned (Subscription Plan)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row" className='highlight1'>Ask a question</th>
+                                        <td className='highlight1'>5 points</td>
+                                        <td className='highlight1'>0 points</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" className='highlight2'>Post an item request</th>
+                                        <td className='highlight2'>5 points</td>
+                                        <td className='highlight2'>0 points</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" className='highlight1'>Respond to an item request</th>
+                                        <td className='highlight1'>2 points</td>
+                                        <td className='highlight1'>0 points</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" className='highlight2'>Propose a collaboration</th>
+                                        <td className='highlight2'>5 points</td>
+                                        <td className='highlight2'>0 points</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" className='highlight1'>Respond to a collab request</th>
+                                        <td className='highlight1'>2 points</td>
+                                        <td className='highlight1'>0 points</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" className='highlight2'>Request a training</th>
+                                        <td className='highlight2'>5 points</td>
+                                        <td className='highlight2'>0 points</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" className='highlight1'>Respond to a training request</th>
+                                        <td className='highlight1'>2 points</td>
+                                        <td className='highlight1'>0 points</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" className='highlight2'>Create a job posting</th>
+                                        <td className='highlight2'>5 points</td>
+                                        <td className='highlight2'>0 points</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </main>
             </>
