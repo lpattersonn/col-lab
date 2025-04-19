@@ -39,8 +39,8 @@ export default function BorrowRequest() {
                 `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items`,
                     {   
                         'title':  createLearningRequest.borrow_description,
-                        'content': "",
-                        'excerpt': "",
+                        'content': createLearningRequest.borrow_features,
+                        'excerpt': createLearningRequest.borrow_features,
                         'author': userDetails.id,
                         'status': 'publish',
                         'acf' : {

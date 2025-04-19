@@ -55,12 +55,12 @@ export default function Collaborations() {
         ])
         .then(([allCollaboations, allUsers, allChats]) => {
             // All collaborations
-            setCollaborations(allCollaboations?.data);
-            setLoading(false);
+            setCollaborations(allCollaboations?.data);            
             // All users
             setUsers(allUsers?.data);
             // All chats
             setCollaborationChats(allChats?.data);
+            setLoading(false);
         })
         .catch(error => {
             console.error(error);

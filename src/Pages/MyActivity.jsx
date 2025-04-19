@@ -11,6 +11,7 @@ export default function MyActivity() {
     const [jobs, setJobs] = useState([]);
     const [lerningCenterItems, setLerningCenterItems] = useState([]);
     const [collaborationItems, setCollaborationItems] = useState([]);
+    const [users, setUsers] = useState([]);
 
     const [selected, setSelected] = useState("questions");
     const [activities, setActivities] = useState([]);
@@ -59,20 +60,40 @@ export default function MyActivity() {
             Authorization: `Bearer ${userDetails.token}`
             }
         }),
+        // Users
+        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
+        {
+            headers: {
+                Authorization: `Bearer ${userDetails.token}`
+                }
+        }),
         ])
-        .then(([allQuestions, allBorrowItems, allJobs, allLearningCenter, allCollaborations]) => {
+        .then(([allQuestions, allBorrowItems, allJobs, allLearningCenter, allCollaborations, allUsers]) => {
             // All questions
-            setQuestions(allQuestions?.data);
-            setActivities(allQuestions?.data)
+            setQuestions(allQuestions?.data?.filter((item) => {
+                return item?.author == userDetails?.id;
+            }));
+            setActivities(allQuestions?.data?.filter((item) => {
+                return item?.author == userDetails?.id;
+            }))
             // All Borrow request
-            setBorrowItems(allBorrowItems?.data);
+            setBorrowItems(allBorrowItems?.data.filter((item) => {
+                return item?.author == userDetails?.id;
+            }));
             // All jobs
-            setJobs(allJobs?.data);
+            setJobs(allJobs?.data.filter((item) => {
+                return item?.author == userDetails?.id;
+            }));
             // All Learning Center
-            setLerningCenterItems(allLearningCenter?.data);
+            setLerningCenterItems(allLearningCenter?.data.filter((item) => {
+                return item?.author == userDetails?.id;
+            }));
             // All collaborations
-            setCollaborationItems(allCollaborations?.data);
-          
+            setCollaborationItems(allCollaborations?.data.filter((item) => {
+                return item?.author == userDetails?.id;
+            }));
+            // Users
+            setUsers(allUsers?.data);
             setLoading(false)
         })
         .catch((error) => {
@@ -102,7 +123,7 @@ export default function MyActivity() {
                     </div>
                     <div className="container-fluid">
                         <div className="row">
-                            <div className="col-md-4">
+                            <div className="col-md-3">
                                 <nav className='activity-buttons'>
                                     <ul>
                                         <li className={selected === 'questions' ? 'active' : ''} onClick={() => {
@@ -129,8 +150,8 @@ export default function MyActivity() {
                                     </ul>
                                 </nav>
                             </div>
-                            <div className="col-md-8">
-                                <Activities activities={activities} keyword={search} />
+                            <div className="col-md-9">
+                                <Activities selected={selected} activities={activities} keyword={search} users={users} />
                             </div>
                         </div>
                     </div>

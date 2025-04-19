@@ -5,7 +5,8 @@ import UserComment from "../Images/user-comment.svg";
 import { submitReport, renderedQuestion, humanReadableDate } from '../helper';
 import axios from 'axios';
 
-export default function Activities({activities, keyword}) {
+export default function Activities({selected, activities, keyword, users}) {
+    console.log(activities);
    // Can add in context
    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
 
@@ -15,8 +16,6 @@ export default function Activities({activities, keyword}) {
    // Turn in to a global item
    const [ collaborations, setCollaborations ] = useState([]);
    const [ collaborationChats, setCollaborationChats ] = useState([]);
-
-   const [users, setUsers] = useState([]);
    
    const [ activeTab, setActiveTab ] = useState("active");
 
@@ -170,14 +169,16 @@ export default function Activities({activities, keyword}) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="d-flex flex-direction-row">
-                                                <div className="designation-button">
-                                                    <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
-                                                </div>
-                                                <div className="due-button">
-                                                <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["collaborations_deadline"])}</span>
-                                                </div>
-                                            </div>
+                                            { selected !== 'questions' && selected !== 'jobs' && 
+                                                (<div className="d-flex flex-direction-row">
+                                                    <div className="designation-button">
+                                                        <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
+                                                    </div>
+                                                    <div className="due-button">
+                                                    <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["collaborations_deadline"])}</span>
+                                                    </div>
+                                                </div>)
+                                            }
                                         </div>
                                         <div className="options-container">
                                             <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
@@ -198,8 +199,8 @@ export default function Activities({activities, keyword}) {
                                     </div>
                                     {/* Middle Section */}
                                     <div style={{marginBottom: "1.8rem"}}>
-                                        <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.collaborations_description, search) : collaboration?.acf?.collaborations_description}} /></strong>
-                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.collaborations_features, search) : collaboration?.acf?.collaborations_features}} />
+                                        <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.title?.rendered, search) : collaboration?.title?.rendered}} /></strong>
+                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.excerpt?.rendered, search) : collaboration?.excerpt?.rendered}} />
                                     </div>
                                     {/* Bottom Section */}
                                     <div className="row d-flex flex-row">
@@ -282,7 +283,7 @@ export default function Activities({activities, keyword}) {
             <div className="tab-content">
                 {activeTab === "active" && (
                 <div className="tab-pane fade show active">
-                    <ActivePaginatedItems itemsPerPage={15} />
+                    <ActivePaginatedItems itemsPerPage={5} />
                 </div>
                 )}
                 {activeTab === "archived" && (

@@ -40,8 +40,8 @@ export default function LearningRequest() {
                     `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center/`,
                     {   
                         'title':  createLearningRequest.learning_description,
-                        'content': "",
-                        'excerpt': "",
+                        'content': createLearningRequest.learning_features,
+                        'excerpt': createLearningRequest.learning_features,
                         'author': userDetails.id,
                         'status': 'publish',
                         'acf' : {
