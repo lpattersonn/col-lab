@@ -45,11 +45,11 @@ export default function LearningRequest() {
                         'author': userDetails.id,
                         'status': 'publish',
                         'acf' : {
-                            'learning_description': createLearningRequest.learning_description,
-                            'learning_features': createLearningRequest.learning_features,
-                            'learning_pay': createLearningRequest.learning_pay,
-                            'learning_perk': createLearningRequest.learning_perk,
-                            'learning_deadline': createLearningRequest.learning_deadline
+                            'description': createLearningRequest.learning_description,
+                            'features': createLearningRequest.learning_features,
+                            'pay': createLearningRequest.learning_pay,
+                            'perk': createLearningRequest.learning_perk,
+                            'deadline': createLearningRequest.learning_deadline
                         }
                     },
                     {

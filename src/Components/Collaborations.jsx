@@ -164,7 +164,7 @@ function ActiveItem({ currentItems }) {
                                 'participant_name': userProfile?.name,
                                 'participant_image': userProfile?.avatar_urls?.['48'],
                                 'request_id': collaboration?.id,
-                                'request_title': collaboration?.acf?.collaborations_description,
+                                'request_title': collaboration?.acf?.description,
                             }
                         },
                         {
@@ -199,7 +199,7 @@ function ActiveItem({ currentItems }) {
 
             // Toggle option display
             let dateNow = new Date();
-            let deadLine = new Date(collaboration?.acf?.collaborations_deadline);
+            let deadLine = new Date(collaboration?.acf?.deadline);
 
             if (dateNow <= deadLine) {
                 return ( 
@@ -222,10 +222,10 @@ function ActiveItem({ currentItems }) {
                                         </div>
                                         <div className="d-flex flex-direction-row">
                                             <div className="designation-button">
-                                                <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
+                                                <span className="small">{collaboration?.acf?.["pay"]}</span>
                                             </div>
                                             <div className="due-button">
-                                            <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["collaborations_deadline"])}</span>
+                                            <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["deadline"])}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -248,8 +248,8 @@ function ActiveItem({ currentItems }) {
                                 </div>
                                 {/* Middle Section */}
                                 <div style={{marginBottom: "1.8rem"}}>
-                                    <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.collaborations_description, search) : collaboration?.acf?.collaborations_description}} /></strong>
-                                    <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.collaborations_features, search) : collaboration?.acf?.collaborations_features}} />
+                                    <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.description, search) : collaboration?.acf?.description}} /></strong>
+                                    <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.features, search) : collaboration?.acf?.features}} />
                                 </div>
                                 {/* Bottom Section */}
                                 <div className="row d-flex flex-row">
@@ -389,7 +389,7 @@ function ExpiredItem({ currentItems }) {
 
             // Get date
             let dateNow = new Date();
-            let deadLine = new Date(collaboration?.acf?.collaborations_deadline);
+            let deadLine = new Date(collaboration?.acf?.deadline);
 
             if (dateNow > deadLine) {
                 return ( 
@@ -412,10 +412,10 @@ function ExpiredItem({ currentItems }) {
                                         </div>
                                         <div className="d-flex flex-direction-row">
                                             <div className="designation-button">
-                                                <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
+                                                <span className="small">{collaboration?.acf?.["pay"]}</span>
                                             </div>
                                             <div className="due-button">
-                                            <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["collaborations_deadline"])}</span>
+                                            <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["deadline"])}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -438,8 +438,8 @@ function ExpiredItem({ currentItems }) {
                                 </div>
                                 {/* Middle Section */}
                                 <div style={{marginBottom: "1.8rem"}}>
-                                    <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.collaborations_description, search) : collaboration?.acf?.collaborations_description}} /></strong>
-                                    <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.collaborations_features, search) : collaboration?.acf?.collaborations_features}} />
+                                    <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.description, search) : collaboration?.acf?.description}} /></strong>
+                                    <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.features, search) : collaboration?.acf?.features}} />
                                 </div>
                                 {/* Bottom Section */}
                                 <div className="row d-flex flex-row">

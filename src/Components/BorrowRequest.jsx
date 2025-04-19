@@ -44,10 +44,10 @@ export default function BorrowRequest() {
                         'author': userDetails.id,
                         'status': 'publish',
                         'acf' : {
-                            'borrow_description': createLearningRequest.borrow_description,
-                            'borrow_features': createLearningRequest.borrow_features,
-                            'borrow_pay': createLearningRequest.borrow_pay,
-                            'borrow_deadline': createLearningRequest.borrow_deadline
+                            'description': createLearningRequest.borrow_description,
+                            'features': createLearningRequest.borrow_features,
+                            'pay': createLearningRequest.borrow_pay,
+                            'deadline': createLearningRequest.borrow_deadline
                         }
                     },
                     {

@@ -44,11 +44,11 @@ export default function CollaborationRequest() {
                         'author': userDetails.id,
                         'status': 'publish',
                         'acf' : {
-                            'collaborations_description': createCollaborationRequest.collaborations_description,
-                            'collaborations_features': createCollaborationRequest.collaborations_features,
-                            'collaborations_pay': createCollaborationRequest.collaborations_pay,
-                            'collaborations_perk': createCollaborationRequest.collaborations_perk,
-                            'collaborations_deadline': createCollaborationRequest.collaborations_deadline
+                            'description': createCollaborationRequest.collaborations_description,
+                            'features': createCollaborationRequest.collaborations_features,
+                            'pay': createCollaborationRequest.collaborations_pay,
+                            'perk': createCollaborationRequest.collaborations_perk,
+                            'deadline': createCollaborationRequest.collaborations_deadline
                         }
                     },
                     {

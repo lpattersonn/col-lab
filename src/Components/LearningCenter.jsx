@@ -182,7 +182,7 @@ export default function LearningCenter() {
                 };
 
                 let dateNow = new Date();
-                let deadLine = new Date(collaboration?.acf?.learning_deadline);
+                let deadLine = new Date(collaboration?.acf?.deadline);
 
                 // Show the currect action
                 let LearningButton = () => {
@@ -200,7 +200,7 @@ export default function LearningCenter() {
                 }
 
                 if (dateNow < deadLine) {
-                    if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.learning_pay?.toLowerCase().includes(search?.toLowerCase())) {     
+                    if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.pay?.toLowerCase().includes(search?.toLowerCase())) {     
                         return ( 
                             <div className={`${showOpportunity} mb-4 col-lg-6`} key={index}>
                                 <div className="card collaboration">
@@ -239,16 +239,16 @@ export default function LearningCenter() {
                                         </div>
                                         {/* Middle Section */}
                                         <div style={{marginBottom: "1.5rem"}}>
-                                            <div style={{fontSize: "1.4rem", marginBottom: "1.5rem", fontWeight: "700"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.learning_description, search) : collaboration?.acf?.learning_description}} />
+                                            <div style={{fontSize: "1.4rem", marginBottom: "1.5rem", fontWeight: "700"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.description, search) : collaboration?.acf?.description}} />
                                             <div className="d-flex flex-direction-row mt-3 mb-4">
                                                 <div className="designation-button">
-                                                    <span className="small">{collaboration?.acf?.["learning_pay"]}</span>
+                                                    <span className="small">{collaboration?.acf?.["pay"]}</span>
                                                 </div>
                                                 <div className="due-button">
-                                                    <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["learning_deadline"])}</span>
+                                                    <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["deadline"])}</span>
                                                 </div>
                                             </div>
-                                            <div>{collaboration?.acf?.learning_features?.length > 250 ? collaboration?.acf?.learning_features?.slice(0, 250)+"..." : collaboration?.acf?.learning_features}</div>
+                                            <div>{collaboration?.acf?.features?.length > 250 ? collaboration?.acf?.features?.slice(0, 250)+"..." : collaboration?.acf?.features}</div>
                                         </div>
                                         {/* Bottom Section */}
                                         <div className="row d-flex justify-content-between flex-row">                                        
@@ -380,10 +380,10 @@ export default function LearningCenter() {
                 // Toggle option display
     
                 let dateNow = new Date();
-                let deadLine = new Date(collaboration?.acf?.learning_deadline);
+                let deadLine = new Date(collaboration?.acf?.deadline);
     
                 if (dateNow > deadLine) {
-                    if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.learning_pay?.toLowerCase().includes(search?.toLowerCase())) {     
+                    if (search.length > 0 && collaboration?.name?.toLowerCase().includes(`${search?.toLowerCase()}`) || collaboration?.title?.rendered?.toLowerCase().includes(search?.toLowerCase()) || collaboration?.acf?.pay?.toLowerCase().includes(search?.toLowerCase())) {     
                         return ( 
                             <div className={`${showOpportunity} mb-4 col-lg-6`} key={index}>
                                 <div className="card collaboration">
@@ -422,16 +422,16 @@ export default function LearningCenter() {
                                         </div>
                                         {/* Middle Section */}
                                         <div style={{marginBottom: "1.5rem"}}>
-                                            <div style={{fontSize: "1.4rem", marginBottom: "1.5rem", fontWeight: "700"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.learning_description, search) : collaboration?.acf?.learning_description}} />
+                                            <div style={{fontSize: "1.4rem", marginBottom: "1.5rem", fontWeight: "700"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.description, search) : collaboration?.acf?.description}} />
                                             <div className="d-flex flex-direction-row mt-3 mb-4">
                                                 <div className="designation-button">
-                                                    <span className="small">{collaboration?.acf?.["learning_pay"]}</span>
+                                                    <span className="small">{collaboration?.acf?.["pay"]}</span>
                                                 </div>
                                                 <div className="due-button">
-                                                    <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["learning_deadline"])}</span>
+                                                    <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["deadline"])}</span>
                                                 </div>
                                             </div>
-                                            <div>{collaboration?.acf?.learning_features?.length > 250 ? collaboration?.acf?.learning_features?.slice(0, 250)+"..." : collaboration?.acf?.learning_features}</div>
+                                            <div>{collaboration?.acf?.features?.length > 250 ? collaboration?.acf?.features?.slice(0, 250)+"..." : collaboration?.acf?.features}</div>
                                         </div>
                                         {/* Bottom Section */}
                                         <div className="row d-flex justify-content-between flex-row">                                        

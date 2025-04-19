@@ -56,8 +56,8 @@ export default function BorrowItems() {
             if (search?.length > 0) {
                 const searchLower = search.toLowerCase();
                 filteredData = allBorrowItems?.data.filter((chat) => {
-                    const description = chat?.acf?.borrow_description?.toLowerCase() || '';
-                    const features = chat?.acf?.borrow_features?.toLowerCase() || '';
+                    const description = chat?.acf?.description?.toLowerCase() || '';
+                    const features = chat?.acf?.features?.toLowerCase() || '';
                 
                     return description.includes(searchLower) || features.includes(searchLower);
                 });
@@ -199,7 +199,7 @@ function ActiveItem({ currentItems }) {
 
                 // Toggle option display
                 let dateNow = new Date();
-                let deadLine = new Date(collaboration?.acf?.borrow_deadline);
+                let deadLine = new Date(collaboration?.acf?.deadline);
 
                 if (dateNow <= deadLine) {
                     return ( 
@@ -241,16 +241,16 @@ function ActiveItem({ currentItems }) {
                                     
                                     {/* Middle Section */}
                                     <div style={{marginBottom: "1.8rem"}}>
-                                        <div style={{fontSize: "1.4rem", marginBottom: "1.5rem", fontWeight: "bold"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.borrow_description, search) : collaboration?.acf?.borrow_description?.split(0, 340) } } />
+                                        <div style={{fontSize: "1.4rem", marginBottom: "1.5rem", fontWeight: "bold"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.description, search) : collaboration?.acf?.description?.split(0, 340) } } />
                                         <div className="d-flex flex-direction-row my-4">
                                             <div className="designation-button">
-                                                <span className="small">{collaboration?.acf?.["borrow_pay"]}</span>
+                                                <span className="small">{collaboration?.acf?.["pay"]}</span>
                                             </div>
                                             <div className="due-button">
-                                                <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["borrow_deadline"])}</span>
+                                                <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["deadline"])}</span>
                                             </div>
                                         </div>
-                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.borrow_features, search) : collaboration?.acf?.borrow_features?.split(0, 340) } } />
+                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.features, search) : collaboration?.acf?.features?.split(0, 340) } } />
                                     </div>
                                     {/* Bottom Section */}
                                     <div className="row d-flex justify-content-between flex-row">                                        
@@ -425,7 +425,7 @@ function ExpiredItem({ currentItems }) {
 
                 // Toggle option display
                 let dateNow = new Date();
-                let deadLine = new Date(collaboration?.acf?.borrow_deadline);
+                let deadLine = new Date(collaboration?.acf?.deadline);
 
                 if (dateNow > deadLine) {
                     return ( 
@@ -467,16 +467,16 @@ function ExpiredItem({ currentItems }) {
                                     
                                     {/* Middle Section */}
                                     <div style={{marginBottom: "1.8rem"}}>
-                                        <div style={{fontSize: "1.4rem", marginBottom: "1.5rem", fontWeight: "bold"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.borrow_description, search) : collaboration?.acf?.borrow_description?.split(0, 340) } } />
+                                        <div style={{fontSize: "1.4rem", marginBottom: "1.5rem", fontWeight: "bold"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.description, search) : collaboration?.acf?.description?.split(0, 340) } } />
                                         <div className="d-flex flex-direction-row my-4">
                                             <div className="designation-button">
-                                                <span className="small">{collaboration?.acf?.["borrow_pay"]}</span>
+                                                <span className="small">{collaboration?.acf?.["pay"]}</span>
                                             </div>
                                             <div className="due-button">
-                                                <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["borrow_deadline"])}</span>
+                                                <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["deadline"])}</span>
                                             </div>
                                         </div>
-                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.borrow_features, search) : collaboration?.acf?.borrow_features?.split(0, 340) } } />
+                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.features, search) : collaboration?.acf?.features?.split(0, 340) } } />
                                     </div>
                                     {/* Bottom Section */}
                                 </div>
