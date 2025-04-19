@@ -172,7 +172,7 @@ export default function Activities({selected, activities, keyword, users}) {
                                             { selected !== 'questions' && selected !== 'jobs' && 
                                                 (<div className="d-flex flex-direction-row">
                                                     <div className="designation-button">
-                                                        <span className="small">{collaboration?.acf?.["collaborations_pay"]}</span>
+                                                        <span className="small">{collaboration?.acf?.["pay"]}</span>
                                                     </div>
                                                     <div className="due-button">
                                                     <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["collaborations_deadline"])}</span>
