@@ -157,8 +157,8 @@ export default function Activities({selected, activities, keyword, users}) {
                                 <div className="card-body">
                                 {/* Top Section */}
                                     <div className="collaboration-header">
-                                        <div className="d-flex flex-direction-row">
-                                            <div className="d-flex" style={{marginRight: "6rem"}}>
+                                        <div className="d-flex flex-wrap flex-direction-row">
+                                            <div className="d-flex" style={{marginRight: "6rem", marginBottom: '1rem'}}>
                                                 <div>
                                                     <img className="collaboration-details-name-img" src={requestorProfile?.acf?.user_profile_picture} alt={requestorProfile.name} loading="lazy" />
                                                 </div>
@@ -175,7 +175,7 @@ export default function Activities({selected, activities, keyword, users}) {
                                                         <span className="small">{collaboration?.acf?.["pay"]}</span>
                                                     </div>
                                                     <div className="due-button">
-                                                    <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["collaborations_deadline"])}</span>
+                                                    <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["deadline"])}</span>
                                                     </div>
                                                 </div>)
                                             }

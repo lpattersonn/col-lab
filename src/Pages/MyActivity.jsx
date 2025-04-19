@@ -107,13 +107,13 @@ export default function MyActivity() {
             <>
                 <Navigation />
                 <main className="activity">
-                    <div className="container">
+                    <div className="container-fluid">
                         <div className="page-filter mb-5">
-                            <div className="row mb-5">
-                                <div className="col-12">
+                            <div className="row d-flex flex-direction-row align-items-center justify-content-between mb-5">
+                                <div className="col-md-6">
                                     <p className="lead"><strong>View your activity and make adjustments as needed.</strong></p>
                                 </div>
-                                <div className="col-12" style={{maxWidth: "330px"}}>
+                                <div className="col-md-6" style={{maxWidth: "330px"}}>
                                     <input type="search" name="search" className="form-control" placeholder='Start typing to search' value={search} onChange={(e) => {
                                         setSearch(e.target.value)
                                     }} />
