@@ -27,6 +27,7 @@ import CreateQuestion from './Components/CreateQuestion';
 import BorrowItemsChat from './Components/BorrowItemsChat';
 import LearningCenterChat from './Components/LearnCenterChat';
 import PointsCenter from './Pages/PointsCenter';
+import MyActivity from './Pages/MyActivity';
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
         <Route path="/create-question" element={<CreateQuestion />} />
         <Route path="/learning-center-chat/:param1" element={<LearningCenterChat />} />
         <Route path="/points-center" element={<PointsCenter />} />
+        <Route path="/my-activity" element={<MyActivity />} />
       </Routes>
    </Router>
   );

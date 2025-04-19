@@ -8,8 +8,6 @@ export default function PointsCenter() {
     const [checkout, setCheckout] = useState(0);
     const [loading, setLoading] = useState(true);
     let [userProfile, setUserProfile] = useState({});
-
-    console.log(userProfile)
     
     useEffect(() => {
         // Api for current user
@@ -87,7 +85,7 @@ export default function PointsCenter() {
                                 <div className="points-checkout">
                                     <div className='input'>
                                         <p>How many points would you like to buy? (Minimum of 50)</p>
-                                        <input type="number" min="50" onChange={(e) => {
+                                        <input type="number" min="50" step="5" onChange={(e) => {
                                             setCheckout(e.target.value / 10);
                                         }} on />
                                     </div>

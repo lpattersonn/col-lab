@@ -1931,6 +1931,30 @@ label {
   border-collapse: collapse;
 }
 
+.activity-buttons ul {
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.activity-buttons ul li {
+  cursor: pointer;
+  width: 100%;
+  padding: 3rem 4rem;
+  list-style: none;
+  background-color: rgba(0, 170, 255, 0.07);
+  font-size: 2rem;
+  font-weight: 700;
+}
+.activity-buttons ul li.active {
+  background: linear-gradient(to right, #000000, #00AAFF);
+  color: white;
+}
+.activity-buttons ul li:hover {
+  background: linear-gradient(to right, #000000, #00AAFF);
+  color: white;
+}
+
 @media screen and (max-width: 1000px) {
   .container-fluid {
     padding: 0 2rem !important;
