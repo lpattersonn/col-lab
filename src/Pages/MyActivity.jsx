@@ -146,7 +146,6 @@ export default function MyActivity() {
                                             setSelected('collaborations');
                                             setActivities(collaborationItems);
                                             }}>Collaboration Requests</li>
-                                        <li className={selected === 'mentorship' ? 'active' : ''} onClick={() => {setSelected('mentorship')}}>Mentorship Profile</li>
                                     </ul>
                                 </nav>
                             </div>

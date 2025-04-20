@@ -6,12 +6,11 @@ import { submitReport, renderedQuestion, humanReadableDate } from '../helper';
 import axios from 'axios';
 
 export default function Activities({selected, activities, keyword, users}) {
-    console.log(activities);
    // Can add in context
    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
 
-   // Could make a component
-   const [ search, setSearch ] = useState(keyword);
+   console.log(keyword)
+
 
    // Turn in to a global item
    const [ collaborations, setCollaborations ] = useState([]);
@@ -163,7 +162,7 @@ export default function Activities({selected, activities, keyword, users}) {
                                                     <img className="collaboration-details-name-img" src={requestorProfile?.acf?.user_profile_picture} alt={requestorProfile.name} loading="lazy" />
                                                 </div>
                                                 <div>
-                                                    <div className="d-flex flex-row my-0"><strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(requestorProfile?.name, search) : requestorProfile?.name}} /></strong><span>&nbsp;| {requestorProfile?.acf?.["user-job-Insitution"]} | {requestorProfile?.acf?.["user-country-of-residence"]}</span></div>
+                                                    <div className="d-flex flex-row my-0"><strong><div dangerouslySetInnerHTML={{ __html: keyword.length > 0 ? renderedQuestion(requestorProfile?.name, keyword) : requestorProfile?.name}} /></strong><span>&nbsp;| {requestorProfile?.acf?.["user-job-Insitution"]} | {requestorProfile?.acf?.["user-country-of-residence"]}</span></div>
                                                     <div className="d-flex flex-row align-items-center" >
                                                         <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
                                                     </div>
@@ -199,8 +198,8 @@ export default function Activities({selected, activities, keyword, users}) {
                                     </div>
                                     {/* Middle Section */}
                                     <div style={{marginBottom: "1.8rem"}}>
-                                        <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.title?.rendered, search) : collaboration?.title?.rendered}} /></strong>
-                                        <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.excerpt?.rendered, search) : collaboration?.excerpt?.rendered}} />
+                                        <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: keyword.length > 0 ? renderedQuestion(collaboration?.title?.rendered, keyword) : collaboration?.title?.rendered}} /></strong>
+                                        <div dangerouslySetInnerHTML={{ __html: keyword.length > 0 ? renderedQuestion(collaboration?.excerpt?.rendered, keyword) : collaboration?.excerpt?.rendered}} />
                                     </div>
                                     {/* Bottom Section */}
                                     <div className="row d-flex flex-row">
