@@ -415,7 +415,6 @@ return (
                                         }}
                                         // onChange={handleChangeContent}
                                         onEditorChange={(content) => setCreateComment(content)}
-
                                       />
                                       
                                       <div className="row">

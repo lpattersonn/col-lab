@@ -6,6 +6,7 @@ import { renderedQuestion, humanReadableDate, deletePost } from '../helper';
 import axios from 'axios';
 
 export default function Activities({selected, activities, keyword, users, setUpdateState}) {
+    console.log(activities);
    // Can add in context
    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
 
@@ -16,6 +17,11 @@ export default function Activities({selected, activities, keyword, users, setUpd
    const [ activeTab, setActiveTab ] = useState("active");
 
    const Naviagte = useNavigate()
+
+    // Function for returning activities
+    function returnActivities() {
+        // Set url for querying activities
+    }
 
     // Start paginated active jobs
     function ActiveItem({ currentItems }) {
@@ -71,15 +77,30 @@ export default function Activities({selected, activities, keyword, users, setUpd
                         userProfile = name;
                     }
                 }
-    
-                function commentCount() {
-                return axios.get(`${collaboration?._links?.replies?.['0']?.href}`)
-                .then((response) => {
-                    localStorage.setItem(`collaboration_count${index}`, response.data.length);
-                }).catch((err) => {});
+                
+                function CommentCount({ collaboration, userDetails }) {
+                    const [count, setCount] = useState(null);
+                
+                    useEffect(() => {
+                        if (!collaboration?._links?.replies?.['0']?.href) return;
+                
+                        axios.get(collaboration._links.replies['0'].href, {
+                            headers: { Authorization: `Bearer ${userDetails.token}` }
+                        })
+                        .then((response) => {
+                            setCount(response?.data?.length || 0);
+                        })
+                        .catch((err) => {
+                            console.error("Error fetching comment count", err);
+                            setCount(0);
+                        });
+                    }, []);
+                
+                    return (
+                        count
+                    );
                 }
-    
-                commentCount();
+                
     
                 // Get the ID
                 let chatID = undefined;
@@ -96,6 +117,13 @@ export default function Activities({selected, activities, keyword, users, setUpd
                         return;
                     }
                 });
+
+                 // Parsing comments
+                 let commentCounter = localStorage.getItem(`comment_count${index}`);
+                 // Ensure that numberOfComments is initialized as an object
+                 let numberOfComments = [{ count: parseInt(commentCounter) }]; // Parse string to integer
+                 // Then you can update the count property
+                 numberOfComments[0].count = parseInt(count); // Parse string to integer
                 
                 // Create Collaboration chat 
                 const createMentorChat = async (e) => {
@@ -207,7 +235,7 @@ export default function Activities({selected, activities, keyword, users, setUpd
                                     {/* Bottom Section */}
                                     <div className="row d-flex flex-row">
                                         <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
-                                        <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{count} {count == 1 ? "person responded to this." : "people responded to this."}</div>
+                                        <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{ selected == 'questions' ? (<CommentCount collaboration={collaboration} userDetails={userDetails} />) : count} {count == 1 ? "person responded to this." : "people responded to this."}</div>
                                         { collaborationButton() }
                                     </div>
                                 </div>
