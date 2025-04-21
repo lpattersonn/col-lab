@@ -154,7 +154,7 @@ export default function Question() {
             <div className='card-body p-0'>
               <div className="questions-details mb-3">
                 <div className="questions-details-name">
-                  <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} alt={userProfileImg ? userProfileImg : defaultImage} loading="lazy" />
+                  <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} alt={userProfileImg ? userProfileImg : defaultImage} loading="eager" />
                   <div className="questions-details-name-info">
                     <p><strong>{userName}</strong></p>
                     <div className="questions-details-posted">
@@ -172,7 +172,7 @@ export default function Question() {
               {question['acf'] && question['acf']['answer_image'] && 
                 <div className="question-image mt-3">
                   <a href={question?.acf?.answer_image} data-lightbox={userName + "image" + index}>
-                    <img className="question-image-item" src={question?.acf?.answer_image} alt={question?.acf?.answer_image}  loading="lazy" />
+                    <img className="question-image-item" src={question?.acf?.answer_image} alt={question?.acf?.answer_image}  loading="eager" />
                   </a>
                 </div>}
             </div>
@@ -315,7 +315,7 @@ return (
                           <div className="card-body">
                           <div className="questions-details">
                               <div className="questions-details-name">
-                                <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} alt={userProfileImg ? userProfileImg : defaultImage} loading="lazy" />
+                                <img className="questions-details-name-img" src={userProfileImg ? userProfileImg : defaultImage} alt={userProfileImg ? userProfileImg : defaultImage} loading="eager" />
                                 <div className="questions-details-name-info">
                                     <p><strong>{userName}</strong></p>
                                     <div className="questions-details-posted">
@@ -335,7 +335,7 @@ return (
                                 {question['acf'] && question['acf']['question_image'] && 
                                 <div className="question-image mt-3">
                                   <a href={question?.acf?.question_image} data-lightbox={userJobInsitution + "item"}>
-                                      <img className="question-image-item" src={question?.acf?.question_image} alt={question?.acf?.question_image} loading='lazy'/>
+                                      <img className="question-image-item" src={question?.acf?.question_image} alt={question?.acf?.question_image} loading='eager'/>
                                   </a>
                                 </div>}
                                 <button className="btn btn-sm btn-outline-info ml-auto" onClick={()=>{setModalClass("show")}}>Answer</button>
