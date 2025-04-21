@@ -112,8 +112,8 @@ if (userDetails != null) {
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
                                         <label htmlFor="learning_pay"><strong>Meeting Preference</strong></label>
-                                        <select name="learning_pay" id="learning_pay" value={createLearningRequest.learning_pay} onChange={handleChange} aria-label="Compensation" disabled={requestSent === 201 ? true : false} className="form-control form-control-lg form-select" required>
-                                            <option defaultValue disabled value="">Choose an option</option>
+                                        <select defaultValue="" name="learning_pay" id="learning_pay" value={createLearningRequest.learning_pay} onChange={handleChange} aria-label="Compensation" disabled={requestSent === 201 ? true : false} className="form-control form-control-lg form-select" required>
+                                            <option disabled value="">Choose an option</option>
                                             <option>Virtual</option>
                                             <option>In Person</option>
                                         </select>

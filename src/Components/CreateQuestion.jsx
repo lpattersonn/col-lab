@@ -147,8 +147,8 @@ if (userDetails != null) {
                                     </div>
                                     <div className="col-lg-12 mb-4">
                                         <p className="m-0 small"><strong>Subject area:</strong></p>
-                                        <select className="form-control form-select" name="question_subject_area"  onChange={handleChange} disabled={askQuestionStatus === 'published' ? true : false} required>
-                                        <option defaultValue selected value="">Choose subject</option>
+                                        <select defaultValue="" className="form-control form-select" name="question_subject_area" onChange={handleChange} disabled={askQuestionStatus === 'published' ? true : false} required>
+                                        <option disabled value="">Choose subject</option>
                                             {optionsArray}
                                         </select>
                                     </div>

@@ -114,8 +114,8 @@ if (userDetails != null) {
                                 <div className="row">
                                     <div className="col-lg-12 mb-4">
                                         <label htmlFor="collaborations_pay"><strong>Compensation</strong></label>
-                                        <select name="collaborations_pay" id="collaborations_pay" onChange={handleChange} aria-label="Compensation" className="form-control form-control-lg form-select" required>
-                                            <option defaultValue disabled value="">Choose an option</option>
+                                        <select defaultValue="" name="collaborations_pay" id="collaborations_pay" onChange={handleChange} aria-label="Compensation" className="form-control form-control-lg form-select" required>
+                                            <option disabled value="">Choose an option</option>
                                             <option>For Free</option>
                                             <option>For Authorship</option>
                                             <option>For Acknowledgment</option>

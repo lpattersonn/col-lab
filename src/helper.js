@@ -169,3 +169,21 @@ export async function reducePoints(user, fee, required) {
       console.error("Error reducing points:", error);
   }
 }
+
+// Delete Post
+export async function deletePost(user, link, id, setUpdateState) {
+  console.log(link, id)
+  try {
+    const response = await axios.delete(`${link}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      }
+    });
+
+    alert("This post has been deleted");
+    setUpdateState(prev => !prev);
+    return response;
+  } catch (error) {
+    console.error("Delete failed:", error);
+  }
+}

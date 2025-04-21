@@ -11,6 +11,7 @@ export default function MyActivity() {
     const [jobs, setJobs] = useState([]);
     const [lerningCenterItems, setLerningCenterItems] = useState([]);
     const [collaborationItems, setCollaborationItems] = useState([]);
+    const [updateState, setUpdateState] = useState(false);
     const [users, setUsers] = useState([]);
 
     const [selected, setSelected] = useState("questions");
@@ -99,7 +100,7 @@ export default function MyActivity() {
         .catch((error) => {
             console.error(error);
         })
-    }, []);
+    }, [updateState]);
 
     if ( userDetails != null) {
         if (loading === false) {
@@ -150,7 +151,7 @@ export default function MyActivity() {
                                 </nav>
                             </div>
                             <div className="col-md-9">
-                                <Activities selected={selected} activities={activities} keyword={search} users={users} />
+                                <Activities selected={selected} activities={activities} keyword={search} users={users} setUpdateState={setUpdateState} />
                             </div>
                         </div>
                     </div>

@@ -2,22 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import UserComment from "../Images/user-comment.svg";
-import { submitReport, renderedQuestion, humanReadableDate } from '../helper';
+import { renderedQuestion, humanReadableDate, deletePost } from '../helper';
 import axios from 'axios';
 
-export default function Activities({selected, activities, keyword, users}) {
+export default function Activities({selected, activities, keyword, users, setUpdateState}) {
    // Can add in context
    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-
-   console.log(keyword)
-
 
    // Turn in to a global item
    const [ collaborations, setCollaborations ] = useState([]);
    const [ collaborationChats, setCollaborationChats ] = useState([]);
    
    const [ activeTab, setActiveTab ] = useState("active");
-
+   
    const Naviagte = useNavigate()
 
     // Start paginated active jobs
@@ -40,6 +37,7 @@ export default function Activities({selected, activities, keyword, users}) {
         return (
           <>
             {currentItems?.map((collaboration, index) => {
+                console.log(collaboration);
                 let showCollaboration =  localStorage.getItem(`show_collaboration${index}`);
             
                 let posted = Date.now() - new Date(collaboration.date);
@@ -190,9 +188,14 @@ export default function Activities({selected, activities, keyword, users}) {
                                                     localStorage.setItem(`show_collaboration${index}`, 'hide')
                                                     handleHideCollaboration(index)
                                                     }}>Hide</div>
-                                                <div className="option-item" onClick={()=>{
-                                                        submitReport(collaboration, userDetails);
-                                                    }}>Report</div>
+                                                <div className="option-item"  onClick={async () => {
+                                                    await deletePost(
+                                                    userDetails,
+                                                    collaboration?._links?.collection?.[0]?.href, // correct URL
+                                                    collaboration?.id,
+                                                    setUpdateState
+                                                    );
+                                                }}>Delete</div>
                                             </div>
                                         </div>
                                     </div>
@@ -266,7 +269,7 @@ export default function Activities({selected, activities, keyword, users}) {
                     className={`nav-link ${activeTab === "active" ? "active" : ""}`}
                     onClick={() => setActiveTab("active")}
                 >
-                    Active Requests
+                    My Requests
                 </button>
                 </li>
                 <li className="nav-item" role="presentation">
@@ -274,7 +277,7 @@ export default function Activities({selected, activities, keyword, users}) {
                     className={`nav-link ${activeTab === "archived" ? "active" : ""}`}
                     onClick={() => setActiveTab("archived")}
                 >
-                    Archived
+                    My Activity
                 </button>
                 </li>
             </ul>
