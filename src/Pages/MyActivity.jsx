@@ -72,25 +72,43 @@ export default function MyActivity() {
         .then(([allQuestions, allBorrowItems, allJobs, allLearningCenter, allCollaborations, allUsers]) => {
             // All questions
             setQuestions(allQuestions?.data?.filter((item) => {
+                if (search.length > 0) {
+                    return item?.author == userDetails?.id && item?.title?.rendered?.includes(search);
+                }
                 return item?.author == userDetails?.id;
             }));
             setActivities(allQuestions?.data?.filter((item) => {
+                if (search.length > 0) {
+                    return item?.author == userDetails?.id && item?.title?.rendered?.includes(search);
+                }
                 return item?.author == userDetails?.id;
             }))
             // All Borrow request
             setBorrowItems(allBorrowItems?.data.filter((item) => {
+                if (search.length > 0) {
+                    return item?.author == userDetails?.id && item?.title?.rendered?.includes(search);
+                }
                 return item?.author == userDetails?.id;
             }));
             // All jobs
             setJobs(allJobs?.data.filter((item) => {
+                if (search.length > 0) {
+                    return item?.author == userDetails?.id && item?.title?.rendered?.includes(search);
+                }
                 return item?.author == userDetails?.id;
             }));
             // All Learning Center
             setLerningCenterItems(allLearningCenter?.data.filter((item) => {
+                if (search.length > 0) {
+                    return item?.author == userDetails?.id && item?.title?.rendered?.includes(search);
+                }
                 return item?.author == userDetails?.id;
             }));
             // All collaborations
             setCollaborationItems(allCollaborations?.data.filter((item) => {
+                if (search.length > 0) {
+                    return item?.author == userDetails?.id && item?.title?.rendered?.includes(search);
+                }
                 return item?.author == userDetails?.id;
             }));
             // Users
@@ -100,7 +118,7 @@ export default function MyActivity() {
         .catch((error) => {
             console.error(error);
         })
-    }, [updateState]);
+    }, [updateState, search]);
 
     if ( userDetails != null) {
         if (loading === false) {
