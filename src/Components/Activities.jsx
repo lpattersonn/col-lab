@@ -14,7 +14,7 @@ export default function Activities({selected, activities, keyword, users, setUpd
    const [ collaborationChats, setCollaborationChats ] = useState([]);
    
    const [ activeTab, setActiveTab ] = useState("active");
-   
+
    const Naviagte = useNavigate()
 
     // Start paginated active jobs
@@ -243,18 +243,24 @@ export default function Activities({selected, activities, keyword, users, setUpd
         };
       
         return (
-          <>
-            <ActiveItem currentItems={currentItems} />
-            <ReactPaginate
-              breakLabel="..."
-              nextLabel="»"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={3}
-              pageCount={pageCount}
-              previousLabel="«"
-              renderOnZeroPageCount={null}
-            />
-          </>
+            <>
+          { currentItems?.length > 0 ?
+            (<>
+                <ActiveItem currentItems={currentItems} />
+                <ReactPaginate
+                breakLabel="..."
+                nextLabel="»"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={3}
+                pageCount={pageCount}
+                previousLabel="«"
+                renderOnZeroPageCount={null}
+                />
+            </>) : (<>
+                <p>No requests found.</p>
+            </>)
+          }
+         </>
         );
         
     }
