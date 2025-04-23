@@ -155,12 +155,12 @@ export default function Dashboard() {
           return axios.get(`${question._links.replies['0'].href}`)
           .then((response) => {
             numberOfComments[0].count = response.data.length;
-            localStorage.setItem(`comment_count${index}`, numberOfComments[0].count)
+            localStorage.setItem(`comment_count(${question.title.rendered})`, numberOfComments[0].count)
           }).catch((err) => {});
         }
 
         // Parsing comments
-        let count = localStorage.getItem(`comment_count${index}`);
+        let count = localStorage.getItem(`comment_count(${question.title.rendered})`);
         // Ensure that numberOfComments is initialized as an object
         let numberOfComments = [{ count: parseInt(count) }]; // Parse string to integer
         // Then you can update the count property

@@ -1796,6 +1796,7 @@ label {
   background: none !important;
   border: 2px solid black !important;
   color: black !important;
+  width: fit-content;
 }
 .collab-btn:hover {
   background: black !important;
