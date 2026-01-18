@@ -16,6 +16,8 @@ $btn-color-4: #A6C3E4;
 $btn-color-5: #FFFFB7;
 $btn-color-6: #C9EADB;
 
+$box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+
 // Mixins
 @mixin border($property) {
     #{$property}: 1.5px solid $mercy-color-1;

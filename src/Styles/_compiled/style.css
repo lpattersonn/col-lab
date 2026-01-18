@@ -63,6 +63,7 @@ main {
 .btn {
   font-size: 1.6rem !important;
   font-family: "Roboto", sans-serif !important;
+  height: -moz-fit-content !important;
   height: fit-content !important;
   font-weight: 600 !important;
 }
@@ -93,6 +94,16 @@ main {
 .btn-main:hover .btn-main-icon {
   transition: 400ms ease-out;
   filter: invert(100%) sepia(16%) saturate(0%) hue-rotate(107deg) brightness(108%) contrast(101%);
+}
+
+.btn-primary {
+  background: rgba(15, 23, 42, 0.9490196078) !important;
+  border: rgba(15, 23, 42, 0.9490196078) !important;
+  text-transform: uppercase;
+}
+
+a {
+  color: rgba(15, 23, 42, 0.9490196078) !important;
 }
 
 .btn-secondary {
@@ -154,8 +165,12 @@ main {
 }
 
 .form-control {
-  border: 1px solid grey !important;
+  border: 1px solid #cccccc !important;
   font-size: 1.6rem !important;
+}
+.form-control:focus {
+  border: 1px solid rgba(15, 23, 42, 0.9490196078) !important;
+  outline: none !important;
 }
 
 .login-text {
@@ -260,6 +275,7 @@ a {
 .link-dark {
   display: inline-block;
   align-items: center;
+  width: -moz-fit-content;
   width: fit-content;
   text-decoration: underline !important;
 }
@@ -297,6 +313,7 @@ a {
 .link-blue {
   display: inline-block;
   align-items: center;
+  width: -moz-fit-content;
   width: fit-content;
   text-decoration: underline !important;
   color: #0b5ed7 !important;
@@ -400,6 +417,18 @@ a {
   padding: 10rem 3rem !important;
 }
 
+.form-control-lg {
+  padding: 1.2rem 2rem !important;
+}
+
+.login-btn {
+  padding: 1.25rem 0 !important;
+}
+
+.left {
+  text-align: left !important;
+}
+
 /* Button Colours */
 .dashboard {
   display: flex;
@@ -461,7 +490,8 @@ a {
 .dashboard-user-details-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .dashboard-user-details-links .link-item {
   display: flex;
@@ -493,7 +523,8 @@ a {
   height: 6rem;
   border: 1px solid black;
   border-radius: 3px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   margin: 0 0.7rem 0 0;
 }
 .questions-details-name-info {
@@ -598,7 +629,9 @@ header {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin-top: 10rem;
+  margin-top: 20rem;
+  padding: 16px;
+  background: transparent;
 }
 
 .col:has(.login-header) {
@@ -609,6 +642,15 @@ header {
 .login-header {
   max-width: 400px;
   width: 100%;
+}
+
+.form-container {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  width: 100%;
+  max-width: 500px;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 0.75rem;
 }
 
 .form-login {
@@ -625,7 +667,7 @@ header {
 }
 
 .login-lead {
-  text-align: left;
+  text-align: center;
 }
 
 .span-login {
@@ -648,7 +690,8 @@ header {
   border: 1px solid black;
   box-shadow: 0px 0px 7px grey;
   border-radius: 3px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   margin-right: 1rem;
 }
 
@@ -683,7 +726,8 @@ header {
   border: 1px solid black;
   box-shadow: 0px 0px 7px grey;
   border-radius: 3px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   margin-right: 1rem;
 }
 
@@ -763,7 +807,8 @@ textarea[data-info=content] {
 .question-image-item {
   width: 100px;
   height: 100px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .question-item {
@@ -820,6 +865,7 @@ main {
 .btn {
   font-size: 1.6rem !important;
   font-family: "Roboto", sans-serif !important;
+  height: -moz-fit-content !important;
   height: fit-content !important;
   font-weight: 600 !important;
 }
@@ -850,6 +896,16 @@ main {
 .btn-main:hover .btn-main-icon {
   transition: 400ms ease-out;
   filter: invert(100%) sepia(16%) saturate(0%) hue-rotate(107deg) brightness(108%) contrast(101%);
+}
+
+.btn-primary {
+  background: rgba(15, 23, 42, 0.9490196078) !important;
+  border: rgba(15, 23, 42, 0.9490196078) !important;
+  text-transform: uppercase;
+}
+
+a {
+  color: rgba(15, 23, 42, 0.9490196078) !important;
 }
 
 .btn-secondary {
@@ -911,8 +967,12 @@ main {
 }
 
 .form-control {
-  border: 1px solid grey !important;
+  border: 1px solid #cccccc !important;
   font-size: 1.6rem !important;
+}
+.form-control:focus {
+  border: 1px solid rgba(15, 23, 42, 0.9490196078) !important;
+  outline: none !important;
 }
 
 .login-text {
@@ -1017,6 +1077,7 @@ a {
 .link-dark {
   display: inline-block;
   align-items: center;
+  width: -moz-fit-content;
   width: fit-content;
   text-decoration: underline !important;
 }
@@ -1054,6 +1115,7 @@ a {
 .link-blue {
   display: inline-block;
   align-items: center;
+  width: -moz-fit-content;
   width: fit-content;
   text-decoration: underline !important;
   color: #0b5ed7 !important;
@@ -1155,6 +1217,18 @@ a {
 
 .slide-pane__content {
   padding: 10rem 3rem !important;
+}
+
+.form-control-lg {
+  padding: 1.2rem 2rem !important;
+}
+
+.login-btn {
+  padding: 1.25rem 0 !important;
+}
+
+.left {
+  text-align: left !important;
 }
 
 /* Button Colours */
@@ -1294,6 +1368,7 @@ label {
   background: #ff0000;
   position: absolute;
   font-size: 1.6rem;
+  width: -moz-fit-content;
   width: fit-content;
   padding: 0.5rem 1rem;
   color: white;
@@ -1360,10 +1435,12 @@ label {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  object-position: center;
+  -o-object-position: center;
+     object-position: center;
   border: 1px solid black;
   border-radius: 3px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   border-radius: 50%;
 }
 
@@ -1428,6 +1505,7 @@ label {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: -moz-fit-content !important;
   width: fit-content !important;
   background-color: transparent;
   padding: 1rem;
@@ -1453,6 +1531,7 @@ label {
 }
 
 .current-user-message {
+  width: -moz-fit-content;
   width: fit-content;
   max-width: 70%;
   float: right;
@@ -1468,6 +1547,7 @@ label {
   margin-bottom: -0.5rem;
   margin-left: auto !important;
   border: none !important;
+  width: -moz-fit-content !important;
   width: fit-content !important;
   padding: 0 1rem !important;
 }
@@ -1486,14 +1566,17 @@ label {
 .current-user-message .image .chat-img {
   width: 4rem !important;
   height: 4rem !important;
-  object-position: center;
+  -o-object-position: center;
+     object-position: center;
   border: 1px solid black;
   border-radius: 3px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   border-radius: 50%;
 }
 
 .other-user-message {
+  width: -moz-fit-content;
   width: fit-content;
   max-width: 70%;
   margin-right: auto;
@@ -1508,6 +1591,7 @@ label {
   margin-bottom: -0.5rem;
   margin-right: auto !important;
   border: none !important;
+  width: -moz-fit-content !important;
   width: fit-content !important;
   padding: 0 1rem !important;
 }
@@ -1526,10 +1610,12 @@ label {
 .other-user-message .image .chat-img {
   width: 4rem !important;
   height: 4rem !important;
-  object-position: center;
+  -o-object-position: center;
+     object-position: center;
   border: 1px solid black;
   border-radius: 3px;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   border-radius: 50%;
 }
 
@@ -1587,7 +1673,8 @@ label {
   width: 5rem;
   height: 5rem;
   padding: 0.5rem;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   cursor: pointer;
 }
 
@@ -1617,6 +1704,7 @@ label {
 .calender-schedule-modal {
   max-width: 50rem;
   position: absolute;
+  height: -moz-fit-content;
   height: fit-content;
   top: 0;
   bottom: 0;
@@ -1687,7 +1775,9 @@ label {
   position: absolute;
   background-color: red;
   top: -5px;
+  width: -moz-fit-content;
   width: fit-content;
+  height: -moz-fit-content;
   height: fit-content;
   color: white;
   display: flex;
@@ -1727,7 +1817,8 @@ label {
   height: 4rem;
   border: 1px solid black;
   border-radius: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
   margin: 0 0.7rem 0 0;
 }
 .collaboration-details-name-info {
@@ -1761,6 +1852,7 @@ label {
   padding: 0.5rem 2rem;
   color: white;
   background: red;
+  height: -moz-fit-content;
   height: fit-content;
   margin-right: 1rem;
   font-weight: 700;
@@ -1772,6 +1864,7 @@ label {
   align-items: center;
   padding: 0.5rem 2rem;
   background: lightgrey;
+  height: -moz-fit-content;
   height: fit-content;
   font-weight: 700;
 }
@@ -1788,6 +1881,7 @@ label {
 .collaboration-header {
   display: grid !important;
   grid-template-columns: 4fr 1fr;
+  height: -moz-fit-content;
   height: fit-content;
   margin-bottom: 1rem;
 }
@@ -1796,6 +1890,7 @@ label {
   background: none !important;
   border: 2px solid black !important;
   color: black !important;
+  width: -moz-fit-content;
   width: fit-content;
 }
 .collab-btn:hover {
@@ -1810,6 +1905,7 @@ label {
 .options-container {
   margin-left: auto;
   position: relative;
+  width: -moz-fit-content;
   width: fit-content;
   position: relative;
   z-index: 999999;
@@ -1817,6 +1913,7 @@ label {
 .options-container .options {
   position: relative;
   z-index: 999999;
+  height: -moz-fit-content;
   height: fit-content;
   cursor: pointer;
 }
@@ -1828,6 +1925,7 @@ label {
   margin-top: 1rem;
   position: absolute;
   z-index: 9;
+  width: -moz-fit-content;
   width: fit-content;
   top: 0;
   right: 0;
@@ -1864,7 +1962,8 @@ label {
 .points-center__header .image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .points-center__header .details {
   font-size: 1.8rem;
@@ -1973,4 +2072,4 @@ label {
   .dashboard-options {
     padding: 3rem 0;
   }
-}
+}/*# sourceMappingURL=style.css.map */

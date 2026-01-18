@@ -108,7 +108,8 @@ export default function Login() {
 
     return (
         <div className="container primary login">
-            <div className="row mb-4">
+            <div className="form-container">
+            <div className="row">
                 <div className="col-lg-12 d-flex justify-content-center mb-3">
                     <img className="brand" src={Brand} alt="colLAB" />
                 </div>
@@ -136,8 +137,7 @@ export default function Login() {
                         />
                     </div>
                 </div>
-
-             <div className="row mb-4">
+             <div className="row mb-3">
     <div className="col position-relative">
         <input
             className="form-control form-control-lg pe-5"
@@ -160,6 +160,7 @@ export default function Login() {
                 transform: 'translateY(-50%)',
                 padding: 0,
                 lineHeight: 0,
+                width: "fit-content",
                 color: '#6c757d',
             }}
         >
@@ -201,7 +202,9 @@ export default function Login() {
         </button>
     </div>
 </div>
-
+       <div className="col left mb-3" style={{textAlign: "left !important"}}>
+            <span><Link to="/registration">Forgot password?</Link></span>
+        </div>
 
                 <button
                     type="submit"
@@ -211,13 +214,13 @@ export default function Login() {
                     {isSubmitting ? 'Logging in…' : 'Log In'}
                 </button>
 
-                <div className="row mt-3">
-                    <div className="col text-center">
-                        <Link to="/registration">Sign up</Link>
+                <div className="row mt-4">
+                    <div className="col left" style={{textAlign: "left !important"}}>
+                        <span>Don't have an account?</span> <span><Link to="/registration">Sign up</Link></span>
                     </div>
                 </div>
             </form>
-
+            </div>
             {userServerMessage()}
             {userServerRegisterMessage()}
         </div>
