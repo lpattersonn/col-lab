@@ -11,25 +11,27 @@ export default function Login() {
     const [serverMessage, setServerMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // 👁️ Show/Hide password
+    const [showPassword, setShowPassword] = useState(false);
+
     // User input
     const [userLogin, setUserLogin] = useState({
         user: '',
-        pass: ''
+        pass: '',
     });
 
     const [apiSettings, setApiSettings] = useState({
         user: '',
-        pass: ''
+        pass: '',
     });
 
     function handleChange(e) {
         const { name, value } = e.target;
-        setUserLogin(prev => ({ ...prev, [name]: value }));
+        setUserLogin((prev) => ({ ...prev, [name]: value }));
     }
 
     function handleSubmit(e) {
         e.preventDefault();
-
         if (isSubmitting) return;
 
         setServerMessage('');
@@ -45,29 +47,24 @@ export default function Login() {
             return;
         }
 
-        const newFormData = new FormData();
-        newFormData.append('username', apiSettings.user);
-        newFormData.append('password', apiSettings.pass);
+        const formData = new FormData();
+        formData.append('username', apiSettings.user);
+        formData.append('password', apiSettings.pass);
 
         const url = `${process.env.REACT_APP_API_URL}/wp-json/jwt-auth/v1/token`;
 
         axios
-            .post(url, newFormData)
-            .then(response => {
+            .post(url, formData)
+            .then((response) => {
                 if (response?.data?.data) {
-                    localStorage.setItem(
-                        'userDetails',
-                        JSON.stringify(response.data.data)
-                    );
+                    localStorage.setItem('userDetails', JSON.stringify(response.data.data));
                     setUserDetails(response.data.data);
                 } else {
                     setServerMessage('Invalid login response.');
                 }
             })
-            .catch(err => {
-                setServerMessage(
-                    err?.response?.data?.message || 'Login failed.'
-                );
+            .catch((err) => {
+                setServerMessage(err?.response?.data?.message || 'Login failed.');
                 console.error(err);
             })
             .finally(() => {
@@ -89,7 +86,7 @@ export default function Login() {
             <div className="row mb-4">
                 <div className="col">
                     <div className="alert alert-danger" role="alert">
-                        <p>{serverMessage}</p>
+                        <p className="m-0">{serverMessage}</p>
                     </div>
                 </div>
             </div>
@@ -104,7 +101,7 @@ export default function Login() {
             <div className="row">
                 <div className="col">
                     <div className="alert alert-success" role="alert">
-                        <p>{msg}</p>
+                        <p className="m-0">{msg}</p>
                     </div>
                 </div>
             </div>
@@ -129,6 +126,7 @@ export default function Login() {
                         </div>
                     </div>
 
+                    {/* Username */}
                     <div className="row mb-4">
                         <div className="col">
                             <input
@@ -144,11 +142,12 @@ export default function Login() {
                         </div>
                     </div>
 
+                    {/* Password + Eye Icon */}
                     <div className="row mb-4">
-                        <div className="col">
+                        <div className="col position-relative">
                             <input
-                                className="form-control form-control-lg"
-                                type="password"
+                                className="form-control form-control-lg pe-5"
+                                type={showPassword ? 'text' : 'password'}
                                 name="pass"
                                 value={userLogin.pass}
                                 onChange={handleChange}
@@ -156,9 +155,60 @@ export default function Login() {
                                 autoComplete="current-password"
                                 required
                             />
+
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword((prev) => !prev)}
+                                className="btn btn-link position-absolute"
+                                style={{
+                                    top: '50%',
+                                    right: '12px',
+                                    transform: 'translateY(-50%)',
+                                    padding: 0,
+                                    textDecoration: 'none',
+                                }}
+                                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                            >
+                                {showPassword ? (
+                                    // 👁️ Eye Off
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="22"
+                                        height="22"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20C7 20 2.73 16.11 1 12c.74-1.76 1.92-3.35 3.44-4.65" />
+                                        <path d="M9.9 9.9A3 3 0 0 0 14.1 14.1" />
+                                        <path d="M10.73 5.08A10.94 10.94 0 0 1 12 4c5 0 9.27 3.89 11 8a11.64 11.64 0 0 1-2.06 3.06" />
+                                        <path d="M1 1l22 22" />
+                                    </svg>
+                                ) : (
+                                    // 👁️ Eye
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="22"
+                                        height="22"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+                                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                                    </svg>
+                                )}
+                            </button>
                         </div>
                     </div>
 
+                    {/* Keep me signed in + Forgot password */}
                     <div className="row">
                         <div className="col d-flex">
                             <input className="form-login-check" type="checkbox" />
@@ -173,6 +223,7 @@ export default function Login() {
                         </div>
                     </div>
 
+                    {/* Submit */}
                     <div className="row mt-2 mb-4">
                         <div className="col">
                             <button
@@ -185,12 +236,13 @@ export default function Login() {
                         </div>
                     </div>
 
+                    {/* Signup */}
                     <div className="row">
                         <div className="col d-flex">
                             <p>
                                 Don't have an account?
                                 <span className="span-login">
-                                    <Link to="/registration">Sign up</Link>
+                                    <Link to="/registration"> Sign up</Link>
                                 </span>
                             </p>
                         </div>
@@ -201,8 +253,9 @@ export default function Login() {
                 {userServerRegisterMessage()}
             </div>
         );
-    } else {
-        navigate('/dashboard', { replace: true });
-        return null;
     }
+
+    // Already logged in
+    navigate('/dashboard', { replace: true });
+    return null;
 }
