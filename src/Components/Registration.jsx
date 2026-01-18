@@ -156,7 +156,8 @@ export default function Registration() {
     ));
 
     return (
-        <div className="container primary login">
+        <div className="container primary register">
+            <div className='form-container-register'>
             <div className="row mb-4">
                 <div className="col">
                     <h1 className="text-center mb-3">
@@ -487,6 +488,7 @@ export default function Registration() {
                     </div>
                 </div>
             </form>
+            </div>
         </div>
     );
 }

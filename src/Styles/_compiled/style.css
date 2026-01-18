@@ -164,11 +164,11 @@ a {
   height: 100%;
 }
 
-.form-control {
+.form-control, .form-select {
   border: 1px solid #cccccc !important;
   font-size: 1.6rem !important;
 }
-.form-control:focus {
+.form-control:focus, .form-select:focus {
   border: 1px solid rgba(15, 23, 42, 0.9490196078) !important;
   outline: none !important;
 }
@@ -417,7 +417,7 @@ a {
   padding: 10rem 3rem !important;
 }
 
-.form-control-lg {
+.form-control-lg, .form-select {
   padding: 1.2rem 2rem !important;
 }
 
@@ -633,6 +633,25 @@ header {
   padding: 16px;
   background: transparent;
 }
+.login a {
+  text-decoration: underline !important;
+}
+
+.register {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin: 20rem 0;
+  padding: 16px;
+  background: transparent;
+}
+.register a {
+  text-decoration: underline !important;
+}
+.register p {
+  margin: 0 !important;
+}
 
 .col:has(.login-header) {
   width: 100% !important;
@@ -648,6 +667,15 @@ header {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
   width: 100%;
   max-width: 500px;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 0.75rem;
+}
+
+.form-container-register {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  width: 100%;
+  max-width: 700px;
   padding: 40px;
   background: #ffffff;
   border-radius: 0.75rem;
@@ -966,11 +994,11 @@ a {
   height: 100%;
 }
 
-.form-control {
+.form-control, .form-select {
   border: 1px solid #cccccc !important;
   font-size: 1.6rem !important;
 }
-.form-control:focus {
+.form-control:focus, .form-select:focus {
   border: 1px solid rgba(15, 23, 42, 0.9490196078) !important;
   outline: none !important;
 }
@@ -1219,7 +1247,7 @@ a {
   padding: 10rem 3rem !important;
 }
 
-.form-control-lg {
+.form-control-lg, .form-select {
   padding: 1.2rem 2rem !important;
 }
 

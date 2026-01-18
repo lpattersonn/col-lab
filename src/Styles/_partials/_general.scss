@@ -104,7 +104,7 @@ a {
   height: 100%;
 }
 // Form
-.form-control {
+.form-control, .form-select {
   border: 1px solid #cccccc !important;
   font-size: 1.6rem !important;
   &:focus {
@@ -360,7 +360,7 @@ a {
   padding: 10rem 3rem !important;
 }
 
-.form-control-lg {
+.form-control-lg, .form-select {
     padding: 1.2rem 2rem !important;
 }
 
