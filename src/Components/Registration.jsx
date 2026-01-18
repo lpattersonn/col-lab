@@ -161,7 +161,7 @@ export default function Registration() {
             <div className="row mb-4">
                 <div className="col">
                     <h1 className="text-center mb-3">
-                        Become a <i>ColLabb</i> member
+                        Become a COLLABB member
                     </h1>
                 </div>
             </div>
