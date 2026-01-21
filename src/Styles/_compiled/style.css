@@ -62,7 +62,7 @@ label {
   font-size: 40px !important;
 }
 
-html, body {
+html, body, #root {
   font-size: 10px;
   font-family: "Roboto", sans-serif !important;
   background-color: #FAFAFA;
@@ -643,7 +643,7 @@ header {
   align-items: center;
   margin-top: 20rem;
   padding: 16px;
-  background: transparent;
+  background: #FAFAFA;
 }
 .login a {
   text-decoration: underline !important;
@@ -656,7 +656,7 @@ header {
   align-items: center;
   margin: 20rem 0;
   padding: 16px;
-  background: transparent;
+  background: #FAFAFA;
 }
 .register a {
   text-decoration: underline !important;
@@ -904,7 +904,7 @@ textarea[data-info=content] {
   font-size: 40px !important;
 }
 
-html, body {
+html, body, #root {
   font-size: 10px;
   font-family: "Roboto", sans-serif !important;
   background-color: #FAFAFA;
