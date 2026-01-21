@@ -51,9 +51,21 @@ label {
 }
 
 /* Button Colours */
-html {
+.page-header {
+  color: #ffffff;
+  background-color: #001923;
+  padding: 67px 38px 36px;
+  margin-right: 12px;
+  border-radius: 20px;
+}
+.page-header h1 {
+  font-size: 40px !important;
+}
+
+html, body {
   font-size: 10px;
   font-family: "Roboto", sans-serif !important;
+  background-color: #FAFAFA;
 }
 
 main {
@@ -881,9 +893,21 @@ textarea[data-info=content] {
 }
 
 /* Button Colours */
-html {
+.page-header {
+  color: #ffffff;
+  background-color: #001923;
+  padding: 67px 38px 36px;
+  margin-right: 12px;
+  border-radius: 20px;
+}
+.page-header h1 {
+  font-size: 40px !important;
+}
+
+html, body {
   font-size: 10px;
   font-family: "Roboto", sans-serif !important;
+  background-color: #FAFAFA;
 }
 
 main {
@@ -2081,6 +2105,48 @@ label {
 .activity-buttons ul li:hover {
   background: linear-gradient(to right, #000000, #00AAFF);
   color: white;
+}
+
+.side-navigation {
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 16px 0 0;
+  position: sticky;
+  top: 30px;
+  background: #ffffff;
+  padding-bottom: 60px;
+  height: 100%;
+}
+.side-navigation a {
+  font-size: 16px;
+  font-weight: 400;
+  text-transform: capitalize;
+  padding: 30px 16px;
+  border-bottom: 1px solid #cccccc;
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  font-weight: 500;
+}
+.side-navigation a:hover {
+  background: rgb(30, 41, 59);
+  color: #ffffff !important;
+}
+.side-navigation a:hover .icon-container {
+  background: rgb(31, 56, 75);
+}
+.side-navigation a .icon-container {
+  padding: 5px 8px;
+  border-radius: 100%;
+  background: rgb(236, 254, 255);
+  margin-right: 10px;
+}
+.side-navigation a .icon-container:hover {
+  background: rgb(30, 41, 59);
+}
+.side-navigation a .icon-container svg {
+  color: rgb(34, 211, 238);
 }
 
 @media screen and (max-width: 1000px) {

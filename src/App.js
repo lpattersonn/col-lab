@@ -2,6 +2,7 @@ import React from 'react';
 import {BrowserRouter as Router, Route, Routes, Switch} from "react-router-dom";
 // import './Styles/_compiled/style.css';
 import Dashboard from './Components/Dashboard';
+import Home from './Components/Dashboard/Home';
 import Login from './Components/Login';
 import Registration from './Components/Registration';
 import Profile from './Components/Profile';
@@ -35,7 +36,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login/>} />
         <Route path="/registration" element={<Registration/>} />
-        <Route path="/dashboard" element={<Dashboard/>} />
+        <Route path="/dashboard" element={<Home/>} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/ask-questions" element={<AskQuestions/>} />
         <Route path="/question/:param1" element={<Question/>} />

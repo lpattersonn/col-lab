@@ -1,8 +1,21 @@
 @import './variables.scss';
 
-html {
+// Home page
+.page-header {
+  color: $mercy-white;
+  background-color: $mercy-color-5;
+  padding: 67px 38px 36px;
+  margin-right: 12px;
+  border-radius: 20px;
+  h1 {
+    font-size: 40px !important;
+  }
+}
+
+html, body {
     font-size: 10px;
     font-family: 'Roboto', sans-serif !important;
+    background-color: #FAFAFA;
 }
 main {
   margin-bottom: 6rem;
