@@ -16,6 +16,7 @@ html, body, #root {
     font-size: 10px;
     font-family: 'Roboto', sans-serif !important;
     background-color: #FAFAFA;
+    overflow-x: hidden;
 }
 main {
   margin-bottom: 6rem;
@@ -414,7 +415,7 @@ a {
       justify-content: center;
       align-items: center;
       border-radius: 100%;
-      border: 0.5px solid #cccccc;
+      border: 0.75px solid $mercy-color-6;
       overflow: hidden;
       background: #f1f2f3;
       svg {
@@ -442,9 +443,24 @@ a {
   padding: 16px;
   color: $mercy-white;
   background: #001923;
-  margin: 24px 16px 0 0;
+  margin: 16px 0 0 0;
   border-radius: 0 20px 20px 20px;
   p {
     margin: 0;
   }
+}
+
+.posts {
+    margin: 24px 0 0 0;
+    .create-posts {
+      form {
+        padding: 16px 24px;
+      }
+    }
+}
+
+.page-body {
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  gap: 32px 16px;
 }

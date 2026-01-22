@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Button Colours */
 /* Button Colours */
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
@@ -66,6 +67,7 @@ html, body, #root {
   font-size: 10px;
   font-family: "Roboto", sans-serif !important;
   background-color: #FAFAFA;
+  overflow-x: hidden;
 }
 
 main {
@@ -470,7 +472,7 @@ a {
   justify-content: center;
   align-items: center;
   border-radius: 100%;
-  border: 0.5px solid #cccccc;
+  border: 0.75px solid #e5e7eb;
   overflow: hidden;
   background: #f1f2f3;
 }
@@ -496,11 +498,24 @@ a {
   padding: 16px;
   color: #ffffff;
   background: #001923;
-  margin: 24px 16px 0 0;
+  margin: 16px 0 0 0;
   border-radius: 0 20px 20px 20px;
 }
 .page-divider p {
   margin: 0;
+}
+
+.posts {
+  margin: 24px 0 0 0;
+}
+.posts .create-posts form {
+  padding: 16px 24px;
+}
+
+.page-body {
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  gap: 32px 16px;
 }
 
 /* Button Colours */
@@ -949,8 +964,8 @@ header.active-header {
   width: 100% !important;
   max-width: 100%;
   background: white;
-  border: 1px solid #d3d3d3 !important;
-  border-radius: 5px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.75rem !important;
   font-family: "Roboto", sans-serif !important;
   line-height: 1.125em;
   padding-bottom: 10px;
@@ -977,6 +992,10 @@ abbr {
 .react-calendar__navigation__next-button, .react-calendar__navigation__next2-button, .react-calendar__navigation__prev-button, .react-calendar__navigation__prev2-button {
   font-size: 20px !important;
   font-weight: 700;
+}
+
+.calendar {
+  margin: 24px 16px 0 0;
 }
 
 .questions {
@@ -1058,6 +1077,7 @@ html, body, #root {
   font-size: 10px;
   font-family: "Roboto", sans-serif !important;
   background-color: #FAFAFA;
+  overflow-x: hidden;
 }
 
 main {
@@ -1462,7 +1482,7 @@ a {
   justify-content: center;
   align-items: center;
   border-radius: 100%;
-  border: 0.5px solid #cccccc;
+  border: 0.75px solid #e5e7eb;
   overflow: hidden;
   background: #f1f2f3;
 }
@@ -1488,11 +1508,24 @@ a {
   padding: 16px;
   color: #ffffff;
   background: #001923;
-  margin: 24px 16px 0 0;
+  margin: 16px 0 0 0;
   border-radius: 0 20px 20px 20px;
 }
 .page-divider p {
   margin: 0;
+}
+
+.posts {
+  margin: 24px 0 0 0;
+}
+.posts .create-posts form {
+  padding: 16px 24px;
+}
+
+.page-body {
+  display: grid;
+  grid-template-columns: 8fr 4fr;
+  gap: 32px 16px;
 }
 
 /* Button Colours */
@@ -1500,8 +1533,8 @@ a {
   width: 100% !important;
   max-width: 100%;
   background: white;
-  border: 1px solid #d3d3d3 !important;
-  border-radius: 5px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 0.75rem !important;
   font-family: "Roboto", sans-serif !important;
   line-height: 1.125em;
   padding-bottom: 10px;
@@ -1528,6 +1561,10 @@ abbr {
 .react-calendar__navigation__next-button, .react-calendar__navigation__next2-button, .react-calendar__navigation__prev-button, .react-calendar__navigation__prev2-button {
   font-size: 20px !important;
   font-weight: 700;
+}
+
+.calendar {
+  margin: 24px 16px 0 0;
 }
 
 /* Button Colours */
@@ -2324,18 +2361,24 @@ label {
   display: flex;
   flex-direction: column;
   margin: 0 16px 0 0;
-  position: sticky;
-  top: 30px;
+  position: fixed;
+  top: 0;
   background: #ffffff;
   padding-bottom: 60px;
   height: 100%;
+  width: 14%;
+}
+@media screen and (max-width: 1000px) {
+  .side-navigation {
+    display: none;
+  }
 }
 .side-navigation a {
   font-size: 16px;
   font-weight: 400;
   text-transform: capitalize;
   padding: 30px 16px;
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 0.75px solid #e5e7eb;
   display: flex;
   align-items: center;
   background: #ffffff;
