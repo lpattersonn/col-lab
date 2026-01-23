@@ -362,7 +362,7 @@ export default function Home() {
         <>
             <Navigation />
             <main>
-                <div className="row" style={{ background: '#FAFAFA' }}>
+                <div className="row">
                     <div className="col-md-2 mt-4" style={{ background: '#ffffff' }}>
                         <SideNavigation />
                     </div>

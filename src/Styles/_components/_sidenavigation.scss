@@ -6,7 +6,7 @@
     margin: 0 16px 0 0;
     position: fixed;
     top: 70px;
-    background: #ffffff;
+    // background: #ffffff;
     padding-bottom: 60px;
     height: 100%;
     width: 14%;
@@ -21,7 +21,7 @@
         border-bottom: 0.75px solid $mercy-color-6;
         display: flex;
         align-items: center;
-        background: $mercy-white;
+        // background: $mercy-white;
         font-weight: 500;
         &:hover {
             background: rgb(30 41 59);
@@ -36,7 +36,7 @@
         .icon-container {
             padding: 5px 8px;
             border-radius: 100%;
-            background: #f1f2f3;
+            // background: #f1f2f3;
             margin-right: 10px;
             &:hover {
                 background: rgb(30 41 59);

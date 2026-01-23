@@ -115,7 +115,13 @@
     margin: 0;
   }
 }
-
+.question-actions {
+  &-count {
+    p {
+      color: #222222;
+    }
+  }
+}
 .dashboard-border {
 position: sticky;
 top: 0;

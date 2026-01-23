@@ -56,7 +56,7 @@ label {
   color: #ffffff;
   background-color: #001923;
   padding: 67px 38px 36px;
-  margin-right: 16px;
+  margin: 66px 16px 0 0;
   border-radius: 20px;
 }
 .page-header h1 {
@@ -339,7 +339,7 @@ a {
 }
 
 #root {
-  margin-bottom: 5rem;
+  margin-bottom: 0;
 }
 
 .tox-statusbar__right-container {
@@ -522,7 +522,7 @@ a {
   margin: 0;
 }
 .post-form-content {
-  padding: 20px 20px 30px;
+  padding: 20px 20px 16px;
 }
 .post-form .post-input {
   border: 1px solid #e5e7eb !important;
@@ -539,7 +539,7 @@ a {
 
 .page-body {
   margin: 24px 16px 0 0;
-  padding: 16px;
+  padding: 16px 16px 0;
   border-radius: 32px;
   display: grid;
   grid-template-columns: 8fr 4fr;
@@ -668,6 +668,10 @@ a {
   margin: 0;
 }
 
+.question-actions-count p {
+  color: #222222;
+}
+
 .dashboard-border {
   position: sticky;
   top: 0;
@@ -690,7 +694,8 @@ a {
 
 /* Button Colours */
 header {
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
   z-index: 10000;
   background: rgb(250, 250, 250);
@@ -1104,7 +1109,7 @@ textarea[data-info=content] {
   color: #ffffff;
   background-color: #001923;
   padding: 67px 38px 36px;
-  margin-right: 16px;
+  margin: 66px 16px 0 0;
   border-radius: 20px;
 }
 .page-header h1 {
@@ -1387,7 +1392,7 @@ a {
 }
 
 #root {
-  margin-bottom: 5rem;
+  margin-bottom: 0;
 }
 
 .tox-statusbar__right-container {
@@ -1570,7 +1575,7 @@ a {
   margin: 0;
 }
 .post-form-content {
-  padding: 20px 20px 30px;
+  padding: 20px 20px 16px;
 }
 .post-form .post-input {
   border: 1px solid #e5e7eb !important;
@@ -1587,7 +1592,7 @@ a {
 
 .page-body {
   margin: 24px 16px 0 0;
-  padding: 16px;
+  padding: 16px 16px 0;
   border-radius: 32px;
   display: grid;
   grid-template-columns: 8fr 4fr;
@@ -2435,7 +2440,6 @@ label {
   margin: 0 16px 0 0;
   position: fixed;
   top: 70px;
-  background: #ffffff;
   padding-bottom: 60px;
   height: 100%;
   width: 14%;
@@ -2453,7 +2457,6 @@ label {
   border-bottom: 0.75px solid #e5e7eb;
   display: flex;
   align-items: center;
-  background: #ffffff;
   font-weight: 500;
 }
 .side-navigation a:hover {
@@ -2469,7 +2472,6 @@ label {
 .side-navigation a .icon-container {
   padding: 5px 8px;
   border-radius: 100%;
-  background: #f1f2f3;
   margin-right: 10px;
 }
 .side-navigation a .icon-container:hover {
