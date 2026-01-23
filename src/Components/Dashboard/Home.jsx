@@ -194,10 +194,6 @@ export default function Home() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getHelpQuestions, userDetails?.token]);
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files?.[0] || null);
-    };
-
     const clearEditor = () => {
         setCreateComment('');
         setFile(null);
@@ -313,20 +309,13 @@ export default function Home() {
                                 <div className="questions-details-name-info">
                                     <p><strong>{userName}</strong></p>
                                     <div className="questions-details-posted">
-                                        {userJobInsitution ? (
-                                            <div>
-                                                <p>{userJobInsitution}</p>
-                                            </div>
-                                        ) : null}
                                         <p>{getTimeAgo(question.date)}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <hr />
-
-                        <p><strong>{question?.title?.rendered}</strong></p>
+                        <p><strong className='lead'>{question?.title?.rendered}</strong></p>
 
                         {rendered ? (
                             <div
@@ -337,11 +326,6 @@ export default function Home() {
                         ) : null}
 
                         <div className="question-actions">
-                            <div className="question-actions-button">
-                                <Link to={`/question/${question.id}`}>
-                                    <button className="btn btn-outline-info btn-sm">View</button>
-                                </Link>
-                            </div>
                             <div className="question-actions-count">
                                 <p>
                                     {commentTotal} {commentTotal === 1 ? 'response' : 'responses'}
@@ -440,56 +424,53 @@ export default function Home() {
                         <div className="page-body">
                             <div className="posts">
                                 <div className="create-posts">
-                                    <form onSubmit={handleSubmit}>
-                                        <Editor
-                                            apiKey={process.env.REACT_APP_TINY_MCE_API_KEY}
-                                            onInit={(evt, editor) => (editorRef.current = editor)}
-                                            className="form-control form-control-lg"
-                                            init={{
-                                                placeholder: 'Write your post here. Attach pictures if necessary.',
-                                                toolbar: 'undo redo | bold italic underline | superscript subscript | alignleft aligncenter alignright | bullist numlist',
-                                                menubar: false,
-                                            }}
-                                            onEditorChange={(content) => setCreateComment(content)}
-                                        />
+                                    <form className="post-form" onSubmit={handleSubmit}>
+                                        <div className="post-form-title">
+                                            <h2>Create a Post</h2>
+                                        </div>
+                                        <div className="post-form-content">
+                                            <input
+                                                className="form-control form-control-lg post-input"
+                                                type="text"
+                                                name="user"
+                                                placeholder="Username or email"
+                                                required
+                                            />
+                                            <Editor
+                                                apiKey={process.env.REACT_APP_TINY_MCE_API_KEY}
+                                                onInit={(evt, editor) => (editorRef.current = editor)}
+                                                className="form-control form-control-lg"
+                                                init={{
+                                                    placeholder: 'Write your post here. Attach pictures if necessary.',
+                                                    toolbar: 'undo redo | bold italic underline | superscript subscript | alignleft aligncenter alignright | bullist numlist',
+                                                    menubar: false,
+                                                }}
+                                                onEditorChange={(content) => setCreateComment(content)}
+                                            />
 
-                                        <div className="row">
-                                            <div className="col-4 mt-4">
-                                                <input
-                                                    className="form-control form-control-lg"
-                                                    type="file"
-                                                    onChange={handleFileChange}
-                                                    disabled={commentStatus === 'approved'}
-                                                />
-                                            </div>
-                                            <div className="col-8 text-end mt-4">
-                                                <button className="btn btn-info btn-lg collab-btn" type="submit">
-                                                    Submit
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-outline-secondary btn-lg ms-2"
-                                                    onClick={clearEditor}
-                                                >
-                                                    Clear
-                                                </button>
-                                            </div>
-
-                                            {serverComment ? (
-                                                <div className="col-12 mt-4">
-                                                    <div className="alert alert-danger" role="alert">
-                                                        <p>{serverComment}</p>
-                                                    </div>
+                                            <div className="row">
+                                                <div className="col-12 text-end mt-4">
+                                                    <button className="btn btn-primary btn-lg" type="submit">
+                                                        Submit
+                                                    </button>
                                                 </div>
-                                            ) : null}
 
-                                            {successServerComment ? (
-                                                <div className="col-12 mt-4">
-                                                    <div className="alert alert-success" role="alert">
-                                                        <p>{successServerComment}</p>
+                                                {serverComment ? (
+                                                    <div className="col-12 mt-4">
+                                                        <div className="alert alert-danger" role="alert">
+                                                            <p>{serverComment}</p>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            ) : null}
+                                                ) : null}
+
+                                                {successServerComment ? (
+                                                    <div className="col-12 mt-4">
+                                                        <div className="alert alert-success" role="alert">
+                                                            <p>{successServerComment}</p>
+                                                        </div>
+                                                    </div>
+                                                ) : null}
+                                            </div>
                                         </div>
                                     </form>
                                 </div>

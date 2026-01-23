@@ -5,7 +5,7 @@
     flex-direction: column;
     margin: 0 16px 0 0;
     position: fixed;
-    top: 0;
+    top: 70px;
     background: #ffffff;
     padding-bottom: 60px;
     height: 100%;
@@ -28,18 +28,21 @@
             color: #ffffff !important;
              .icon-container {
                 background: rgba(31, 56, 75);
+                svg {
+                    color: $mercy-white;
+                }
              }
         }
         .icon-container {
             padding: 5px 8px;
             border-radius: 100%;
-            background: rgb(236 254 255);
+            background: #f1f2f3;
             margin-right: 10px;
             &:hover {
                 background: rgb(30 41 59);
             }
             svg {
-                color: rgb(34 211 238);
+                color: gray;
             }
         }
     }

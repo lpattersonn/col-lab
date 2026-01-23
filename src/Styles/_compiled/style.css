@@ -18,7 +18,7 @@ h1 {
 }
 
 .lead {
-  font-size: 2rem !important;
+  font-size: 1.8rem !important;
   font-weight: 700 !important;
 }
 
@@ -111,9 +111,11 @@ main {
 }
 
 .btn-primary {
+  padding: 9px 30px !important;
   background: rgba(15, 23, 42, 0.9490196078) !important;
   border: rgba(15, 23, 42, 0.9490196078) !important;
   text-transform: uppercase;
+  border-radius: 16px !important;
 }
 
 a {
@@ -433,6 +435,7 @@ a {
 
 .form-control-lg, .form-select {
   padding: 1.2rem 2rem !important;
+  border-radius: 24px;
 }
 
 .login-btn {
@@ -498,24 +501,54 @@ a {
   padding: 16px;
   color: #ffffff;
   background: #001923;
-  margin: 16px 0 0 0;
+  margin: 16px 0;
   border-radius: 0 20px 20px 20px;
 }
 .page-divider p {
   margin: 0;
 }
 
-.posts {
-  margin: 24px 0 0 0;
+.post-form {
+  border: 1px solid #e5e7eb;
+  box-sizing: border-box;
+  border-radius: 24px;
+  overflow: hidden;
 }
+.post-form-title {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+.post-form-title h2 {
+  margin: 0;
+}
+.post-form-content {
+  padding: 20px 20px 30px;
+}
+.post-form .post-input {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 10px !important;
+  margin-bottom: 16px;
+}
+.post-form .tox-tinymce {
+  border: 1px solid #e5e7eb !important;
+}
+
 .posts .create-posts form {
   padding: 16px 24px;
 }
 
 .page-body {
+  margin: 24px 16px 0 0;
+  padding: 16px;
+  border-radius: 32px;
   display: grid;
   grid-template-columns: 8fr 4fr;
   gap: 32px 16px;
+  background: #ffffff;
+}
+
+.card {
+  border-radius: 16px !important;
 }
 
 /* Button Colours */
@@ -609,12 +642,13 @@ a {
 }
 .questions-details-name-img {
   width: 5rem;
-  height: 6rem;
-  border: 1px solid black;
+  height: 5rem;
+  border: 1px solid #e5e7eb;
   border-radius: 3px;
   -o-object-fit: cover;
      object-fit: cover;
   margin: 0 0.7rem 0 0;
+  border-radius: 100%;
 }
 .questions-details-name-info {
   display: flex;
@@ -625,6 +659,9 @@ a {
   display: flex;
   width: 100%;
   justify-content: space-between;
+}
+.questions-details-name-info .questions-details-posted p {
+  color: grey;
 }
 .questions-details p {
   font-size: 1.4rem;
@@ -965,10 +1002,11 @@ header.active-header {
   max-width: 100%;
   background: white;
   border: 1px solid #e5e7eb !important;
-  border-radius: 0.75rem !important;
+  border-radius: 16px !important;
   font-family: "Roboto", sans-serif !important;
   line-height: 1.125em;
   padding-bottom: 10px;
+  position: sticky;
 }
 
 button.react-calendar__navigation__label span {
@@ -995,7 +1033,7 @@ abbr {
 }
 
 .calendar {
-  margin: 24px 16px 0 0;
+  margin: 0;
 }
 
 .questions {
@@ -1121,9 +1159,11 @@ main {
 }
 
 .btn-primary {
+  padding: 9px 30px !important;
   background: rgba(15, 23, 42, 0.9490196078) !important;
   border: rgba(15, 23, 42, 0.9490196078) !important;
   text-transform: uppercase;
+  border-radius: 16px !important;
 }
 
 a {
@@ -1443,6 +1483,7 @@ a {
 
 .form-control-lg, .form-select {
   padding: 1.2rem 2rem !important;
+  border-radius: 24px;
 }
 
 .login-btn {
@@ -1508,24 +1549,54 @@ a {
   padding: 16px;
   color: #ffffff;
   background: #001923;
-  margin: 16px 0 0 0;
+  margin: 16px 0;
   border-radius: 0 20px 20px 20px;
 }
 .page-divider p {
   margin: 0;
 }
 
-.posts {
-  margin: 24px 0 0 0;
+.post-form {
+  border: 1px solid #e5e7eb;
+  box-sizing: border-box;
+  border-radius: 24px;
+  overflow: hidden;
 }
+.post-form-title {
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+.post-form-title h2 {
+  margin: 0;
+}
+.post-form-content {
+  padding: 20px 20px 30px;
+}
+.post-form .post-input {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 10px !important;
+  margin-bottom: 16px;
+}
+.post-form .tox-tinymce {
+  border: 1px solid #e5e7eb !important;
+}
+
 .posts .create-posts form {
   padding: 16px 24px;
 }
 
 .page-body {
+  margin: 24px 16px 0 0;
+  padding: 16px;
+  border-radius: 32px;
   display: grid;
   grid-template-columns: 8fr 4fr;
   gap: 32px 16px;
+  background: #ffffff;
+}
+
+.card {
+  border-radius: 16px !important;
 }
 
 /* Button Colours */
@@ -1534,10 +1605,11 @@ a {
   max-width: 100%;
   background: white;
   border: 1px solid #e5e7eb !important;
-  border-radius: 0.75rem !important;
+  border-radius: 16px !important;
   font-family: "Roboto", sans-serif !important;
   line-height: 1.125em;
   padding-bottom: 10px;
+  position: sticky;
 }
 
 button.react-calendar__navigation__label span {
@@ -1564,7 +1636,7 @@ abbr {
 }
 
 .calendar {
-  margin: 24px 16px 0 0;
+  margin: 0;
 }
 
 /* Button Colours */
@@ -1583,7 +1655,7 @@ h1 {
 }
 
 .lead {
-  font-size: 2rem !important;
+  font-size: 1.8rem !important;
   font-weight: 700 !important;
 }
 
@@ -2362,7 +2434,7 @@ label {
   flex-direction: column;
   margin: 0 16px 0 0;
   position: fixed;
-  top: 0;
+  top: 70px;
   background: #ffffff;
   padding-bottom: 60px;
   height: 100%;
@@ -2391,17 +2463,20 @@ label {
 .side-navigation a:hover .icon-container {
   background: rgb(31, 56, 75);
 }
+.side-navigation a:hover .icon-container svg {
+  color: #ffffff;
+}
 .side-navigation a .icon-container {
   padding: 5px 8px;
   border-radius: 100%;
-  background: rgb(236, 254, 255);
+  background: #f1f2f3;
   margin-right: 10px;
 }
 .side-navigation a .icon-container:hover {
   background: rgb(30, 41, 59);
 }
 .side-navigation a .icon-container svg {
-  color: rgb(34, 211, 238);
+  color: gray;
 }
 
 @media screen and (max-width: 1000px) {

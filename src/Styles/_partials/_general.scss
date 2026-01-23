@@ -55,11 +55,15 @@ main {
       filter: invert(100%) sepia(16%) saturate(0%) hue-rotate(107deg) brightness(108%) contrast(101%);
     }
 }
+
 .btn-primary {
+  padding: 9px 30px !important;
   background: #0f172af2 !important;
   border: #0f172af2 !important;
   text-transform: uppercase;
+  border-radius: 16px !important;
 }
+
 a {
   color: #0f172af2 !important;
 }
@@ -377,6 +381,7 @@ a {
 
 .form-control-lg, .form-select {
     padding: 1.2rem 2rem !important;
+    border-radius: 24px;
 }
 
 .login-btn {
@@ -443,15 +448,39 @@ a {
   padding: 16px;
   color: $mercy-white;
   background: #001923;
-  margin: 16px 0 0 0;
+  margin: 16px 0;
   border-radius: 0 20px 20px 20px;
   p {
     margin: 0;
   }
 }
 
+.post-form {
+  border: 1px solid $mercy-color-6;
+  box-sizing: border-box;
+  border-radius: 24px;
+  overflow: hidden;
+  &-title {
+    padding: 20px;
+    border-bottom: 1px solid $mercy-color-6 !important;
+    h2 {
+      margin: 0;
+    }
+  }
+  &-content {
+       padding: 20px 20px 30px;
+  }
+  .post-input {
+    border: 1px solid $mercy-color-6 !important;
+    border-radius: 10px !important;
+    margin-bottom: 16px;
+  }
+  .tox-tinymce {
+    border: 1px solid $mercy-color-6 !important; 
+  }
+}
+
 .posts {
-    margin: 24px 0 0 0;
     .create-posts {
       form {
         padding: 16px 24px;
@@ -460,7 +489,15 @@ a {
 }
 
 .page-body {
+  margin: 24px 16px 0 0;
+  padding: 16px;
+  border-radius: 32px;
   display: grid;
   grid-template-columns: 8fr 4fr;
   gap: 32px 16px;
+  background: $mercy-white;
+}
+
+.card {
+  border-radius: 16px !important;
 }
