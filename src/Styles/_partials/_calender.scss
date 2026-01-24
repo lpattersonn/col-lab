@@ -1,4 +1,4 @@
-@import "./variables";
+@use './variables' as *;
 
 .react-calendar {
     width: 100% !important;
@@ -6,7 +6,7 @@
     background: white;
     border: 1px solid $mercy-color-6 !important;
     border-radius: 16px !important;
-    font-family: 'Roboto', sans-serif !important;
+     font-family: "Urbanist", sans-serif !important;
     line-height: 1.125em;
     padding-bottom: 10px;
     position: sticky;

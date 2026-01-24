@@ -18,10 +18,8 @@ export default function Navigation() {
     const navItems = [
         { to: '/', label: 'Home' },
         { to: '/profile', label: 'Chat Room' },
-        { to: '/my-activity', label: 'My Activity' },
         { to: '/points-center', label: 'Points Center' },
         { to: '/contact-us', label: 'Contact Us' },
-        { to: '/profile', label: 'Settings' }
     ];
 
     return (

@@ -1,11 +1,11 @@
-@import "../_partials/variables";
+@use '../_partials/variables' as *;
 
 header {
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 10000;
-    background: rgb(250, 250, 250);
+    background: #FAFAFA;
 }
 
 /* ---------------------------
@@ -47,7 +47,7 @@ header {
 
 .nav-link {
     color: grey;
-    font-weight: 600;
+    font-weight: 500;
     padding: 0.5rem 1rem;
     border-radius: 8px;
     transition: background-color 0.2s ease, color 0.2s ease;

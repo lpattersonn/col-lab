@@ -1,12 +1,12 @@
-@import './variables.scss';
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@use './variables' as *;
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
 
 html, body {
-  font-family: 'Roboto', sans-serif;
+   font-family: "Urbanist", sans-serif;
 }
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700 !important;
-  font-family: 'Roboto', sans-serif;
+   font-family: "Urbanist", sans-serif;
 }
 
 h1 {
@@ -19,24 +19,24 @@ h1 {
   }
 p {
   font-size: $mercy-font-size-1;
-  font-family: 'Roboto', sans-serif;
+   font-family: "Urbanist", sans-serif;
 }
 ul, ol {
   font-size: $mercy-font-size-1;
-  font-family: 'Roboto', sans-serif;
+   font-family: "Urbanist", sans-serif;
 }
 a {
   font-size: $mercy-font-size-1;
-  font-family: 'Roboto', sans-serif;
+   font-family: "Urbanist", sans-serif;
 }
 div {
-  font-family: 'Roboto', sans-serif;
+   font-family: "Urbanist", sans-serif;
 }
 span {
   font-size: $mercy-font-size-1;
-  font-family: 'Roboto', sans-serif;
+   font-family: "Urbanist", sans-serif;
 }
 label {
   font-size: $mercy-font-size-1 !important;
-  font-family: 'Roboto', sans-serif;
+   font-family: "Urbanist", sans-serif;
 }

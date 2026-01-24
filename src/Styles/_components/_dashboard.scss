@@ -1,4 +1,4 @@
-@import "../_partials/variables";
+@use '../_partials/variables' as *;
 
 .dashboard {
     display: flex;

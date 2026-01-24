@@ -362,12 +362,12 @@ export default function Home() {
         <>
             <Navigation />
             <main>
-                <div className="row">
-                    <div className="col-md-2 mt-4" style={{ background: '#ffffff' }}>
+                <div className="page-body-container">
+                    <div className="side-navigation-container" style={{ background: '#ffffff' }}>
                         <SideNavigation />
                     </div>
 
-                    <div className="col-md-10 mt-4">
+                    <div className="mt-4">
                         <div className="page-header">
                             <h1 className="mb-3">Welcome to LabSci!</h1>
                             <p>Start a convo, engage with posts, share your ideas!</p>
@@ -397,10 +397,10 @@ export default function Home() {
                             </div>
 
                             <div className="user-detail">
-                                <div className="user-info-image">
+                                <div className="user-info-image user-notifcations">
                                     <FontAwesomeIcon icon={faStar} />
                                 </div>
-                                <div className="user-info-content">
+                                <div className="user-info-content notifcations">
                                     <p>Notifications</p>
                                     <div className="link-item">
                                         <Link to="/profile">{notifications}</Link>
@@ -409,10 +409,10 @@ export default function Home() {
                             </div>
 
                             <div className="user-detail">
-                                <div className="user-info-image">
+                                <div className="user-info-image user-notifcations">
                                     <FontAwesomeIcon icon={faStar} />
                                 </div>
-                                <div className="user-info-content">
+                                <div className="user-info-content notifcations">
                                     <p>Upcoming Events</p>
                                     <div className="link-item">
                                         <Link to="/profile">{events.length}</Link>

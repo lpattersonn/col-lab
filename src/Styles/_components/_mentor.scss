@@ -1,4 +1,4 @@
-@import '../_partials/variables';
+@use '../_partials/variables' as *;
 
 .mentor { 
     box-shadow: 0px 0px 7px grey; 

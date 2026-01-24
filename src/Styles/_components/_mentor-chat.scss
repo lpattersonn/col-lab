@@ -1,4 +1,4 @@
-@import '../_partials/variables';
+@use '../_partials/variables' as *;
 
 .mentors-chat {
     margin-bottom: -11rem;
@@ -202,7 +202,7 @@
 
 .sidebare-lastchat * {
     font-size: 1.4rem !important;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Urbanist", sans-serif;
     color: inherit !important;
 }
 .side-chat-dots {
