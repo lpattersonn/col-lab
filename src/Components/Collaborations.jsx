@@ -1,590 +1,448 @@
-import React, { useState, useEffect } from 'react';
-import Navigation from './Navigation';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse } from '@fortawesome/free-solid-svg-icons';
-import { TailSpin } from "react-loader-spinner";
-import ReactPaginate from 'react-paginate';
-import UserComment from "../Images/user-comment.svg";
-import { submitReport, renderedQuestion, humanReadableDate } from '../helper';
 import axios from 'axios';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import { Editor } from '@tinymce/tinymce-react';
+import imageCompression from 'browser-image-compression';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { TailSpin } from 'react-loader-spinner';
+
+import Navigation from './Navigation';
+import SideNavigation from './Navigation/SideNavigation';
+import defaultImage from '../Images/user-profile.svg';
+import { dateFormat } from '../helper';
 
 export default function Collaborations() {
-    // Can add in context
-    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
+    const Navigate = useNavigate(); // keep your original naming
+    const editorRef = useRef(null);
 
-    // Could make a component
-    const [ search, setSearch ] = useState('');
+    const userDetails = useMemo(() => {
+        try {
+            return JSON.parse(localStorage.getItem('userDetails'));
+        } catch {
+            return null;
+        }
+    }, []);
 
-    // Turn in to a global item
-    const [ collaborations, setCollaborations ] = useState([]);
-    const [ collaborationChats, setCollaborationChats ] = useState([]);
+    const [ getHelpQuestions, setGetHelpQuestions ] = useState([]);
+    const [ getUsers, setGetUsers ] = useState([]);
+    const [ usersAccountDetails, setUsersAccountDetails ] = useState(null);
 
-    const [loading, setLoading] = useState(true);
-    const [users, setUsers] = useState([]);
-    
-    const [ activeTab, setActiveTab ] = useState("active");
+    const [ notifications, setNotifications ] = useState(0);
+    const [ events, setEvents ] = useState([]);
+    const [ collaborations, setCollaborations ] = useState(0);
+    const [ mentorships, setMentorships ] = useState(0);
 
-    const Naviagte = useNavigate()
+    const [ loading, setLoading ] = useState(true);
+
+    const [ createComment, setCreateComment ] = useState('');
+    const [ file, setFile ] = useState(null);
+    const [ commentStatus, setCommentStatus ] = useState('not approved');
+    const [ serverComment, setServerComment ] = useState('');
+    const [ successServerComment, setSuccessServerComment ] = useState('');
+
+    const [ commentTotalsByPostId, setCommentTotalsByPostId ] = useState({});
 
     useEffect(() => {
+        if (!userDetails?.token) {
+            Navigate('/');
+            return;
+        }
+
+        let isMounted = true;
+
+        const headers = {
+            Authorization: `Bearer ${userDetails.token}`,
+        };
+
         Promise.all([
-            // All collaborations
-            axios({
-                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations`,
-                method: 'GET',
-                headers: {
-                  Authorization: `Bearer ${userDetails.token}`
-                }
-              }),
-            // All users
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
-            {
-                headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                    }
-            }),
-            // All colaboration chats
-            axios({
-                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`,
-                method: 'GET',
-                headers: {
-                  Authorization: `Bearer ${userDetails.token}`
-                }
-              }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`, { headers }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, { headers }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`, { headers }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests`, { headers }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`, { headers }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`, { headers }),
         ])
-        .then(([allCollaboations, allUsers, allChats]) => {
-            // All collaborations
-            setCollaborations(allCollaboations?.data);            
-            // All users
-            setUsers(allUsers?.data);
-            // All chats
-            setCollaborationChats(allChats?.data);
-            setLoading(false);
-        })
-        .catch(error => {
-            console.error(error);
-        })
-    }, []);
-    
-    // Start paginated active jobs
+            .then(([ apiQuestion, apiUsers, currentUserApi, mentorRequest, allCollaborations, allMentorChats ]) => {
+                if (!isMounted) return;
 
-function ActiveItem({ currentItems }) {
-    const [optionDisplay, setOptionDisplay] = useState({});
-    let [buttonClick, setButtonClick] = useState(0);
+                setGetHelpQuestions(apiQuestion?.data || []);
+                setGetUsers(apiUsers?.data || []);
 
-    const handleToggleOptions = (index) => {
-        setOptionDisplay(prevState => ({
-            ...prevState,
-            [index]: prevState[index] === 'show' ? 'hide' : 'show'
-        }));
-    };
+                const currentUser = currentUserApi?.data || null;
+                setUsersAccountDetails(currentUser);
 
-    const handleHideCollaboration = (index) => {
-        setButtonClick(prev => prev + 1); // Trigger a re-render by updating state
-    };
+                const points = currentUser?.acf?.['user-points'] ?? 0;
+                localStorage.setItem('userPoints', JSON.stringify(points));
 
-    return (
-      <>
-        {currentItems.map((collaboration, index) => {
-            let showCollaboration =  localStorage.getItem(`show_collaboration${index}`);
-        
-            let posted = Date.now() - new Date(collaboration.date);
-            // let days = Math.floor(posted/(86400 * 1000));
+                const relatedResponse = (mentorRequest?.data || [])
+                    .filter((item) => item?.acf?.mentor_id === userDetails?.id || item?.acf?.mentee_id === userDetails?.id)
+                    .filter((item) => item?.acf?.mentor_agree === 'Agree');
 
-            // Calculate total days
-            let totalDays = Math.floor(posted / (86400 * 1000));
+                setEvents(relatedResponse);
 
-            // Calculate years
-            let years = Math.floor(totalDays / 365);
-
-            // Calculate remaining days after extracting years
-            let remainingDaysAfterYears = totalDays % 365;
-
-            // Calculate months
-            let months = Math.floor(remainingDaysAfterYears / 30);
-
-            // Calculate remaining days after extracting months
-            let days = remainingDaysAfterYears % 30;
-
-            let requestorProfile = "";
-            for (let name of users) {
-                if ( name.id == collaboration.author) {
-                    requestorProfile = name;
-                }
-            }
-
-            let userProfile = "";
-            for (let name of users) {
-                if ( name?.id == userDetails?.id) {
-                    userProfile = name;
-                }
-            }
-
-            function commentCount() {
-            return axios.get(`${collaboration?._links?.replies?.['0']?.href}`)
-            .then((response) => {
-                localStorage.setItem(`collaboration_count${index}`, response.data.length);
-            }).catch((err) => {});
-            }
-
-            commentCount();
-
-            // Get the ID
-            let chatID = undefined;
-            
-            // Get chat message counts
-            let count = 0;
-            collaborationChats?.map((chat) => {
-                if (chat?.acf?.requestor_id == requestorProfile?.id) {
-                    count++;
-                }
-                // if(userDetails?.id === chat?.acf?.participant_id && Number(collaboration?.author) === chat?.acf?.requestor_id) {
-                if (chat?.acf?.request_id == collaboration?.id && userDetails?.id === chat?.acf?.participant_id && Number(collaboration?.author) === chat?.acf?.requestor_id) {
-                    chatID = chat?.id
-                    return;
-                }
-            });
-            
-            // Create Collaboration chat 
-            const createMentorChat = async (e) => {
-                try {
-                    const createChat = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`,
-                        {
-                            author: userDetails.id,
-                            title: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,
-                            content: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,
-                            excerpt: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,
-                            status: 'publish',
-                            acf: {
-                                'requestor_id': collaboration?.author,
-                                'requestor_name': requestorProfile?.name,
-                                'requestor_image': requestorProfile?.avatar_urls?.['48'],
-                                'participant_id': userProfile?.id,
-                                'participant_name': userProfile?.name,
-                                'participant_image': userProfile?.avatar_urls?.['48'],
-                                'request_id': collaboration?.id,
-                                'request_title': collaboration?.acf?.description,
-                            }
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${userDetails.token}`
-                            }
-                        }
-                    ).then((response) => {
-                            Naviagte(`/collaboration-chat/${response?.data?.id}`);
-                        }
-                    ).catch((err) => {})
-            
-                } catch (err) {
-            
-                }
-            };
-         
-            // Show the currect action
-            let collaborationButton = () => {
-                if (userDetails.id != collaboration.author) { 
-                    if (chatID != undefined) {
-                        return (<div className="col-auto">
-                            <a href={`/collaboration-chat/${chatID}`} className="btn btn-primary collab-btn">Return To Chat</a>
-                        </div>);
-                    } else {
-                        return (<div className="col-auto">
-                            <button className="btn btn-primary collab-btn" onClick={createMentorChat} aria-label="Collaboration button">Collaborate</button>
-                        </div>);
+                let userCollaborations = 0;
+                (allCollaborations?.data || []).forEach((chat) => {
+                    if (chat?.acf?.participant_id === userDetails?.id || chat?.acf?.requestor_id === userDetails?.id) {
+                        userCollaborations += 1;
                     }
-                };
-            }
+                });
+                setCollaborations(userCollaborations);
 
-            // Toggle option display
-            let dateNow = new Date();
-            let deadLine = new Date(collaboration?.acf?.deadline);
+                let userMentorships = 0;
+                (allMentorChats?.data || []).forEach((chat) => {
+                    if (chat?.acf?.mentee_id === userDetails?.id || chat?.acf?.mentor_id === userDetails?.id) {
+                        userMentorships += 1;
+                    }
+                });
+                setMentorships(userMentorships);
 
-            if (dateNow <= deadLine) {
-                return ( 
-                    <div className={`col-12 mb-5 ${showCollaboration}`} key={index}>
-                        <div className="card collaboration">
-                            <div className="card-body">
-                            {/* Top Section */}
-                                <div className="collaboration-header">
-                                    <div className="d-flex flex-direction-row">
-                                        <div className="d-flex" style={{marginRight: "6rem"}}>
-                                            <div>
-                                                <img className="collaboration-details-name-img" src={requestorProfile?.acf?.user_profile_picture} alt={requestorProfile.name} loading="lazy" />
-                                            </div>
-                                            <div>
-                                                <div className="d-flex flex-row my-0"><strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(requestorProfile?.name, search) : requestorProfile?.name}} /></strong><span>&nbsp;| {requestorProfile?.acf?.["user-job-Insitution"]} | {requestorProfile?.acf?.["user-country-of-residence"]}</span></div>
-                                                <div className="d-flex flex-row align-items-center" >
-                                                    <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex flex-direction-row">
-                                            <div className="designation-button">
-                                                <span className="small">{collaboration?.acf?.["pay"]}</span>
-                                            </div>
-                                            <div className="due-button">
-                                            <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["deadline"])}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="options-container">
-                                        <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                        </div>
-                                        <div className={`option-items ${optionDisplay[index]}`}>
-                                            <div className="option-item" onClick={() => {
-                                                localStorage.setItem(`show_collaboration${index}`, 'hide')
-                                                handleHideCollaboration(index)
-                                                }}>Hide</div>
-                                            <div className="option-item" onClick={()=>{
-                                                    submitReport(collaboration, userDetails);
-                                                }}>Report</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* Middle Section */}
-                                <div style={{marginBottom: "1.8rem"}}>
-                                    <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.description, search) : collaboration?.acf?.description}} /></strong>
-                                    <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.features, search) : collaboration?.acf?.features}} />
-                                </div>
-                                {/* Bottom Section */}
-                                <div className="row d-flex flex-row">
-                                    <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
-                                    <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{count} {count == 1 ? "person responded to this." : "people responded to this."}</div>
-                                    { collaborationButton() }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            }
-        }
-    )}
-      </>
-    );
-  }
-  
-function ActivePaginatedmentors({ itemsPerPage }) {
-    // Here we use item offsets; we could also use page offsets
-    // following the API or data you're working with.
-    const [itemOffset, setItemOffset] = useState(0);
-  
-    // Simulate fetching items from another resources.
-    // (This could be items from props; or items loaded in a local state
-    // from an API endpoint with useEffect and useState)
-    const endOffset = itemOffset + itemsPerPage;
-
-    
-    const currentItems = collaborations.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(collaborations.length / itemsPerPage);
-  
-    // Invoke when user click to request another page.
-    const handlePageClick = (event) => {
-      const newOffset = (event.selected * itemsPerPage) % collaborations.length;
-
-      setItemOffset(newOffset);
-    };
-  
-    return (
-      <>
-        <ActiveItem currentItems={currentItems} />
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="»"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={3}
-          pageCount={pageCount}
-          previousLabel="«"
-          renderOnZeroPageCount={null}
-        />
-      </>
-    );
-    
-}
-// End paginated active jobs
-
-// Expired jobs
-function ExpiredItem({ currentItems }) {
-    const [optionDisplay, setOptionDisplay] = useState({});
-    let [buttonClick, setButtonClick] = useState(0);
-
-    const handleToggleOptions = (index) => {
-        setOptionDisplay(prevState => ({
-            ...prevState,
-            [index]: prevState[index] === 'show' ? 'hide' : 'show'
-        }));
-    };
-
-    const handleHideCollaboration = (index) => {
-        setButtonClick(prev => prev + 1); // Trigger a re-render by updating state
-    };
-
-
-    return (
-      <>
-        {currentItems.map((collaboration, index) => {
-            let showCollaboration =  localStorage.getItem(`show_collaboration${index}`);
-        
-            let posted = Date.now() - new Date(collaboration.date);
-            // let days = Math.floor(posted/(86400 * 1000));
-
-            // Calculate total days
-            let totalDays = Math.floor(posted / (86400 * 1000));
-
-            // Calculate years
-            let years = Math.floor(totalDays / 365);
-
-            // Calculate remaining days after extracting years
-            let remainingDaysAfterYears = totalDays % 365;
-
-            // Calculate months
-            let months = Math.floor(remainingDaysAfterYears / 30);
-
-            // Calculate remaining days after extracting months
-            let days = remainingDaysAfterYears % 30;
-
-            let requestorProfile = "";
-            for (let name of users) {
-                if ( name.id == collaboration.author) {
-                    requestorProfile = name;
-                }
-            }
-
-            let userProfile = "";
-            for (let name of users) {
-                if ( name?.id == userDetails?.id) {
-                    userProfile = name;
-                }
-            }
-
-            function commentCount() {
-            return axios.get(`${collaboration._links.replies['0'].href}`)
-            .then((response) => {
-                localStorage.setItem(`collaboration_count${index}`, response.data.length);
-            }).catch((err) => {});
-            }
-
-            commentCount();
-
-            // Get the ID
-            let chatID = undefined;
-
-            // Get chat message counts
-            let count = 0;
-
-            collaborationChats?.map((chat) => {
-                if (chat?.acf?.requestor_id == requestorProfile?.id) {
-                    count++;
-                }
-                // if(userDetails?.id === chat?.acf?.participant_id && Number(collaboration?.author) === chat?.acf?.requestor_id) {
-                if (chat?.acf?.request_id == collaboration?.id && userDetails?.id === chat?.acf?.participant_id && Number(collaboration?.author) === chat?.acf?.requestor_id) {
-                    chatID = chat?.id
-                    return;
-                }
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error(error);
+                setLoading(false);
             });
 
-            // Get date
-            let dateNow = new Date();
-            let deadLine = new Date(collaboration?.acf?.deadline);
+        return () => {
+            isMounted = false;
+        };
+    }, [Navigate, userDetails?.id, userDetails?.token]);
 
-            if (dateNow > deadLine) {
-                return ( 
-                    <div className={`col-12 mb-5 ${showCollaboration}`} key={index}>
-                        <div className="card collaboration">
-                            <div className="card-body">
-                            {/* Top Section */}
-                                <div className="collaboration-header">
-                                    <div className="d-flex flex-direction-row">
-                                        <div className="d-flex" style={{marginRight: "6rem"}}>
-                                            <div>
-                                                <img className="collaboration-details-name-img" src={requestorProfile?.acf?.user_profile_picture} alt={requestorProfile.name} loading="lazy" />
-                                            </div>
-                                            <div>
-                                                <div className="d-flex flex-row my-0"><strong><div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(requestorProfile?.name, search) : requestorProfile?.name}} /></strong><span>&nbsp;| {requestorProfile?.acf?.["user-job-Insitution"]} | {requestorProfile?.acf?.["user-country-of-residence"]}</span></div>                                                
-                                                <div className="d-flex flex-row align-items-center" >
-                                                    <span className="option-button" style={{marginRight: ".5rem"}}></span><p style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex flex-direction-row">
-                                            <div className="designation-button">
-                                                <span className="small">{collaboration?.acf?.["pay"]}</span>
-                                            </div>
-                                            <div className="due-button">
-                                            <span className="small">Deadline {humanReadableDate(collaboration?.acf?.["deadline"])}</span>
-                                            </div>
-                                        </div>
+    const usersById = useMemo(() => {
+        const map = {};
+        (getUsers || []).forEach((u) => {
+            map[u.id] = u;
+        });
+        return map;
+    }, [getUsers]);
+
+    const getTimeAgo = (date) => {
+        if (!date) return '';
+        const diff = Date.now() - new Date(date).getTime();
+        const totalDays = Math.floor(diff / (86400 * 1000));
+        const years = Math.floor(totalDays / 365);
+        const months = Math.floor((totalDays % 365) / 30);
+        const days = totalDays % 30;
+
+        if (years > 0) return `${years} years ago`;
+        if (months > 0) return `${months} months ago`;
+        if (days === 0) return 'Posted today';
+        return `${days} days ago`;
+    };
+
+    useEffect(() => {
+        if (!userDetails?.token) return;
+        if (!getHelpQuestions?.length) return;
+
+        let isMounted = true;
+
+        const headers = {
+            Authorization: `Bearer ${userDetails.token}`,
+        };
+
+        const fetchTotals = async () => {
+            try {
+                const ids = getHelpQuestions
+                    .filter((q) => q?.id)
+                    .map((q) => q.id);
+
+                const missing = ids.filter((id) => typeof commentTotalsByPostId[id] !== 'number');
+                if (!missing.length) return;
+
+                const requests = missing.map((postId) =>
+                    axios.get(
+                        `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+                        {
+                            headers,
+                            params: {
+                                post: postId,
+                                per_page: 1,
+                            },
+                        }
+                    )
+                        .then((res) => {
+                            const total = parseInt(res.headers?.['x-wp-total'] || '0', 10);
+                            return [ postId, Number.isFinite(total) ? total : 0 ];
+                        })
+                        .catch(() => [ postId, 0 ])
+                );
+
+                const results = await Promise.all(requests);
+
+                if (!isMounted) return;
+
+                setCommentTotalsByPostId((prev) => {
+                    const next = { ...prev };
+                    results.forEach(([ id, total ]) => {
+                        next[id] = total;
+                    });
+                    return next;
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        fetchTotals();
+
+        return () => {
+            isMounted = false;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [getHelpQuestions, userDetails?.token]);
+
+    const clearEditor = () => {
+        setCreateComment('');
+        setFile(null);
+        setCommentStatus('not approved');
+        setServerComment('');
+        setSuccessServerComment('');
+        editorRef.current?.setContent('');
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        setServerComment('');
+        setSuccessServerComment('');
+
+        if (!userDetails?.token) {
+            Navigate('/');
+            return;
+        }
+
+        const stripped = (createComment || '').replace(/<[^>]*>/g, '').trim();
+        if (!stripped) {
+            setServerComment('Please write something before submitting.');
+            return;
+        }
+
+        try {
+            const headers = {
+                Authorization: `Bearer ${userDetails.token}`,
+            };
+
+            let imageUrl = '';
+
+            if (file) {
+                const options = {
+                    maxSizeMB: 1,
+                    maxWidthOrHeight: 1280,
+                    useWebWorker: true,
+                };
+
+                const compressed = await imageCompression(file, options);
+                const finalFile = new File([compressed], file.name, { type: file.type });
+
+                const formData = new FormData();
+                formData.append('file', finalFile);
+
+                const mediaRes = await axios.post(
+                    `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
+                    formData,
+                    { headers }
+                );
+
+                imageUrl = mediaRes?.data?.source_url || '';
+            }
+
+            const created = await axios.post(
+                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`,
+                {
+                    title: stripped.slice(0, 80) || 'New Question',
+                    content: createComment,
+                    status: 'publish',
+                    acf: imageUrl ? { question_image: imageUrl } : undefined,
+                },
+                { headers }
+            );
+
+            setSuccessServerComment('Success! Your post has been published.');
+            setCommentStatus(created?.data?.status || 'approved');
+
+            editorRef.current?.setContent('');
+            setCreateComment('');
+            setFile(null);
+
+            setGetHelpQuestions((prev) => [ created.data, ...(prev || []) ]);
+        } catch (err) {
+            console.error(err);
+            setServerComment('Something went wrong. Please try again.');
+        }
+    };
+
+    const questions = useMemo(() => {
+        const userField = usersAccountDetails?.acf?.user_feild;
+        if (!getHelpQuestions?.length) return [];
+
+        return getHelpQuestions.map((question, index) => {
+            if (!question) return null;
+
+            const author = usersById[question.author];
+            const userName = author?.name || '';
+            const userProfileImg = author?.acf?.user_profile_picture;
+            const userJobInsitution = author?.acf?.['user-job-Insitution'];
+
+            const commentTotal = commentTotalsByPostId[question.id] ?? 0;
+
+            if (question.status !== 'publish') return null;
+            if (userField && question?.acf?.question_subject_area && userField !== question?.acf?.question_subject_area) return null;
+
+            const rendered = question?.content?.rendered || '';
+            const snippetText = rendered.substring(0, 250);
+            const ellipsis = rendered.replace(/<[^>]*>/g, '').length > 250 ? '...' : '';
+
+            return (
+                <div className="card mb-4" key={question.id || index}>
+                    <div className="card-body">
+                        <div className="questions-details">
+                            <div className="questions-details-name">
+                                <img
+                                    className="questions-details-name-img"
+                                    src={userProfileImg ? userProfileImg : defaultImage}
+                                    alt={userName || 'User'}
+                                    loading="lazy"
+                                />
+                                <div className="questions-details-name-info">
+                                    <p><strong>{userName}</strong></p>
+                                    <div className="questions-details-posted">
+                                        <p>{getTimeAgo(question.date)}</p>
                                     </div>
-                                    <div className="options-container">
-                                        <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                        </div>
-                                        <div className={`option-items ${optionDisplay[index]}`}>
-                                            <div className="option-item" onClick={() => {
-                                                localStorage.setItem(`show_collaboration${index}`, 'hide')
-                                                handleHideCollaboration(index)
-                                                }}>Hide</div>
-                                            <div className="option-item" onClick={()=>{
-                                                    submitReport(collaboration, userDetails);
-                                                }}>Report</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* Middle Section */}
-                                <div style={{marginBottom: "1.8rem"}}>
-                                    <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.description, search) : collaboration?.acf?.description}} /></strong>
-                                    <div dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(collaboration?.acf?.features, search) : collaboration?.acf?.features}} />
-                                </div>
-                                {/* Bottom Section */}
-                                <div className="row d-flex flex-row">
-                                    <img src={UserComment} className="collaboration-icon" alt="Collaboration icon" style={{width: "4rem", paddingRight: ".3rem"}} /> 
-                                    <div className="mt-2 col-auto d-flex flex-row p-0" style={{marginRight: "6rem"}}>{count} {count == 1 ? "person responded to this." : "people responded to this."}</div>
                                 </div>
                             </div>
                         </div>
+
+                        <p><strong className='lead'>{question?.title?.rendered}</strong></p>
+
+                        {rendered ? (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: `${snippetText}${ellipsis}`,
+                                }}
+                            />
+                        ) : null}
+
+                        <div className="question-actions">
+                            <div className="question-actions-count">
+                                <p>
+                                    {commentTotal} {commentTotal === 1 ? 'response' : 'responses'}
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                )
-            }
-        }
-    )}
-      </>
-    );
-  }
-  
-  function ExpiredPaginatedmentors({ itemsPerPage }) {
-    // Here we use item offsets; we could also use page offsets
-    // following the API or data you're working with.
-    const [itemOffset, setItemOffset] = useState(0);
-  
-    // Simulate fetching items from another resources.
-    // (This could be items from props; or items loaded in a local state
-    // from an API endpoint with useEffect and useState)
-    const endOffset = itemOffset + itemsPerPage;
+                </div>
+            );
+        });
+    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId]);
 
-    
-    const currentItems = collaborations.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(collaborations.length / itemsPerPage);
-  
-    // Invoke when user click to request another page.
-    const handlePageClick = (event) => {
-      const newOffset = (event.selected * itemsPerPage) % collaborations.length;
+    if (!localStorage.getItem('userDetails')) {
+        window.location.replace('/');
+        return null;
+    }
 
-      setItemOffset(newOffset);
-    };
-  
-    return (
-      <>
-        <ExpiredItem currentItems={currentItems} />
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="»"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={3}
-          pageCount={pageCount}
-          previousLabel="«"
-          renderOnZeroPageCount={null}
-        />
-      </>
-    );
-    
-} 
-// End paginated expired jobs
+    if (loading) {
+        return (
+            <TailSpin
+                visible={true}
+                height="80"
+                width="80"
+                color="#0f9ed5"
+                ariaLabel="tail-spin-loading"
+                radius="1"
+                wrapperStyle={{ position: 'absolute', top: 0, left: 0, right: 0 }}
+                wrapperClass="spinner"
+            />
+        );
+    }
 
-    if (userDetails !== null) {
-        if (loading === false) {
     return (
         <>
-            <Navigation />
-            <main className='collaborations'>
-                <div className='container primary'>
-                    <div className='get-help-details'>
-                        <div className="row mb-5">
-                            <div className="col-6 d-flex align-item-center">
-                                <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash d-flex align-items-center">>></span><span className="small d-flex align-items-center">Collaborations</span>
-                            </div>
-                        </div>
-                        <div className="row mb-5">
-                            <div className="col-lg-12">
-                                <p className="lead"><strong>Move your research along using our collaboration platform!</strong></p>
-                            </div>
-                        </div>
-                        <div className="row mt-3">
-                            <div className="col-lg-4">
-                                <p><strong>Browse all collaboration opportunities</strong></p>
-                            </div>
-                            <div className="col-lg-4">
-                                <input type="search" name="search" className="form-control" placeholder='Start typing to search' value={search} onChange={(e) => {
-                                    setSearch(e.target.value)
-                                }} />
-                            </div>
-                            <div className="col-lg-4 text-end">
-                                <Link to="/collaboration-request" className="btn btn-outline-info btn-lg">Request collaboration</Link>
-                            </div>
-                        </div>
+           <Navigation />
+            <main>
+                <div className="page-body-container">
+                    <div className="side-navigation-container" style={{ background: '#ffffff' }}>
+                        <SideNavigation />
                     </div>
-                    <div className="mentors mt-5">
-                        <ul className="nav nav-tabs mb-5" role="tablist">
-                            <li className="nav-item" role="presentation">
-                            <button
-                                className={`nav-link ${activeTab === "active" ? "active" : ""}`}
-                                onClick={() => setActiveTab("active")}
-                            >
-                                Active Requests
-                            </button>
-                            </li>
-                            <li className="nav-item" role="presentation">
-                            <button
-                                className={`nav-link ${activeTab === "archived" ? "active" : ""}`}
-                                onClick={() => setActiveTab("archived")}
-                            >
-                                Archived
-                            </button>
-                            </li>
-                        </ul>
 
-                        <div className="tab-content">
-                            {activeTab === "active" && (
-                            <div className="tab-pane fade show active">
-                                <div className="tab-items">
-                                <ActivePaginatedmentors itemsPerPage={15} />
+                    <div className="mt-4">
+                        <div className="page-header">
+                            <div>
+                                <h1 className="mb-3">Collaborations</h1>
+                                <p>Find meaningful partnerships to move your research along</p>
+                            </div>
+                            <div className="col-12 text-end mt-4">
+                                <button className="btn btn-primary btn-lg" type="submit">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="user-details">
+                            <div className="user-detail">
+                                <div className="user-info-image user-notifcations">
+                                    <FontAwesomeIcon icon={faStar} />
+                                </div>
+                                <div className="user-info-content notifcations">
+                                    <p>My Collaboration Requests</p>
+                                    <div className="link-item">
+                                        <Link to="/profile">{notifications}</Link>
+                                    </div>
                                 </div>
                             </div>
-                            )}
-                            {activeTab === "archived" && (
-                            <div className="tab-pane fade show active">
-                                <div className="tab-items">
-                                <ExpiredPaginatedmentors itemsPerPage={15} />
+
+                            <div className="user-detail">
+                                <div className="user-info-image user-notifcations">
+                                    <FontAwesomeIcon icon={faStar} />
+                                </div>
+                                <div className="user-info-content notifcations">
+                                    <p>Current Collaborations</p>
+                                    <div className="link-item">
+                                        <Link to="/profile">{notifications}</Link>
+                                    </div>
                                 </div>
                             </div>
-                            )}
+
+                            <div className="user-detail">
+                                <div className="user-info-image user-notifcations">
+                                    <FontAwesomeIcon icon={faStar} />
+                                </div>
+                                <div className="user-info-content notifcations">
+                                    <p>Completed Collaborations</p>
+                                    <div className="link-item">
+                                        <Link to="/profile">{events.length}</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="page-body single-container">
+                            <div className="posts">
+                                <div className="create-posts">
+
+                                </div>
+
+                                <div className="page-divider" style={{width: "50%"}}>
+                                    <p>Browse all collaboration opportunities</p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div className="page-body-2 single-container">
+                            <div className="posts">
+                                <div className="create-posts">
+                                </div>
+                                <div className="container-3">
+                                    {questions?.some(Boolean) ? questions : <p>No posts yet.</p>}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </main>
         </>
-    )
-} else {
-        return (
-          <TailSpin
-          visible={true}
-          height="80"
-          width="80"
-          color="#0f9ed5"
-          ariaLabel="tail-spin-loading"
-          radius="1"
-          wrapperStyle={{position: "absolute", top: 0, left: 0, right: 0, left: 0}}
-          wrapperClass="spinner"
-          />
-        )
-      }
-    } else {
-        window.location.replace('/')
-    }
+    );
 }
-

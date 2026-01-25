@@ -369,8 +369,10 @@ export default function Home() {
 
                     <div className="mt-4">
                         <div className="page-header">
-                            <h1 className="mb-3">Welcome to LabSci!</h1>
-                            <p>Start a convo, engage with posts, share your ideas!</p>
+                            <div>
+                                <h1 className="mb-3">Welcome to LabSci!</h1>
+                                <p>Start a convo, engage with posts, share your ideas!</p>
+                            </div>
                         </div>
 
                         <div className="user-details">
@@ -401,7 +403,7 @@ export default function Home() {
                                     <FontAwesomeIcon icon={faStar} />
                                 </div>
                                 <div className="user-info-content notifcations">
-                                    <p>Notifications</p>
+                                    <p>Points Earned</p>
                                     <div className="link-item">
                                         <Link to="/profile">{notifications}</Link>
                                     </div>
