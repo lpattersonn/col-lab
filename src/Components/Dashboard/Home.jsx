@@ -349,7 +349,7 @@ export default function Home() {
                 visible={true}
                 height="80"
                 width="80"
-                color="#0f9ed5"
+                color="#001923"
                 ariaLabel="tail-spin-loading"
                 radius="1"
                 wrapperStyle={{ position: 'absolute', top: 0, left: 0, right: 0 }}
@@ -487,7 +487,7 @@ export default function Home() {
                                     </form>
                                 </div>
 
-                                <div className="page-divider">
+                                <div className="page-divider page-divider-home">
                                     <p>Recent Posts</p>
                                 </div>
 

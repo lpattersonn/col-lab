@@ -48,6 +48,14 @@ export default function Collaborations() {
     const [ commentTotalsByPostId, setCommentTotalsByPostId ] = useState({});
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filters, setFilters] = useState({
+        country: '',
+        field: '',
+        distance: '',
+        purpose: '',
+    });
+
 
     useEffect(() => {
         if (!userDetails?.token) {
@@ -340,12 +348,30 @@ export default function Collaborations() {
                 </div>
             );
         });
+        
     }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId]);
+          
+    const filteredQuestions = useMemo(() => {
+    if (!questions?.length) return [];
+
+    return questions.filter(Boolean).filter((card) => {
+        const textContent =
+            card.props?.children?.toString?.().toLowerCase() || '';
+
+        const matchesSearch =
+            !searchTerm ||
+            textContent.includes(searchTerm.toLowerCase());
+
+        return matchesSearch;
+    });
+}, [questions, searchTerm]);
+
 
     if (!localStorage.getItem('userDetails')) {
         window.location.replace('/');
         return null;
     }
+    
 
     if (loading) {
         return (
@@ -353,7 +379,7 @@ export default function Collaborations() {
                 visible={true}
                 height="80"
                 width="80"
-                color="#0f9ed5"
+                color="#001923"
                 ariaLabel="tail-spin-loading"
                 radius="1"
                 wrapperStyle={{ position: 'absolute', top: 0, left: 0, right: 0 }}
@@ -364,7 +390,7 @@ export default function Collaborations() {
 
     return (
         <>
-            <Navigation user={usersAccountDetails} />
+           <Navigation />
             <main>
                 <div className="page-body-container">
                     <div className="side-navigation-container" style={{ background: '#ffffff' }}>
@@ -435,6 +461,43 @@ export default function Collaborations() {
                                 <div className="page-divider" style={{width: "50%"}}>
                                     <p className="p-divider">Browse all collaboration opportunities</p>
                                 </div>
+{/* Search + Filters */}
+<div className="search-filter-wrap">
+    {/* Search Bar */}
+    <div className="search-bar">
+        <input
+            type="text"
+            placeholder="Search for anything"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button type="button" className="search-btn">
+            🔍
+        </button>
+    </div>
+
+    {/* Filters */}
+    <div className="filters">
+        <select onChange={(e) => setFilters({ ...filters, country: e.target.value })}>
+            <option value="">Country</option>
+            <option value="Canada">Canada</option>
+            <option value="USA">USA</option>
+        </select>
+
+        <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
+            <option value="">Field</option>
+            <option value="Biology">Biology</option>
+            <option value="Chemistry">Chemistry</option>
+        </select>
+
+
+        <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
+            <option value="">Purpose</option>
+            <option value="Collaboration">Collaboration</option>
+            <option value="Mentorship">Mentorship</option>
+        </select>
+    </div>
+</div>
 
                             </div>
                         </div>
@@ -443,9 +506,13 @@ export default function Collaborations() {
                             <div className="posts">
                                 <div className="create-posts">
                                 </div>
-                                <div className="container-3">
-                                    {questions?.some(Boolean) ? questions : <p>No posts yet.</p>}
-                                </div>
+<div className="container-3">
+    {filteredQuestions.length
+        ? filteredQuestions
+        : <p>No results found.</p>
+    }
+</div>
+
                             </div>
                         </div>
                     </div>

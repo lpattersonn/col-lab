@@ -139,6 +139,17 @@ a {
   font-size: 1.6rem !important;
   height: 100%;
 }
+
+.btn-outline {
+    border: 1px solid rgba(0, 0, 0, 0.5) !important;
+    padding: 10px 20px !important;
+    border-radius: 8px;
+}
+
+.btn-outline:hover {
+    background-color: rgba(217, 217, 217, 0.3) !important;
+}
+
 // Form
 .form-control, .form-select {
   border: 1px solid #cccccc !important;
@@ -515,10 +526,18 @@ a {
   color: $mercy-white;
   background: #001923;
   margin: 16px 0;
-  border-radius: 0 20px 20px 20px;
+  border-radius: 18px;
   p {
     margin: 0;
   }
+}
+
+.page-divider {
+  font-weight: 600;
+}
+
+.page-divider-home {
+  border-radius: 10px;
 }
 
 .post-form {
@@ -623,3 +642,57 @@ a {
     flex-direction: row;
     gap: 16px;
   }
+
+
+.search-filter-wrap {
+    margin: 32px 0;
+}
+
+/* Search bar */
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 2px solid #001923;
+    border-radius: 999px;
+    padding: 6px 8px 6px 16px;
+    max-width: 720px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+}
+
+.search-btn {
+    background: #ff6200;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* Filters */
+.filters {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.filters select {
+    background: #e5e5e5;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.filters select.active {
+    background: #555;
+    color: #fff;
+}
