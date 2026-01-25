@@ -1,115 +1,147 @@
-import React, { useCallback, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBell, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Brand from '../Images/colLAB-logo.svg';
+import defaultImage from '../Images/user-profile.svg';
 
-export default function Navigation() {
+export default function Navigation({ user }) {
     const navigate = useNavigate();
-    const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
+    const dropdownRef = useRef(null);
 
-    const toggleMenu = () => setIsOpen(prev => !prev);
-    const closeMenu = () => setIsOpen(false);
+    const [showMenu, setShowMenu] = useState(false);
 
     const logout = useCallback(() => {
-        localStorage.removeItem('userDetails');
+        setShowMenu(false);
         localStorage.clear();
         navigate('/');
     }, [navigate]);
 
+    /* -------------------------------
+       CLOSE DROPDOWN LOGIC
+    -------------------------------- */
+
+    useEffect(() => {
+        function handleOutsideClick(event) {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                setShowMenu(false);
+            }
+        }
+
+        function handleScroll() {
+            setShowMenu(false);
+        }
+
+        function handleEscape(event) {
+            if (event.key === 'Escape') {
+                setShowMenu(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleOutsideClick);
+        document.addEventListener('touchstart', handleOutsideClick);
+        window.addEventListener('scroll', handleScroll);
+        document.addEventListener('keydown', handleEscape);
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+            document.removeEventListener('touchstart', handleOutsideClick);
+            window.removeEventListener('scroll', handleScroll);
+            document.removeEventListener('keydown', handleEscape);
+        };
+    }, []);
+
+    // Close dropdown on route change
+    useEffect(() => {
+        setShowMenu(false);
+    }, [location.pathname]);
+
+    /* -------------------------------
+       NAV ITEMS
+    -------------------------------- */
+
     const navItems = [
         { to: '/', label: 'Home' },
-        { to: '/profile', label: 'Chat Room' },
+        { to: '/chat-room', label: 'Chat Room' },
         { to: '/points-center', label: 'Points Center' },
         { to: '/contact-us', label: 'Contact Us' },
     ];
 
+    const userName = user?.name || 'User';
+    const userImage =
+        user?.acf?.user_profile_picture ||
+        user?.avatar_urls?.['48'] ||
+        defaultImage;
+
     return (
-        <>
-            <header>
-                <nav className="navbar navbar-expand-lg primary">
-                    <div className="container-fluid">
+        <header className="top-nav">
+            {/* LEFT - Logo */}
+            <div className="nav-logo">
+                <NavLink to="/">
+                    <img src={Brand} alt="colLAB" />
+                </NavLink>
+            </div>
 
-                        {/* Brand */}
-                        <NavLink className="nav-brand" to="/" onClick={closeMenu}>
-                            <img
-                                src={Brand}
-                                alt="colLAB"
-                                className="brand"
-                                loading="lazy"
-                            />
-                        </NavLink>
+            {/* CENTER - Links */}
+            <div className="nav-links">
+                {navItems.map(({ to, label }) => (
+                    <NavLink
+                        key={to}
+                        to={to}
+                        end={to === '/'}
+                        className={({ isActive }) =>
+                            isActive ? 'nav-link active' : 'nav-link'
+                        }
+                    >
+                        {label}
+                    </NavLink>
+                ))}
+            </div>
 
-                        {/* Mobile Toggle */}
-                        <button
-                            className="navbar-toggler"
-                            type="button"
-                            aria-label="Toggle navigation"
-                            aria-expanded={isOpen}
-                            onClick={toggleMenu}
-                        >
-                            <span className="navbar-toggler-icon" />
-                        </button>
+            {/* RIGHT - Bell + User */}
+            <div className="nav-right">
+                <div className="nav-bell">
+                    <FontAwesomeIcon icon={faBell} />
+                    <span className="bell-dot" />
+                </div>
 
-                        {/* Slide-out Nav */}
-                        <div
-                            className={[
-                                'navbar-collapse',
-                                'mobile-drawer',
-                                isOpen ? 'is-open' : ''
-                            ].join(' ')}
-                        >
-                            {/* Close button (X) */}
+                <div className="nav-user" ref={dropdownRef}>
+                    <div
+                        className="user-trigger"
+                        onClick={() => setShowMenu(prev => !prev)}
+                    >
+                        <img
+                            src={userImage}
+                            alt={userName}
+                            className="avatar"
+                        />
+                        <span className="user-name">{userName}</span>
+                        <FontAwesomeIcon icon={faChevronDown} />
+                    </div>
+
+                    {showMenu && (
+                        <div className="user-dropdown">
                             <button
-                                type="button"
-                                className="drawer-close"
-                                aria-label="Close navigation"
-                                onClick={closeMenu}
+                                className="dropdown-item"
+                                onClick={() => navigate('/profile')}
                             >
-                                ×
+                                Profile
                             </button>
 
-                            <ul className="nav nav-pills ms-auto">
-                                {navItems.map(({ to, label }) => (
-                                    <li className="nav-item" key={to}>
-                                        <NavLink
-                                            to={to}
-                                            end={to === '/'}
-                                            onClick={closeMenu}
-                                            className={({ isActive }) =>
-                                                [
-                                                    'nav-link',
-                                                    isActive ? 'active active-header' : ''
-                                                ].join(' ')
-                                            }
-                                        >
-                                            {label}
-                                        </NavLink>
-                                    </li>
-                                ))}
-
-                                <li className="nav-item">
-                                    <button
-                                        type="button"
-                                        className="nav-link logout"
-                                        onClick={logout}
-                                    >
-                                        Logout
-                                    </button>
-                                </li>
-                            </ul>
+                            <button
+                                className="dropdown-item logout"
+                                onClick={logout}
+                            >
+                                Logout
+                            </button>
                         </div>
-
-                    </div>
-                </nav>
-            </header>
-
-            {/* Overlay */}
-            {isOpen && (
-                <div
-                    className="nav-overlay"
-                    onClick={closeMenu}
-                    aria-hidden="true"
-                />
-            )}
-        </>
+                    )}
+                </div>
+            </div>
+        </header>
     );
 }

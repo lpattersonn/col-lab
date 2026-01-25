@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from '../Navigation';
@@ -360,7 +360,7 @@ export default function Home() {
 
     return (
         <>
-            <Navigation />
+            <Navigation user={usersAccountDetails} />
             <main>
                 <div className="page-body-container">
                     <div className="side-navigation-container" style={{ background: '#ffffff' }}>
@@ -398,29 +398,39 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            <div className="user-detail">
-                                <div className="user-info-image user-notifcations">
-                                    <FontAwesomeIcon icon={faStar} />
-                                </div>
-                                <div className="user-info-content notifcations">
-                                    <p>Points Earned</p>
-                                    <div className="link-item">
-                                        <Link to="/profile">{notifications}</Link>
+                            <Link to="/profile">
+                                <div className="user-detail">
+                                    <div className='card-icon'>
+                                        <FontAwesomeIcon icon={faArrowRight} />
+                                    </div>
+                                    <div className="user-info-image user-notifcations">
+                                        <FontAwesomeIcon icon={faStar} />
+                                    </div>
+                                    <div className="user-info-content notifcations">
+                                        <p>Points Earned</p>
+                                        <div className="link-item">
+                                            {notifications}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
 
-                            <div className="user-detail">
-                                <div className="user-info-image user-notifcations">
-                                    <FontAwesomeIcon icon={faStar} />
-                                </div>
-                                <div className="user-info-content notifcations">
-                                    <p>Upcoming Events</p>
-                                    <div className="link-item">
-                                        <Link to="/profile">{events.length}</Link>
+                            <Link to="/profile">
+                                <div className="user-detail">
+                                    <div className='card-icon'>
+                                        <FontAwesomeIcon icon={faArrowRight} />
+                                    </div>
+                                    <div className="user-info-image user-notifcations">
+                                        <FontAwesomeIcon icon={faStar} />
+                                    </div>
+                                    <div className="user-info-content notifcations">
+                                        <p>Upcoming Events</p>
+                                        <div className="link-item">
+                                            {events.length}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
 
                         <div className="page-body">

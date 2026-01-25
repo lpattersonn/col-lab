@@ -2,17 +2,12 @@
 
 // Home page
 .page-header {
-
-    display: grid;
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
-  //margin-top: 24px;
-  //padding: 0 16px 0 0;
- // gap: 30px 16px;
-
   color: $mercy-white;
   background: linear-gradient(90deg, rgba(0, 25, 35, 0.075) 0%, rgba(255, 98, 0, 0.105) 54.33%, rgba(255, 245, 200, 0.06) 100%);
   padding: 50px 38px 45px;
-  margin: 55px 16px 0 0;
+  margin: 85px 16px 0 0;
   border-radius: 20px;
   h1 {
     font-size: 40px !important;
@@ -73,6 +68,17 @@ main {
   border: #0f172af2 !important;
   text-transform: uppercase;
   border-radius: 16px !important;
+}
+
+.btn-header {
+  padding: 9px 30px !important;
+  background: #ffffff !important;
+  border: 2px solid rgb(#000, .5) !important;
+  border-radius: 30px !important;
+    &:hover {
+      background: linear-gradient(90deg, rgba(255, 98, 0, 0.5) 0%, rgba(255, 245, 200) 100%) !important;
+      color: #000 !important;
+    }
 }
 
 a {
@@ -411,6 +417,7 @@ a {
   padding: 0 16px 0 0;
   gap: 30px 16px;
   .user-detail {
+    position: relative;
     width: 100%;
     height: 100%;
     display: flex;
@@ -421,11 +428,26 @@ a {
     box-shadow: $box-shadow;
     padding: 40px 16px;
     border-radius: 20px;
+    .card-icon {
+      background: #D9D9D9;
+      height: 34.5px;
+      width: 34.5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 100%;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      }
     .notifcations {
       p {
         color: #000;
       }
       .link-item {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 45px;
         a {
           font-size: 24px;
           font-weight: 700;
@@ -477,6 +499,14 @@ a {
     }
   }
 }
+
+.user-detail:not(.user) {
+    transition: 300ms ease-out;
+    &:hover {
+      transform: translateY(-5px);
+    }
+}
+
 
 .page-divider {
   display: flex;
@@ -540,7 +570,7 @@ a {
 
 .page-body {
   margin: 24px 16px 0 0;
-  padding: 0 16px 0;
+  padding: 16px 16px 0;
   border-radius: 20px;
   display: grid;
   grid-template-columns: 8fr 4fr;
@@ -568,8 +598,15 @@ a {
 .card {
   border-radius: 16px !important;
   border: 1px solid rgba(217, 217, 217, 0.3) !important;
-  padding: 10px;
   box-shadow: $box-shadow;
+  transition: 300ms ease-out;
+  cursor: pointer;
+  &:hover {
+     transform: translateY(-5px);
+  }
+  .card-body {
+      padding: 20px;
+  }
 }
 
 .post-form-content .tox.tox-tinymce {

@@ -1,3 +1,4 @@
+@use '../_partials/variables' as *;
 .collaboration {
   // border: none !important;
   border-radius: 5px;
@@ -135,4 +136,116 @@ width: 4rem;
 
 .collaboration-page_image {
   width: 100%;
+}
+
+  /* Overlay */
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 2, 23, 0.35);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px); /* Safari */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 999;
+
+  
+}
+
+.drawer-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Drawer */
+.drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 480px;
+    max-width: 100%;
+    height: 100vh;
+    background: #ffffff;
+    transform: translateX(100%);
+    transition: transform 0.35s ease;
+    z-index: 1000;
+    padding: 32px;
+    overflow-y: auto;
+}
+
+.drawer.open {
+    transform: translateX(0);
+    padding-top: 10rem;
+}
+
+/* Header */
+.drawer-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.drawer-divider {
+    width: 80%;
+    height: 1px;
+    background: rgba(217, 217, 217, 0.3);
+    margin: 12px 0 25px;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+/* Badge */
+.points-badge {
+    background: linear-gradient(90deg, rgba(255, 98, 0, 0.5) 0%, rgba(255, 245, 200) 100%);
+    padding: 9px 27px;
+    font-size: 16px;
+    border-radius: 30px;
+}
+
+/* Form */
+.drawer-form label {
+    display: block;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.first-label {
+  margin-top: 20px;
+}
+
+.drawer-form input,
+.drawer-form textarea,
+.drawer-form select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(217, 217, 217, 0.5);
+}
+
+.drawer-form textarea {
+    min-height: 100px;
+}
+
+.drawer-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+}
+
+.btn-dark {
+    background: #001f2d;
+    color: #fff;
+    border: none;
+    padding: 10px 20px !important;
+    border-radius: 8px;
 }

@@ -6,7 +6,7 @@
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 70px;
+    top: 95px;
     // background: #ffffff;
     padding-bottom: 60px;
     height: 100%;
@@ -25,7 +25,17 @@
         // background: $mercy-white;
         font-weight: 500;
         &:hover {
-            background: rgb(30 41 59);
+            background: #001923;
+            color: #ffffff !important;
+             .icon-container {
+                background: rgba(31, 56, 75);
+                svg {
+                    color: $mercy-white;
+                }
+             }
+        }
+        &.active {
+            background: #001923;
             color: #ffffff !important;
              .icon-container {
                 background: rgba(31, 56, 75);

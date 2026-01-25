@@ -14,6 +14,8 @@ import SideNavigation from './Navigation/SideNavigation';
 import defaultImage from '../Images/user-profile.svg';
 import { dateFormat } from '../helper';
 
+
+
 export default function Collaborations() {
     const Navigate = useNavigate(); // keep your original naming
     const editorRef = useRef(null);
@@ -44,6 +46,8 @@ export default function Collaborations() {
     const [ successServerComment, setSuccessServerComment ] = useState('');
 
     const [ commentTotalsByPostId, setCommentTotalsByPostId ] = useState({});
+
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     useEffect(() => {
         if (!userDetails?.token) {
@@ -360,7 +364,7 @@ export default function Collaborations() {
 
     return (
         <>
-           <Navigation />
+            <Navigation user={usersAccountDetails} />
             <main>
                 <div className="page-body-container">
                     <div className="side-navigation-container" style={{ background: '#ffffff' }}>
@@ -374,8 +378,12 @@ export default function Collaborations() {
                                 <p>Find meaningful partnerships to move your research along</p>
                             </div>
                             <div className="col-12 text-end mt-4">
-                                <button className="btn btn-primary btn-lg" type="submit">
-                                    Submit
+                                <button 
+                                    className="btn btn-header" 
+                                    type="button"
+                                    onClick={() => setIsDrawerOpen(true)}
+                                >
+                                    Request Collaboration
                                 </button>
                             </div>
                         </div>
@@ -425,7 +433,7 @@ export default function Collaborations() {
                                 </div>
 
                                 <div className="page-divider" style={{width: "50%"}}>
-                                    <p>Browse all collaboration opportunities</p>
+                                    <p className="p-divider">Browse all collaboration opportunities</p>
                                 </div>
 
                             </div>
@@ -442,6 +450,82 @@ export default function Collaborations() {
                         </div>
                     </div>
                 </div>
+                
+                {/* Overlay */}
+<div
+    className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
+    onClick={() => setIsDrawerOpen(false)}
+/>
+
+{/* Slide-in Drawer */}
+<aside className={`drawer ${isDrawerOpen ? 'open' : ''}`}>
+    <div className="drawer-header">
+        <button
+            className="back-btn"
+            type="button"
+            onClick={() => setIsDrawerOpen(false)}
+        >
+            ← Back
+        </button>
+
+        <span className="points-badge">*5 points required</span>
+    </div>
+
+    <h1>Collaboration Request</h1>
+    <div className="drawer-divider" />
+    <form className="drawer-form">
+        <label className="first-label">
+            Type your request briefly (150 characters max)
+            <input
+                type="text"
+                maxLength={150}
+                placeholder="ex. Need help creating a knockout cell line."
+            />
+        </label>
+
+        <label>
+            Description
+            <textarea
+                placeholder="Explain your request in further detail. Please keep project explanations sufficiently vague to avoid scooping."
+            />
+        </label>
+
+        <label>
+            Enter major skills required (max. 5)
+            <input type="text" />
+        </label>
+
+        <label>
+            Deadline for project completion
+            <input type="date" />
+        </label>
+
+        <label>
+            Compensation
+            <select>
+                <option>Choose an option</option>
+                <option>Points</option>
+                <option>Co-authorship</option>
+                <option>Paid</option>
+            </select>
+        </label>
+
+        <div className="drawer-actions">
+            <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => setIsDrawerOpen(false)}
+            >
+                Cancel
+            </button>
+
+            <button type="submit" className="btn btn-dark">
+                Submit
+            </button>
+        </div>
+    </form>
+</aside>
+
             </main>
         </>
     );
