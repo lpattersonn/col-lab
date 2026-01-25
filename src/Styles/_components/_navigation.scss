@@ -180,13 +180,14 @@ header.active-header {
 /* Center links */
 .nav-links {
     display: flex;
-    justify-content: center;
-    gap: 60px;
+    justify-content: right;
+    gap: 7px;
+    margin-right: 20px;
 }
 
 .nav-link {
     text-decoration: none;
-    font-size: 20px;
+    font-size: 16px !important;
     color: #000;
 }
 
@@ -226,7 +227,7 @@ header.active-header {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 6px 16px;
+    padding: 6px 7px;
     border-radius: 40px;
     border: 1px solid #eee;
     background: #fafafa;
