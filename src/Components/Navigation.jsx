@@ -126,17 +126,17 @@ export default function Navigation({ user }) {
                     {showMenu && (
                         <div className="user-dropdown">
                             <button
-                                className="dropdown-item"
+                                className="dropdown-item first-dropdown-item"
                                 onClick={() => navigate('/profile')}
                             >
-                                Profile
+                                <span>Profile / Settings</span>
                             </button>
 
                             <button
                                 className="dropdown-item logout"
                                 onClick={logout}
                             >
-                                Logout
+                                <span>Log out</span>
                             </button>
                         </div>
                     )}
