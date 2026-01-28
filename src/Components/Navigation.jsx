@@ -65,7 +65,7 @@ export default function Navigation({ user }) {
     -------------------------------- */
 
     const navItems = [
-        { to: '/', label: 'Home' },
+        { to: '/dashboard', label: 'Home' },
         { to: '/chat-room', label: 'Chat Room' },
         { to: '/points-center', label: 'Points Center' },
         { to: '/contact-us', label: 'Contact Us' },
@@ -94,7 +94,7 @@ export default function Navigation({ user }) {
                         to={to}
                         end={to === '/'}
                         className={({ isActive }) =>
-                            isActive ? 'nav-link active' : 'nav-link'
+                            isActive ? 'nav-link--active' : 'nav-link'
                         }
                     >
                         {label}

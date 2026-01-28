@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from './Navigation';
@@ -415,42 +415,66 @@ export default function Collaborations() {
                         </div>
 
                         <div className="user-details">
-                            <div className="user-detail">
-                                <div className="user-info-image user-notifcations">
-                                    <FontAwesomeIcon icon={faStar} />
-                                </div>
-                                <div className="user-info-content notifcations">
-                                    <p>My Collaboration Requests</p>
-                                    <div className="link-item">
-                                        <Link to="/profile">{notifications}</Link>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div className="user-detail">
-                                <div className="user-info-image user-notifcations">
-                                    <FontAwesomeIcon icon={faStar} />
-                                </div>
-                                <div className="user-info-content notifcations">
-                                    <p>Current Collaborations</p>
-                                    <div className="link-item">
-                                        <Link to="/profile">{notifications}</Link>
-                                    </div>
-                                </div>
-                            </div>
+                             <Link to="/profile">
+                                <div className="user-detail">
+                                    {/* <div className="user-info-image user-notifcations">
+                                        <FontAwesomeIcon icon={faStar} />
+                                    </div> */}
+                                    <div className="user-info-content notifcations">
 
-                            <div className="user-detail">
-                                <div className="user-info-image user-notifcations">
-                                    <FontAwesomeIcon icon={faStar} />
-                                </div>
-                                <div className="user-info-content notifcations">
-                                    <p>Completed Collaborations</p>
-                                    <div className="link-item">
-                                        <Link to="/profile">{events.length}</Link>
+                                        <div className="title-row">
+                                            <p>My Collaboration Requests</p>
+                                                <span className="arrow-icon">
+                                                    <FontAwesomeIcon icon={faArrowRight} />
+                                                </span>
+                                        </div>
+                                            <div className="link-item">
+                                                {notifications}
+                                            </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </Link>      
+
+                            <Link to="/profile">
+                                <div className="user-detail">
+                                    {/* <div className="user-info-image user-notifcations">
+                                        <FontAwesomeIcon icon={faStar} />
+                                    </div> */}
+                                    <div className="user-info-content notifcations">
+
+                                        <div className="title-row">
+                                            <p>Current Collaborations</p>
+                                                <span className="arrow-icon">
+                                                    <FontAwesomeIcon icon={faArrowRight} />
+                                                </span>
+                                        </div>
+                                            <div className="link-item">
+                                                {notifications}
+                                            </div>
+                                    </div>
+                                </div>
+                            </Link>      
+                            <Link to="/profile">
+                                <div className="user-detail">
+                                    {/* <div className="user-info-image user-notifcations">
+                                        <FontAwesomeIcon icon={faStar} />
+                                    </div> */}
+                                    <div className="user-info-content notifcations">
+
+                                        <div className="title-row">
+                                            <p>Completed Collaborations</p>
+                                                <span className="arrow-icon">
+                                                    <FontAwesomeIcon icon={faArrowRight} />
+                                                </span>
+                                        </div>
+                                            <div className="link-item">
+                                                {events.length}
+                                            </div>
+                                    </div>
+                                </div>
+                            </Link>   
+                            </div>               
 
                         <div className="page-body single-container">
                             <div className="posts">
@@ -461,43 +485,44 @@ export default function Collaborations() {
                                 <div className="page-divider" style={{width: "50%"}}>
                                     <p className="p-divider">Browse all collaboration opportunities</p>
                                 </div>
-{/* Search + Filters */}
-<div className="search-filter-wrap">
-    {/* Search Bar */}
-    <div className="search-bar">
-        <input
-            type="text"
-            placeholder="Search for anything"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button type="button" className="search-btn">
-            🔍
-        </button>
-    </div>
 
-    {/* Filters */}
-    <div className="filters">
-        <select onChange={(e) => setFilters({ ...filters, country: e.target.value })}>
-            <option value="">Country</option>
-            <option value="Canada">Canada</option>
-            <option value="USA">USA</option>
-        </select>
+                                {/* Search + Filters */}
+                                <div className="search-filter-wrap">
+                                    {/* Search Bar */}
+                                    <div className="search-bar">
+                                        <input
+                                            type="text"
+                                            placeholder="Search for anything"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                        <button type="button" className="search-btn">
+                                            🔍
+                                        </button>
+                                    </div>
 
-        <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
-            <option value="">Field</option>
-            <option value="Biology">Biology</option>
-            <option value="Chemistry">Chemistry</option>
-        </select>
+                                    {/* Filters */}
+                                    <div className="filters">
+                                        <select onChange={(e) => setFilters({ ...filters, country: e.target.value })}>
+                                            <option value="">Country</option>
+                                            <option value="Canada">Canada</option>
+                                            <option value="USA">USA</option>
+                                        </select>
+
+                                        <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
+                                            <option value="">Field</option>
+                                            <option value="Biology">Biology</option>
+                                            <option value="Chemistry">Chemistry</option>
+                                        </select>
 
 
-        <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
-            <option value="">Purpose</option>
-            <option value="Collaboration">Collaboration</option>
-            <option value="Mentorship">Mentorship</option>
-        </select>
-    </div>
-</div>
+                                        <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
+                                            <option value="">Purpose</option>
+                                            <option value="Collaboration">Collaboration</option>
+                                            <option value="Mentorship">Mentorship</option>
+                                        </select>
+                                    </div>
+                                </div>
 
                             </div>
                         </div>
@@ -506,19 +531,19 @@ export default function Collaborations() {
                             <div className="posts">
                                 <div className="create-posts">
                                 </div>
-<div className="container-3">
-    {filteredQuestions.length
-        ? filteredQuestions
-        : <p>No results found.</p>
-    }
-</div>
-
+                            <div className="container-3">
+                                {filteredQuestions.length
+                                    ? filteredQuestions
+                                    : <p>No results found.</p>
+                                }
                             </div>
-                        </div>
-                    </div>
-                </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                 
-                {/* Overlay */}
+{/* Overlay */}
 <div
     className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
     onClick={() => setIsDrawerOpen(false)}

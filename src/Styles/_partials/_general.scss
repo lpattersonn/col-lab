@@ -182,7 +182,8 @@ a {
 
 .card-body {
   div, p {
-    font-size: 1.5rem
+    font-size: 1.6rem;
+    line-height: 2.5rem;
   }
 }
 
@@ -433,11 +434,11 @@ a {
     height: 100%;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 20px;
     border: 1px solid rgba(217, 217, 217, 0.3);
     background: $mercy-white;
     box-shadow: $box-shadow;
-    padding: 40px 16px;
+    padding: 40px 40px;
     border-radius: 20px;
     .card-icon {
       background: #D9D9D9;
@@ -466,6 +467,10 @@ a {
       }
     }
   }
+
+.user-detail-home {
+  padding: 40px 40px 40px 16px;
+}
   .user {
     background: #001923;
     &-info-image {
@@ -506,6 +511,10 @@ a {
       p {
         color: $mercy-white;
         margin: 0;
+      }
+      .user-greeting-name {
+        font-size: 24px !important;
+        margin-top: 6px;
       }
     }
   }
@@ -637,6 +646,10 @@ a {
     height: 65px !important;
   }
 
+  .user-info-content {
+    flex: 1;
+}
+
   .user-details-body {
     display: flex;
     flex-direction: row;
@@ -695,4 +708,27 @@ a {
 .filters select.active {
     background: #555;
     color: #fff;
+}
+
+.title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.arrow-icon {
+    margin-left: auto; /* pushes arrow to the edge */
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e5e5e5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

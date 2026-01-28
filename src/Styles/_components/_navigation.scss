@@ -41,8 +41,35 @@ header {
    NAV LINKS
 --------------------------- */
 
+
 .nav-item {
     font-size: 1.6rem;
+}
+
+// .nav-link {
+//     color: grey;
+//     font-weight: 500;
+//     padding: 0.5rem 1rem;
+//     border-radius: 8px;
+//     transition: background-color 0.2s ease, color 0.2s ease;
+
+//     &:hover {
+//         color: #000;
+//     }
+
+//     // &.active {
+//     //     background-color: $mercy-color-1;
+//     //     color: #fff;
+
+        
+//     // }
+// }
+
+.nav-link,
+.nav-link--active,
+.nav-link:hover,
+.nav-link--active:hover {
+    text-decoration: none !important;
 }
 
 .nav-link {
@@ -51,15 +78,25 @@ header {
     padding: 0.5rem 1rem;
     border-radius: 8px;
     transition: background-color 0.2s ease, color 0.2s ease;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 180ms ease, color 180ms ease, opacity 180ms ease;
+    will-change: transform;
 
     &:hover {
-        color: #000;
+        transform: translateY(-1px);
     }
+}
 
-    &.active {
-        background-color: $mercy-color-1;
-        color: #fff;
-    }
+
+/* ACTIVE (current page) */
+.nav-link--active {
+    color: #9ca3af;      /* greyed out */
+    opacity: 0.6;
+    cursor: default;
+    pointer-events: none; /* prevents clicking current page */
 }
 
 /* ---------------------------
@@ -181,25 +218,28 @@ header.active-header {
 .nav-links {
     display: flex;
     justify-content: right;
-    gap: 16px;
-    margin-right: 20px;
+    gap: 20px;
+    margin-right: 25px;
 }
 
 .nav-link {
-    text-decoration: none;
     font-size: 16px !important;
-    color: #000;
+    // color: #000;
+
+        color: #ffffff;
+    //text-decoration: none;
+    transition: color 0.2s ease, opacity 0.2s ease;
 }
 
-.nav-link.active {
-    font-weight: 600;
-}
+// .nav-link.active {
+//     font-weight: 600;
+// }
 
 /* Right section */
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 30px;
 }
 
 /* Bell */
@@ -271,4 +311,8 @@ header.active-header {
 
 .logout {
     color: #c0392b;
+}
+
+.nav-link:hover {
+    color: #d1d5db; /* light hover */
 }

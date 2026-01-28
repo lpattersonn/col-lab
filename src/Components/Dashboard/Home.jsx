@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight  } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from '../Navigation';
@@ -25,6 +25,32 @@ export default function Home() {
             return null;
         }
     }, []);
+
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return 'Good morning,';
+        if (hour < 18) return 'Good afternoon,';
+        return 'Good evening,';
+    };
+    const [greeting, setGreeting] = useState(getGreeting);
+
+    useEffect(() => {
+        const now = new Date();
+        const nextHour = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            now.getHours() + 1,
+            0,
+            0,
+            0
+        );
+        const timeoutId = setTimeout(() => {
+            setGreeting(getGreeting());
+        }, nextHour.getTime() - now.getTime());
+
+        return () => clearTimeout(timeoutId);
+    }, [greeting]);
 
     const [ getHelpQuestions, setGetHelpQuestions ] = useState([]);
     const [ getUsers, setGetUsers ] = useState([]);
@@ -376,7 +402,7 @@ export default function Home() {
                         </div>
 
                         <div className="user-details">
-                            <div className="user-detail user">
+                            <div className="user-detail user user-detail-home">
                                 <div className="user-info-image">
                                     {usersAccountDetails?.avatar_urls?.['48'] &&
                                     usersAccountDetails?.avatar_urls?.['48'] !== 'https://secure.gravatar.com/avatar/bda5ea71631e2cce73beb5e17644bd74?s=48&d=mm&r=g' ? (
@@ -391,46 +417,53 @@ export default function Home() {
                                 </div>
 
                                 <div className="user-info-content">
-                                    <p>Hi, <strong>{userDetails?.firstName}</strong></p>
-                                    <div className="link-item">
-                                        <p><strong>You’ve earned {JSON.parse(localStorage.getItem('userPoints') || '0')} pts</strong></p>
-                                    </div>
+                                    <p>{greeting}</p>
+                                    <p className="user-greeting-name">
+                                        <strong>{userDetails?.firstName || 'User'} 🔥</strong>
+                                    </p>
                                 </div>
                             </div>
 
                             <Link to="/profile">
-                                <div className="user-detail">
-                                    <div className='card-icon'>
-                                        <FontAwesomeIcon icon={faArrowRight} />
-                                    </div>
+                                <div className="user-detail user-detail-home">
                                     <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div>
                                     <div className="user-info-content notifcations">
-                                        <p>Points Earned</p>
-                                        <div className="link-item">
-                                            {notifications}
+
+                                        <div className="title-row">
+                                            <p>Points Earned</p>
+                                                <span className="arrow-icon">
+                                                    <FontAwesomeIcon icon={faArrowRight} />
+                                                </span>
                                         </div>
+                                            <div className="link-item">
+                                                {notifications}
+                                            </div>
                                     </div>
                                 </div>
                             </Link>
 
                             <Link to="/profile">
-                                <div className="user-detail">
-                                    <div className='card-icon'>
-                                        <FontAwesomeIcon icon={faArrowRight} />
-                                    </div>
+                                <div className="user-detail user-detail-home">
                                     <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div>
                                     <div className="user-info-content notifcations">
-                                        <p>Upcoming Events</p>
-                                        <div className="link-item">
-                                            {events.length}
+
+                                        <div className="title-row">
+                                            <p>Upcoming Events</p>
+                                                <span className="arrow-icon">
+                                                    <FontAwesomeIcon icon={faArrowRight} />
+                                                </span>
                                         </div>
+                                            <div className="link-item">
+                                                {events.length}
+                                            </div>
                                     </div>
                                 </div>
                             </Link>
+
                         </div>
 
                         <div className="page-body">
