@@ -71,7 +71,7 @@ export default function CollaborationRequest() {
 if (userDetails != null) {
     return(
         <>
-            <Navigation />
+            <Navigation user={userDetails} />
             <main className="create-collaboration" style={{marginBottom: "0", paddingBottom: "0",}}>
                 <div className="container primary" >
                     <div className="page-filter">

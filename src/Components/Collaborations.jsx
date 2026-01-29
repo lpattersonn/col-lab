@@ -390,7 +390,7 @@ export default function Collaborations() {
 
     return (
         <>
-           <Navigation />
+           <Navigation user={userDetails} />
             <main>
                 <div className="page-body-container">
                     <div className="side-navigation-container" style={{ background: '#ffffff' }}>
@@ -416,7 +416,7 @@ export default function Collaborations() {
 
                         <div className="user-details">
 
-                             <Link to="/profile">
+                             <Link to="/settings/profile">
                                 <div className="user-detail">
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
@@ -436,7 +436,7 @@ export default function Collaborations() {
                                 </div>
                             </Link>      
 
-                            <Link to="/profile">
+                            <Link to="/settings/profile">
                                 <div className="user-detail">
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
@@ -455,7 +455,7 @@ export default function Collaborations() {
                                     </div>
                                 </div>
                             </Link>      
-                            <Link to="/profile">
+                            <Link to="/settings/profile">
                                 <div className="user-detail">
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />

@@ -31,7 +31,7 @@ export default function PointsCenter() {
         if (loading === false) {
             return(
             <>
-                <Navigation />
+                <Navigation user={userDetails} />
                 <main className="points-center">
                     <div className="container">
                         <div className="points-center__header">

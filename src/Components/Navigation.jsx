@@ -68,12 +68,21 @@ export default function Navigation({ user }) {
         { to: '/dashboard', label: 'Home' },
         { to: '/chat-room', label: 'Chat Room' },
         { to: '/points-center', label: 'Points Center' },
-        { to: '/contact-us', label: 'Contact Us' },
+        { to: '/settings/support', label: 'Contact Us' },
     ];
 
-    const userName = user?.name || 'User';
+    const userName =
+        user?.name ||
+        user?.displayName ||
+        user?.user_display_name ||
+        user?.user_nicename ||
+        [user?.firstName, user?.lastName].filter(Boolean).join(' ') ||
+        'User';
+
     const userImage =
         user?.acf?.user_profile_picture ||
+        user?.user_profile_picture ||
+        user?.profile_picture ||
         user?.avatar_urls?.['48'] ||
         defaultImage;
 
@@ -127,7 +136,7 @@ export default function Navigation({ user }) {
                         <div className="user-dropdown">
                             <button
                                 className="dropdown-item first-dropdown-item"
-                                onClick={() => navigate('/profile')}
+                                onClick={() => navigate('/settings/profile')}
                             >
                                 <span>Profile / Settings</span>
                             </button>

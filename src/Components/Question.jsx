@@ -301,7 +301,7 @@ export default function Question() {
     if (loading === false) {
 return (
     <>
-        <Navigation />
+        <Navigation user={userDetails} />
         <div className="container primary questions">
             <div className="row mb-5">
                 <div className="col-12 d-flex">

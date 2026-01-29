@@ -13,7 +13,7 @@ export default function ContactUs() {
 if (userDetails != null) {
     return(
         <>
-            <Navigation />
+            <Navigation user={userDetails} />
             <main className="create-collaboration" style={{marginTop: "6rem"}}>
                 <div className="container primary" >
                     <div className="row">

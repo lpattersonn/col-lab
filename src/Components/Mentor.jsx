@@ -125,7 +125,7 @@ export default function Mentor() {
     if (loading === false) {
     return(
         <>
-            <Navigation />
+            <Navigation user={userDetails} />
             <main className="create-job">
                 <div className="container primary" >
                     <div className="page-filter">

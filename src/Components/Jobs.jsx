@@ -561,7 +561,7 @@ export default function Jobs() {
   if (userDetails != null) {
     return(
     <>
-        <Navigation />
+        <Navigation user={userDetails} />
         <main className="jobs">
             <div className="container primary">
                 <div className="page-filter">

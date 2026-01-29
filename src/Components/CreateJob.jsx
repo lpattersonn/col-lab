@@ -123,7 +123,7 @@ function handleChangeContentDetail(e) {
 if (userDetails != null) {
     return(
         <>
-            <Navigation />
+            <Navigation user={userDetails} />
             <main className="create-job">
                 <div className="container primary" >
                     <div className="page-filter">

@@ -1,10 +1,8 @@
 import React from 'react';
-import Navigation from './Navigation';
+import SettingsProfile from './SettingsProfile';
 
 export default function Profile() {
     return (
-    <>
-    <Navigation />
-    </>
-    )
+        <SettingsProfile />
+    );
 }

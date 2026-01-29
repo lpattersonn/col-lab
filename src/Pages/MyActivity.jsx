@@ -124,7 +124,7 @@ export default function MyActivity() {
         if (loading === false) {
             return(
             <>
-                <Navigation />
+                <Navigation user={userDetails} />
                 <main className="activity">
                     <div className="container-fluid">
                         <div className="page-filter mb-5">

@@ -7,7 +7,7 @@ export default function SideNavigation() {
     const location = useLocation();
 
     const isActive = (path) => {
-        return location.pathname.includes(path);
+        return location.pathname.startsWith(path);
     };
 
     return (

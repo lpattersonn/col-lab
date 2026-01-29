@@ -538,7 +538,7 @@ function ExpiredItem({ currentItems }) {
         if (loading === false) {
     return (
         <>
-            <Navigation />
+            <Navigation user={userDetails} />
             <main className='collaborations'>
                 <div className='container primary'>
                     <div className='get-help-details'>

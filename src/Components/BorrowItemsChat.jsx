@@ -238,7 +238,7 @@ if (userDetails !== null) {
     if (userDetails.id  !== chatDetails?.acf?.requestor_id || userDetails.id  !== chatDetails?.acf?.participant_id) {
         return (
             <>
-                <Navigation />
+                <Navigation user={userDetails} />
                 <main className='mentors-chat'>
                     <div className="container-fluid primary">
                         <div className='row'>

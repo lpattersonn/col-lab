@@ -121,7 +121,7 @@ function ActiveItem({ currentItems }) {
         if (loading === false) {
     return (
         <>
-            <Navigation />
+            <Navigation user={userDetails} />
             <main className='mentors'>
                 <div className='container primary'>
                     <div className='get-help-details'>

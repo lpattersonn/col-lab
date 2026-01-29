@@ -401,7 +401,7 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            <Link to="/profile">
+                            <Link to="/settings/profile">
                                 <div className="user-detail user-detail-home">
                                     <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />

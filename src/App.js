@@ -29,6 +29,14 @@ import BorrowItemsChat from './Components/BorrowItemsChat';
 import LearningCenterChat from './Components/LearnCenterChat';
 import PointsCenter from './Pages/PointsCenter';
 import MyActivity from './Pages/MyActivity';
+import ChatRoom from './Components/ChatRoom';
+import ChatRoomCollaborations from './Components/ChatRoomCollaborations';
+import ChatRoomMentorships from './Components/ChatRoomMentorships';
+import ChatRoomShareResources from './Components/ChatRoomShareResources';
+import ChatRoomLearningCenter from './Components/ChatRoomLearningCenter';
+import SettingsPassword from './Components/SettingsPassword';
+import SettingsBilling from './Components/SettingsBilling';
+import SettingsSupport from './Components/SettingsSupport';
 
 function App() {
   return (
@@ -37,7 +45,15 @@ function App() {
         <Route path="/" element={<Login/>} />
         <Route path="/registration" element={<Registration/>} />
         <Route path="/dashboard" element={<Home/>} />
-        <Route path="/profile" element={<Profile/>} />
+        <Route path="/chat-room" element={<ChatRoom/>} />
+        <Route path="/chat-room/collaborations" element={<ChatRoomCollaborations/>} />
+        <Route path="/chat-room/mentorships" element={<ChatRoomMentorships/>} />
+        <Route path="/chat-room/share-resources" element={<ChatRoomShareResources/>} />
+        <Route path="/chat-room/learning-center" element={<ChatRoomLearningCenter/>} />
+        <Route path="/settings/profile" element={<Profile/>} />
+        <Route path="/settings/password" element={<SettingsPassword/>} />
+        <Route path="/settings/billing" element={<SettingsBilling/>} />
+        <Route path="/settings/support" element={<SettingsSupport/>} />
         <Route path="/ask-questions" element={<AskQuestions/>} />
         <Route path="/question/:param1" element={<Question/>} />
         <Route path="/jobs" element={<Jobs/>} />

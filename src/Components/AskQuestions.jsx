@@ -288,7 +288,7 @@ export default function AskQuestions() {
         if (loading === false) {
         return (
             <>
-                <Navigation />
+                <Navigation user={userDetails} />
                 <div className="get-help mb-5">
                     <div className='container primary'>
                         <div className='get-help-details mb-5'>

@@ -210,7 +210,7 @@ export default function Dashboard() {
     if (loading === false) {
   return (
     <>
-    <Navigation />
+    <Navigation user={userDetails} />
     <div className="dashboard">
       <div className="container-fluid primary">
         <div className="row">
@@ -244,7 +244,7 @@ export default function Dashboard() {
                       </div>
                       <div className="link-item">
                         <p>Notifications</p>
-                        <Link to="/profile">{notifications}</Link>
+                        <Link to="/settings/profile">{notifications}</Link>
                       </div>
                       <div className="link-item">
                         <p>New messages</p>
