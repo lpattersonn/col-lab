@@ -22,7 +22,7 @@ export default function SettingsPassword() {
                         Confirm New Password
                         <input type="password" />
                     </label>
-                    <button type="button" className="btn btn-primary settings-submit">
+                    <button type="button" className="btn btn-dark">
                         Update Password
                     </button>
                 </form>

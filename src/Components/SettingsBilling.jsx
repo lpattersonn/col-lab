@@ -11,6 +11,7 @@ export default function SettingsBilling() {
                 </div>
 
                 <div className="billing-section">
+
                     <div className="billing-plans">
                         <div className="billing-card">
                             <div className="billing-title">FREE</div>
@@ -31,7 +32,7 @@ export default function SettingsBilling() {
                             <div className="billing-title">PREMIUM</div>
                             <div className="billing-price">
                                 <span className="billing-amount">$7.99</span>
-                                <span className="billing-duration">/ month</span>
+                                <span className="billing-duration">/ month (plus applicable taxes)</span>
                             </div>
                             <ul className="billing-list">
                                 <li>Unlimited access to job postings</li>
@@ -44,38 +45,56 @@ export default function SettingsBilling() {
                         </div>
                     </div>
 
-                    <div className="billing-actions">
-                        <button type="button" className="btn btn-primary">
-                            Upgrade
-                        </button>
-                        <button type="button" className="btn btn-dark">
-                            Cancel Subscription
-                        </button>
+                    <div className="plan-card">
+                        <div className="plan-card-header">
+                            <h3>Plan</h3>
+                            <div className="plan-card-actions">
+                                <button type="button" className="btn btn-outline">Cancel plan</button>
+                            </div>
+                        </div>
+                        <div className="plan-card-body">
+                            <div className="plan-title">
+                                <h4>Free Plan</h4>
+                            </div>
+                            <div className="plan-info">
+                                <div className="plan-info-item">
+                                    <div className="plan-info-icon">📅</div>
+                                    <div>
+                                        <p className="plan-info-label">Renews on</p>
+                                        <p className="plan-info-value">February 10, 2026</p>
+                                    </div>
+                                </div>
+                                <div className="plan-info-item">
+                                    <div className="plan-info-icon">💲</div>
+                                    <div>
+                                        <p className="plan-info-label">Price after renewal</p>
+                                        <p className="plan-info-value">$7.99 CAD/month</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <form className="settings-form">
-                        <label>
-                            Cardholder Name
-                            <input type="text" placeholder="Name on card" />
-                        </label>
-                        <label>
-                            Card Number
-                            <input type="text" placeholder="1234 5678 9012 3456" />
-                        </label>
-                        <div className="settings-grid">
-                            <label>
-                                Expiration Date
-                                <input type="text" placeholder="MM/YY" />
-                            </label>
-                            <label>
-                                CVC
-                                <input type="text" placeholder="123" />
-                            </label>
+                    <div className="billing-method">
+                        <h3 className="billing-method-title">Payment method for your team</h3>
+                        <div className="billing-method-card">
+                            <div className="billing-method-header">
+                                <div className="billing-method-logo">
+                                    <img
+                                        src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png"
+                                        alt="Mastercard"
+                                    />
+                                </div>
+                                <div className="billing-method-details">
+                                    <h4>Mastercard •••• 1852</h4>
+                                    <p>Expires August 2027</p>
+                                </div>
+                            </div>
+                            <button type="button" className="btn btn-outline billing-manage-btn">
+                                Manage
+                            </button>
                         </div>
-                        <button type="button" className="btn btn-primary settings-submit">
-                            Save Billing
-                        </button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </SettingsLayout>

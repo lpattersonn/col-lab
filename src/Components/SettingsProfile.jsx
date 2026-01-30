@@ -285,21 +285,12 @@ export default function SettingsProfile() {
                                 placeholder="Your pronouns (e.g. she/her)"
                             />
                         </label>
-                        <label className="settings-toggle">
-                            <input
-                                type="checkbox"
-                                name="lgbtqiaBadge"
-                                checked={formData.lgbtqiaBadge}
-                                onChange={handleChange}
-                            />
-                            <span>LGBTQIA Badge</span>
-                        </label>
                     </div>
 
                     {error ? <p className="red">{error}</p> : null}
                     {success ? <p className="green">{success}</p> : null}
 
-                    <button type="submit" className="btn btn-primary settings-submit" disabled={saving}>
+                    <button type="submit" className="btn btn-dark" disabled={saving}>
                         {saving ? 'Updating...' : 'Update Profile'}
                     </button>
                 </form>

@@ -29,7 +29,7 @@ export default function SettingsSupport() {
                         Message
                         <textarea placeholder="Describe the issue or request" />
                     </label>
-                    <button type="button" className="btn btn-primary settings-submit">
+                    <button type="button" className="btn btn-dark">
                         Send Message
                     </button>
                 </form>
