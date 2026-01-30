@@ -97,11 +97,11 @@
 width: 4rem;
 }
 
-.question-actions {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #eef0f3ec;
-}
+// .question-actions {
+//   margin-top: 2rem;
+//   padding-top: 1.5rem;
+//   border-top: 1px solid #eef0f3ec;
+// }
 
 .question-actions-meta {
   display: flex;
@@ -133,6 +133,8 @@ width: 4rem;
   position: relative;
   width: fit-content;
   position: relative;
+
+
   z-index: 999999;
   .options {
     position: relative;

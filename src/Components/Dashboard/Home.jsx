@@ -62,6 +62,7 @@ export default function Home() {
     const [ mentorships, setMentorships ] = useState(0);
 
     const [ loading, setLoading ] = useState(true);
+    const [ openComments, setOpenComments ] = useState({});
 
     const [ createComment, setCreateComment ] = useState('');
     const [ file, setFile ] = useState(null);
@@ -69,6 +70,8 @@ export default function Home() {
     const [ serverComment, setServerComment ] = useState('');
     const [ successServerComment, setSuccessServerComment ] = useState('');
     const [ postTitle, setPostTitle ] = useState('');
+    const [ commentInputs, setCommentInputs ] = useState({});
+    const [ commentThreads, setCommentThreads ] = useState({});
 
     const [ commentTotalsByPostId, setCommentTotalsByPostId ] = useState({});
 
@@ -231,6 +234,57 @@ export default function Home() {
         editorRef.current?.setContent('');
     };
 
+    const handleCommentChange = (postId, value) => {
+        setCommentInputs((prev) => ({ ...prev, [postId]: value }));
+    };
+
+    const handleCommentSubmit = async (postId) => {
+        const content = (commentInputs?.[postId] || '').trim();
+        if (!content) return;
+        if (!userDetails?.token || !userDetails?.id) {
+            Navigate('/');
+            return;
+        }
+
+        try {
+            const headers = { Authorization: `Bearer ${userDetails.token}` };
+            const res = await axios.post(
+                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+                {
+                    post: postId,
+                    content,
+                    author: userDetails.id,
+                },
+                { headers }
+            );
+
+            const displayName =
+                userDetails?.displayName ||
+                userDetails?.user_display_name ||
+                [userDetails?.firstName, userDetails?.lastName].filter(Boolean).join(' ') ||
+                'User';
+
+            const newComment = {
+                id: res?.data?.id || Date.now(),
+                author: displayName,
+                date: res?.data?.date || new Date().toISOString(),
+                content: res?.data?.content?.rendered || content,
+            };
+
+            setCommentThreads((prev) => ({
+                ...prev,
+                [postId]: [newComment, ...(prev[postId] || [])],
+            }));
+            setCommentInputs((prev) => ({ ...prev, [postId]: '' }));
+            setCommentTotalsByPostId((prev) => ({
+                ...prev,
+                [postId]: (prev[postId] ?? 0) + 1,
+            }));
+        } catch (error) {
+            console.error('Error submitting comment:', error?.response?.data || error.message);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -324,6 +378,8 @@ export default function Home() {
             const snippetText = rendered.substring(0, 250);
             const ellipsis = rendered.replace(/<[^>]*>/g, '').length > 250 ? '...' : '';
 
+            const isCommentsOpen = Boolean(openComments[question.id]);
+
             return (
                 <div className="card mb-4" key={question.id || index}>
                     <div className="card-body">
@@ -356,24 +412,76 @@ export default function Home() {
 
                         <div className="question-actions">
                             <div className="question-actions-meta">
-                                <span className="question-actions-item">
+                                <button type="button" className="question-actions-item">
                                     <FontAwesomeIcon icon={faThumbsUp} />
                                     <span>{likeTotal} Like</span>
-                                </span>
-                                <span className="question-actions-item">
+                                </button>
+                                <button
+                                    type="button"
+                                    className="question-actions-item"
+                                    onClick={() =>
+                                        setOpenComments((prev) => ({
+                                            ...prev,
+                                            [question.id]: !prev[question.id],
+                                        }))
+                                    }
+                                >
                                     <FontAwesomeIcon icon={faComment} />
                                     <span>{commentTotal} Comments</span>
-                                </span>
+                                </button>
                             </div>
-                            <Link className="question-actions-link" to={`/question/${question.id}`}>
-                                View/Expand
-                            </Link>
+                            
                         </div>
+
+                        {isCommentsOpen ? (
+                            <div className="question-comments">
+                                <div className="question-comments-input">
+                                    <textarea
+                                        placeholder="Write a comment..."
+                                        rows={3}
+                                        value={commentInputs?.[question.id] || ''}
+                                        onChange={(e) => handleCommentChange(question.id, e.target.value)}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline"
+                                        onClick={() => handleCommentSubmit(question.id)}
+                                    >
+                                        Post
+                                    </button>
+                                </div>
+                                <div className="question-comments-list">
+                                    {(commentThreads?.[question.id] || []).map((comment) => (
+                                        <div className="comment-item" key={comment.id}>
+                                            <img
+                                                className="comment-avatar"
+                                                src={defaultImage}
+                                                alt={comment.author}
+                                                loading="lazy"
+                                            />
+                                            <div className="comment-body">
+                                                <div className="comment-meta">
+                                                    <strong>{comment.author}</strong>
+                                                    <span className="time-ago">Just now</span>
+                                                </div>
+                                                <p>{comment.content?.replace?.(/<[^>]*>/g, '') || comment.content}</p>
+                                                <div className="comment-actions">
+                                                    <button type="button" className="comment-like">
+                                                        <FontAwesomeIcon icon={faThumbsUp} />
+                                                        <span className='comment-like-text'>Like</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
             );
         });
-    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId]);
+    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads]);
 
     if (!localStorage.getItem('userDetails')) {
         window.location.replace('/');

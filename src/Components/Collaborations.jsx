@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight, faComment, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from './Navigation';
@@ -38,6 +38,9 @@ export default function Collaborations() {
     const [ mentorships, setMentorships ] = useState(0);
 
     const [ loading, setLoading ] = useState(true);
+    const [ openComments, setOpenComments ] = useState({});
+    const [ commentInputs, setCommentInputs ] = useState({});
+    const [ commentThreads, setCommentThreads ] = useState({});
 
     const [ createComment, setCreateComment ] = useState('');
     const [ file, setFile ] = useState(null);
@@ -214,6 +217,57 @@ export default function Collaborations() {
         editorRef.current?.setContent('');
     };
 
+    const handleCommentChange = (postId, value) => {
+        setCommentInputs((prev) => ({ ...prev, [postId]: value }));
+    };
+
+    const handleCommentSubmit = async (postId) => {
+        const content = (commentInputs?.[postId] || '').trim();
+        if (!content) return;
+        if (!userDetails?.token || !userDetails?.id) {
+            Navigate('/');
+            return;
+        }
+
+        try {
+            const headers = { Authorization: `Bearer ${userDetails.token}` };
+            const res = await axios.post(
+                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+                {
+                    post: postId,
+                    content,
+                    author: userDetails.id,
+                },
+                { headers }
+            );
+
+            const displayName =
+                userDetails?.displayName ||
+                userDetails?.user_display_name ||
+                [userDetails?.firstName, userDetails?.lastName].filter(Boolean).join(' ') ||
+                'User';
+
+            const newComment = {
+                id: res?.data?.id || Date.now(),
+                author: displayName,
+                date: res?.data?.date || new Date().toISOString(),
+                content: res?.data?.content?.rendered || content,
+            };
+
+            setCommentThreads((prev) => ({
+                ...prev,
+                [postId]: [newComment, ...(prev[postId] || [])],
+            }));
+            setCommentInputs((prev) => ({ ...prev, [postId]: '' }));
+            setCommentTotalsByPostId((prev) => ({
+                ...prev,
+                [postId]: (prev[postId] ?? 0) + 1,
+            }));
+        } catch (error) {
+            console.error('Error submitting comment:', error?.response?.data || error.message);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -306,8 +360,10 @@ export default function Collaborations() {
             const snippetText = rendered.substring(0, 250);
             const ellipsis = rendered.replace(/<[^>]*>/g, '').length > 250 ? '...' : '';
 
+            const isCommentsOpen = Boolean(openComments[question.id]);
+
             return (
-                <div className="card mb-4" key={question.id || index}>
+                <div className="card collaboration-card mb-4" key={question.id || index}>
                     <div className="card-body">
                         <div className="questions-details">
                             <div className="questions-details-name">
@@ -337,18 +393,74 @@ export default function Collaborations() {
                         ) : null}
 
                         <div className="question-actions">
-                            <div className="question-actions-count">
-                                <p>
-                                    {commentTotal} {commentTotal === 1 ? 'response' : 'responses'}
-                                </p>
+                            <div className="question-actions-meta">
+                                <button
+                                    type="button"
+                                    className="question-actions-btn"
+                                    onClick={() =>
+                                        setOpenComments((prev) => ({
+                                            ...prev,
+                                            [question.id]: !prev[question.id],
+                                        }))
+                                    }
+                                >
+                                    <FontAwesomeIcon icon={faComment} />
+                                    <span>{commentTotal} Comments</span>
+                                </button>
                             </div>
+                            
                         </div>
+
+                        {isCommentsOpen ? (
+                            <div className="question-comments">
+                                <div className="question-comments-input">
+                                    <textarea
+                                        placeholder="Write a comment..."
+                                        rows={3}
+                                        value={commentInputs?.[question.id] || ''}
+                                        onChange={(e) => handleCommentChange(question.id, e.target.value)}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline"
+                                        onClick={() => handleCommentSubmit(question.id)}
+                                    >
+                                        Post
+                                    </button>
+                                </div>
+                                <div className="question-comments-list">
+                                    {(commentThreads?.[question.id] || []).map((comment) => (
+                                        <div className="comment-item" key={comment.id}>
+                                            <img
+                                                className="comment-avatar"
+                                                src={defaultImage}
+                                                alt={comment.author}
+                                                loading="lazy"
+                                            />
+                                            <div className="comment-body">
+                                                <div className="comment-meta">
+                                                    <strong>{comment.author}</strong>
+                                                    <span>Just now</span>
+                                                </div>
+                                                <p>{comment.content?.replace?.(/<[^>]*>/g, '') || comment.content}</p>
+                                                <div className="comment-actions">
+                                                    <button type="button" className="comment-like">
+                                                        <FontAwesomeIcon icon={faThumbsUp} />
+                                                        <span>Like</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
             );
         });
         
-    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId]);
+    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads]);
           
     const filteredQuestions = useMemo(() => {
     if (!questions?.length) return [];
