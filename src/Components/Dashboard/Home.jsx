@@ -72,6 +72,7 @@ export default function Home() {
     const [ postTitle, setPostTitle ] = useState('');
     const [ commentInputs, setCommentInputs ] = useState({});
     const [ commentThreads, setCommentThreads ] = useState({});
+    const [ expandedPosts, setExpandedPosts ] = useState({});
 
     const [ commentTotalsByPostId, setCommentTotalsByPostId ] = useState({});
 
@@ -375,8 +376,11 @@ export default function Home() {
             if (userField && question?.acf?.question_subject_area && userField !== question?.acf?.question_subject_area) return null;
 
             const rendered = question?.content?.rendered || '';
+            const plainText = rendered.replace(/<[^>]*>/g, '');
+            const isExpanded = Boolean(expandedPosts[question.id]);
+            const shouldTruncate = plainText.length > 250;
             const snippetText = rendered.substring(0, 250);
-            const ellipsis = rendered.replace(/<[^>]*>/g, '').length > 250 ? '...' : '';
+            const ellipsis = shouldTruncate ? '...' : '';
 
             const isCommentsOpen = Boolean(openComments[question.id]);
 
@@ -403,11 +407,27 @@ export default function Home() {
                         <p><strong className='lead'>{question?.title?.rendered}</strong></p>
 
                         {rendered ? (
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: `${snippetText}${ellipsis}`,
-                                }}
-                            />
+                            <div>
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: isExpanded ? rendered : `${snippetText}${ellipsis}`,
+                                    }}
+                                />
+                                {shouldTruncate ? (
+                                    <button
+                                        type="button"
+                                        className="read-more-btn"
+                                        onClick={() =>
+                                            setExpandedPosts((prev) => ({
+                                                ...prev,
+                                                [question.id]: !prev[question.id],
+                                            }))
+                                        }
+                                    >
+                                        {isExpanded ? 'Show less' : 'Read more'}
+                                    </button>
+                                ) : null}
+                            </div>
                         ) : null}
 
                         <div className="question-actions">
@@ -481,7 +501,7 @@ export default function Home() {
                 </div>
             );
         });
-    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads]);
+    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads, expandedPosts]);
 
     if (!localStorage.getItem('userDetails')) {
         window.location.replace('/');

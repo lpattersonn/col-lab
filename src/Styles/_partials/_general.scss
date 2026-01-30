@@ -939,6 +939,17 @@ a {
     cursor: pointer;
 }
 
+.read-more-btn {
+    margin-top: 0.8rem;
+    border: none;
+    background: transparent;
+    color: #2563eb;
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding: 0;
+    cursor: pointer;
+}
+
 .comment-like {
     display: inline-flex;
     align-items: center;
