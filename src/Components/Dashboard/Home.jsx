@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight  } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight, faThumbsUp, faComment, faPlusSquare, faXmark, faImage, faFaceSmile } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from '../Navigation';
@@ -68,6 +68,7 @@ export default function Home() {
     const [ commentStatus, setCommentStatus ] = useState('not approved');
     const [ serverComment, setServerComment ] = useState('');
     const [ successServerComment, setSuccessServerComment ] = useState('');
+    const [ postTitle, setPostTitle ] = useState('');
 
     const [ commentTotalsByPostId, setCommentTotalsByPostId ] = useState({});
 
@@ -226,6 +227,7 @@ export default function Home() {
         setCommentStatus('not approved');
         setServerComment('');
         setSuccessServerComment('');
+        setPostTitle('');
         editorRef.current?.setContent('');
     };
 
@@ -278,7 +280,7 @@ export default function Home() {
             const created = await axios.post(
                 `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`,
                 {
-                    title: stripped.slice(0, 80) || 'New Question',
+                    title: (postTitle || '').trim() || stripped.slice(0, 80) || 'New Question',
                     content: createComment,
                     status: 'publish',
                     acf: imageUrl ? { question_image: imageUrl } : undefined,
@@ -313,6 +315,7 @@ export default function Home() {
             const userJobInsitution = author?.acf?.['user-job-Insitution'];
 
             const commentTotal = commentTotalsByPostId[question.id] ?? 0;
+            const likeTotal = question?.acf?.like_count ?? 0;
 
             if (question.status !== 'publish') return null;
             if (userField && question?.acf?.question_subject_area && userField !== question?.acf?.question_subject_area) return null;
@@ -352,11 +355,19 @@ export default function Home() {
                         ) : null}
 
                         <div className="question-actions">
-                            <div className="question-actions-count">
-                                <p>
-                                    {commentTotal} {commentTotal === 1 ? 'response' : 'responses'}
-                                </p>
+                            <div className="question-actions-meta">
+                                <span className="question-actions-item">
+                                    <FontAwesomeIcon icon={faThumbsUp} />
+                                    <span>{likeTotal} Like</span>
+                                </span>
+                                <span className="question-actions-item">
+                                    <FontAwesomeIcon icon={faComment} />
+                                    <span>{commentTotal} Comments</span>
+                                </span>
                             </div>
+                            <Link className="question-actions-link" to={`/question/${question.id}`}>
+                                View/Expand
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -424,8 +435,7 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            <Link to="/settings/profile">
-                                <div className="user-detail user-detail-home">
+                            <div className="user-detail user-detail-home">
                                     <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div>
@@ -441,11 +451,9 @@ export default function Home() {
                                                 {notifications}
                                             </div>
                                     </div>
-                                </div>
-                            </Link>
+                            </div>
 
-                            <Link to="/settings/profile">
-                                <div className="user-detail user-detail-home">
+                            <div className="user-detail user-detail-home">
                                     <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div>
@@ -461,8 +469,7 @@ export default function Home() {
                                                 {events.length}
                                             </div>
                                     </div>
-                                </div>
-                            </Link>
+                            </div>
 
                         </div>
 
@@ -470,52 +477,80 @@ export default function Home() {
                             <div className="posts">
                                 <div className="create-posts">
                                     <form className="post-form" onSubmit={handleSubmit}>
-                                        <div className="post-form-title">
-                                            <h2>Create a Post</h2>
+                                        <div className="post-form-header">
+                                            <div className="post-form-title">
+                                                <h2>Create a Post</h2>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                className="post-form-close"
+                                                aria-label="Close"
+                                                onClick={clearEditor}
+                                            >
+                                                <FontAwesomeIcon icon={faXmark} />
+                                            </button>
+
                                         </div>
                                         <div className="post-form-content">
-                                            <input
-                                                className="form-control form-control-lg post-input"
-                                                type="text"
-                                                name="user"
-                                                placeholder="Username or email"
-                                                required
-                                            />
-                                            <Editor
-                                                apiKey={process.env.REACT_APP_TINY_MCE_API_KEY}
-                                                onInit={(evt, editor) => (editorRef.current = editor)}
-                                                className="form-control form-control-lg"
-                                                init={{
-                                                    placeholder: 'Write your post here. Attach pictures if necessary.',
-                                                    toolbar: 'undo redo | bold italic underline | superscript subscript | alignleft aligncenter alignright | bullist numlist',
-                                                    menubar: false,
-                                                }}
-                                                onEditorChange={(content) => setCreateComment(content)}
-                                            />
+                                            <div className="post-field">
+                                                <input
+                                                    className="form-control form-control-lg post-input"
+                                                    type="text"
+                                                    name="title"
+                                                    maxLength={150}
+                                                    placeholder="Title your post..."
+                                                    value={postTitle}
+                                                    onChange={(e) => setPostTitle(e.target.value)}
+                                                />
+                                                <span className="post-count">{postTitle.length}/150</span>
+                                            </div>
 
-                                            <div className="row">
-                                                <div className="col-12 text-end mt-4">
-                                                    <button className="btn btn-primary btn-lg" type="submit">
-                                                        Submit
+                                            <div className="post-editor">
+                                                <Editor
+                                                    apiKey={process.env.REACT_APP_TINY_MCE_API_KEY}
+                                                    onInit={(evt, editor) => (editorRef.current = editor)}
+                                                    className="form-control form-control-lg"
+                                                    init={{
+                                                        placeholder: 'Share your thoughts, ideas, or questions...',
+                                                        toolbar: 'undo redo | bold italic underline | superscript subscript | alignleft aligncenter alignright | bullist numlist',
+                                                        menubar: false,
+                                                    }}
+                                                    onEditorChange={(content) => setCreateComment(content)}
+                                                />
+                                                <span className="post-count">
+                                                    {(createComment || '').replace(/<[^>]*>/g, '').length}/2000
+                                                </span>
+                                            </div>
+
+                                            <div className="post-form-footer">
+                                                <div className="post-form-icons">
+                                                    <button type="button" className="post-icon-btn" aria-label="Add media">
+                                                        <FontAwesomeIcon icon={faImage} />
+                                                    </button>
+                                                    <button type="button" className="post-icon-btn" aria-label="Add emoji">
+                                                        <FontAwesomeIcon icon={faFaceSmile} />
                                                     </button>
                                                 </div>
-
-                                                {serverComment ? (
-                                                    <div className="col-12 mt-4">
-                                                        <div className="alert alert-danger" role="alert">
-                                                            <p>{serverComment}</p>
-                                                        </div>
-                                                    </div>
-                                                ) : null}
-
-                                                {successServerComment ? (
-                                                    <div className="col-12 mt-4">
-                                                        <div className="alert alert-success" role="alert">
-                                                            <p>{successServerComment}</p>
-                                                        </div>
-                                                    </div>
-                                                ) : null}
+                                                <button type="submit" className="btn btn-dark">
+                                                    Submit
+                                                </button>
                                             </div>
+
+                                            {serverComment ? (
+                                                <div className="col-12 mt-4">
+                                                    <div className="alert alert-danger" role="alert">
+                                                        <p>{serverComment}</p>
+                                                    </div>
+                                                </div>
+                                            ) : null}
+
+                                            {successServerComment ? (
+                                                <div className="col-12 mt-4">
+                                                    <div className="alert alert-success" role="alert">
+                                                        <p>{successServerComment}</p>
+                                                    </div>
+                                                </div>
+                                            ) : null}
                                         </div>
                                     </form>
                                 </div>

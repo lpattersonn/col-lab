@@ -113,7 +113,7 @@ export default function Navigation({ user }) {
 
             {/* RIGHT - Bell + User */}
             <div className="nav-right">
-                <div className="nav-bell">
+                <div className="nav-bell" role="button" tabIndex={0} onClick={() => navigate('/notifications')} onKeyDown={(e) => { if (e.key === 'Enter') navigate('/notifications'); }}>
                     <FontAwesomeIcon icon={faBell} />
                     <span className="bell-dot" />
                 </div>

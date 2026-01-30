@@ -37,6 +37,7 @@ import ChatRoomLearningCenter from './Components/ChatRoomLearningCenter';
 import SettingsPassword from './Components/SettingsPassword';
 import SettingsBilling from './Components/SettingsBilling';
 import SettingsSupport from './Components/SettingsSupport';
+import Notifications from './Components/Notifications';
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
         <Route path="/settings/password" element={<SettingsPassword/>} />
         <Route path="/settings/billing" element={<SettingsBilling/>} />
         <Route path="/settings/support" element={<SettingsSupport/>} />
+        <Route path="/notifications" element={<Notifications/>} />
         <Route path="/ask-questions" element={<AskQuestions/>} />
         <Route path="/question/:param1" element={<Question/>} />
         <Route path="/jobs" element={<Jobs/>} />

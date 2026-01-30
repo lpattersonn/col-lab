@@ -1,0 +1,78 @@
+@use '../_partials/variables' as *;
+
+.notifications-page {
+  .page-header {
+    margin-right: 16px;
+    margin-top: 85px;
+    padding: 40px 32px;
+    h1 {
+      font-size: 40px !important;
+    }
+  }
+}
+
+.notifications-card {
+  background: #ffffff;
+  margin: 24px 16px 0 0;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: $box-shadow;
+}
+
+.notifications-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+  }
+}
+
+.notifications-list {
+  display: grid;
+  gap: 16px;
+}
+
+.notification-item {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid #eef0f3;
+  background: #f8fafc;
+}
+
+.notification-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.notification-body {
+  display: grid;
+  gap: 6px;
+}
+
+.notification-text {
+  margin: 0;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.notification-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: $mercy-color-1;
+}

@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight, faComment } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from './Navigation';
@@ -52,7 +52,6 @@ export default function Collaborations() {
     const [filters, setFilters] = useState({
         country: '',
         field: '',
-        distance: '',
         purpose: '',
     });
 
@@ -416,8 +415,7 @@ export default function Collaborations() {
 
                         <div className="user-details">
 
-                             <Link to="/settings/profile">
-                                <div className="user-detail">
+                            <div className="user-detail">
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div> */}
@@ -433,11 +431,9 @@ export default function Collaborations() {
                                                 {notifications}
                                             </div>
                                     </div>
-                                </div>
-                            </Link>      
+                            </div>
 
-                            <Link to="/settings/profile">
-                                <div className="user-detail">
+                            <div className="user-detail">
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div> */}
@@ -453,10 +449,8 @@ export default function Collaborations() {
                                                 {notifications}
                                             </div>
                                     </div>
-                                </div>
-                            </Link>      
-                            <Link to="/settings/profile">
-                                <div className="user-detail">
+                            </div>
+                            <div className="user-detail">
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div> */}
@@ -472,18 +466,14 @@ export default function Collaborations() {
                                                 {events.length}
                                             </div>
                                     </div>
-                                </div>
-                            </Link>   
+                            </div>
                             </div>               
 
-                        <div className="page-body single-container">
+
+                        <div className="page-body">
                             <div className="posts">
-                                <div className="create-posts">
-
-                                </div>
-
-                                <div className="page-divider" style={{width: "50%"}}>
-                                    <p className="p-divider">Browse all collaboration opportunities</p>
+                                <div className="page-divider page-divider-home">
+                                    <p>Browse all collaboration opportunities</p>
                                 </div>
 
                                 {/* Search + Filters */}
@@ -524,24 +514,13 @@ export default function Collaborations() {
                                     </div>
                                 </div>
 
+                                <div>
+                                    {questions?.some(Boolean) ? questions : <p>No posts yet.</p>}
+                                </div>
                             </div>
                         </div>
-
-                        <div className="page-body-2 single-container">
-                            <div className="posts">
-                                <div className="create-posts">
-                                </div>
-                            <div className="container-3">
-                                {filteredQuestions.length
-                                    ? filteredQuestions
-                                    : <p>No results found.</p>
-                                }
-                            </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                    </div>
+                </div>
                 
 {/* Overlay */}
 <div
