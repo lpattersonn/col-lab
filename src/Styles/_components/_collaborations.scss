@@ -292,3 +292,14 @@ width: 4rem;
   grid-template-columns: 1fr;
   padding-right: 16px;
 }
+
+/* Collaboration search overrides */
+.search-bar--modern .search-icon--right {
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #0b1638;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(11, 22, 56, 0.18);
+}
