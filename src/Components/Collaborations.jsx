@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight, faMagnifyingGlass, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from './Navigation';
@@ -14,7 +14,7 @@ import SideNavigation from './Navigation/SideNavigation';
 import defaultImage from '../Images/user-profile.svg';
 import likeIcon from '../Images/like-svgrepo-com.svg';
 import commentIcon from '../Images/comment-svgrepo-com.svg';
-import { dateFormat } from '../helper';
+import { dateFormat, humanReadableDate } from '../helper';
 
 
 
@@ -380,6 +380,28 @@ export default function Collaborations() {
             const userName = author?.name || '';
             const userProfileImg = author?.acf?.user_profile_picture;
             const userJobInsitution = author?.acf?.['user-job-Insitution'];
+            const intention =
+                question?.acf?.pay ||
+                question?.acf?.learning_pay ||
+                question?.acf?.borrow_pay ||
+                question?.acf?.collaborations_pay ||
+                '';
+            const deadline =
+                question?.acf?.deadline ||
+                question?.acf?.learning_deadline ||
+                question?.acf?.borrow_deadline ||
+                question?.acf?.collaborations_deadline ||
+                '';
+            const skillsRaw =
+                question?.acf?.collaborations_skills ||
+                question?.acf?.skills_required ||
+                question?.acf?.required_skills ||
+                '';
+            const skills = Array.isArray(skillsRaw)
+                ? skillsRaw
+                : typeof skillsRaw === 'string'
+                    ? skillsRaw.split(',').map((skill) => skill.trim()).filter(Boolean)
+                    : [];
 
             const commentTotal = commentTotalsByPostId[question.id] ?? 0;
 
@@ -396,8 +418,11 @@ export default function Collaborations() {
             const isCommentsOpen = Boolean(openComments[question.id]);
 
             return (
-                <div className="card collaboration-card mb-4" key={question.id || index}>
-                    <div className="card-body">
+                <div className="card collaboration-card mb-4 share-card" key={question.id || index}>
+                    <div className="card-body share-card-body">
+                        <span className="share-card-intention">
+                            {intention || 'Intention'}
+                        </span>
                         <div className="questions-details">
                             <div className="questions-details-name">
                                 <img
@@ -416,7 +441,6 @@ export default function Collaborations() {
                         </div>
 
                         <p><strong className='lead'>{question?.title?.rendered}</strong></p>
-
                         {rendered ? (
                             <div>
                                 <div
@@ -441,6 +465,12 @@ export default function Collaborations() {
                             </div>
                         ) : null}
 
+                        <div className="collab-skill-tags">
+                            {(skills.length ? skills.slice(0, 5) : ['Skills']).map((skill) => (
+                                <span className="collab-skill-tag" key={`${question.id}-${skill}`}>{skill}</span>
+                            ))}
+                        </div>
+
                         <div className="question-actions">
                             <div className="question-actions-meta">
                                 <button
@@ -457,7 +487,10 @@ export default function Collaborations() {
                                     <span>{commentTotal} Comments</span>
                                 </button>
                             </div>
-                            
+                            <div className="share-card-deadline">
+                                <FontAwesomeIcon icon={faClock} />
+                                <span>{deadline ? humanReadableDate(deadline) : 'Deadline'}</span>
+                            </div>
                         </div>
 
                         {isCommentsOpen ? (
@@ -784,23 +817,27 @@ export default function Collaborations() {
         </label>
 
         <label>
-            Enter major skills required (max. 5)
-            <input type="text" />
-        </label>
-
-        <label>
-            Deadline for project completion
-            <input type="date" />
+            Enter major skills required (max. 5; comma separated)
+            <input
+                type="text"
+                placeholder="e.g., PCR, cloning, microscopy, data analysis, writing"
+                aria-label="Project skills (comma separated)"
+            />
         </label>
 
         <label>
             Compensation
             <select>
                 <option>Choose an option</option>
-                <option>Points</option>
+                <option>Acknowledgement</option>
                 <option>Co-authorship</option>
                 <option>Paid</option>
             </select>
+        </label>
+
+        <label>
+            Deadline for project completion
+            <input type="date" />
         </label>
 
         <div className="drawer-actions">

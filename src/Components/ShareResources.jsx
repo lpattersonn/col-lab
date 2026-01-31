@@ -638,7 +638,7 @@ export default function Collaborations() {
                         <div className="page-body">
                             <div className="posts">
                                 <div className="page-divider page-divider-home">
-                                    <p>See all requests</p>
+                                    <p>Browse all requests</p>
                                 </div>
 
                                 {/* Search + Filters */}
@@ -768,7 +768,7 @@ export default function Collaborations() {
         <span className="points-badge">*5 points required</span>
     </div>
 
-    <h1>Create a Borrow Request</h1>
+    <h1>Make a Request</h1>
     <div className="drawer-divider" />
     <form className="drawer-form">
         <label className="first-label">

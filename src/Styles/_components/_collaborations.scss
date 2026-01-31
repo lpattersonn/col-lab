@@ -97,6 +97,22 @@
 width: 4rem;
 }
 
+.collab-skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0 6px;
+}
+
+.collab-skill-tag {
+  background: #f0f0f0;
+  color: #111827;
+  border-radius: 2px;
+  padding: 6px 24px;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
 // .question-actions {
 //   margin-top: 2rem;
 //   padding-top: 1.5rem;

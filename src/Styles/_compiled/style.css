@@ -1872,6 +1872,74 @@ a {
   padding: 20px;
 }
 
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 2.5rem;
+}
+
+@media screen and (max-width: 1200px) {
+  .jobs-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media screen and (max-width: 800px) {
+  .jobs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.job-card {
+  background: #ffffff;
+  border-radius: 24px !important;
+  border: 1px solid rgba(217, 217, 217, 0.3) !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.job-card .card-body {
+  padding: 32px 16px 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.job-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.job-card-title {
+  margin: 0;
+  font-size: 1.8rem !important;
+  font-weight: 500;
+  color: #000000;
+}
+
+.job-card-company,
+.job-card-location {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #212529;
+}
+
+.job-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.job-card-tag {
+  background: #f0f0f0;
+  color: #111827;
+  border-radius: 2px;
+  padding: 10px 15px;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
 .posts {
   width: 67%;
 }
@@ -2857,8 +2925,8 @@ header.active-header {
 
 .share-card-intention {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 25px;
+  right: 35px;
   background: #fff1e8;
   color: #212529;
   font-weight: 600;
@@ -2872,8 +2940,9 @@ header.active-header {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 1.3rem;
-  color: #111827;
+  font-size: 1.4rem;
+  color: #212529;
+  margin-right: 15px;
 }
 
 .share-card-deadline svg {
@@ -6412,6 +6481,22 @@ textarea[data-info=content] {
 
 .collaboration-icon {
   width: 4rem;
+}
+
+.collab-skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0 6px;
+}
+
+.collab-skill-tag {
+  background: #f0f0f0;
+  color: #111827;
+  border-radius: 2px;
+  padding: 6px 24px;
+  font-size: 1.4rem;
+  font-weight: 500;
 }
 
 .question-actions-meta {
