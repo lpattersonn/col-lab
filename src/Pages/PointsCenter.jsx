@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faPlay, faArrowRight, faMagnifyingGlass, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from '../Components/Navigation';
@@ -20,6 +20,7 @@ export default function PointsCenter() {
         }
     }, []);
 
+    
     const [ usersAccountDetails, setUsersAccountDetails ] = useState(null);
     const [ userPoints, setUserPoints ] = useState(0);
     const [ pointsToBuy, setPointsToBuy ] = useState(50);
@@ -99,31 +100,31 @@ export default function PointsCenter() {
                             </div>
                         </div>
 
-                        <section className="points-summary-row">
-                            <div className="points-card">
-                                <img
-                                    className="points-avatar"
-                                    src={usersAccountDetails?.acf?.user_profile_picture || defaultImage}
-                                    alt="User avatar"
-                                    loading="lazy"
-                                />
-                                <div>
-                                    <p className="small m-0">Current Balance</p>
-                                    <h2 className="m-0">{userPoints} pts</h2>
+                        <div className="user-details">
+                            <div className="user-detail user user-detail-home">
+                                <div className="user-info-image">
+                                    {usersAccountDetails?.avatar_urls?.['48'] &&
+                                    usersAccountDetails?.avatar_urls?.['48'] !== 'https://secure.gravatar.com/avatar/bda5ea71631e2cce73beb5e17644bd74?s=48&d=mm&r=g' ? (
+                                        <img
+                                            src={usersAccountDetails?.acf?.user_profile_picture || defaultImage}
+                                            alt="User Avatar"
+                                            loading="lazy"
+                                        />
+                                    ) : (
+                                        <img src={defaultImage} alt="Default User Avatar" loading="lazy" />
+                                    )}
                                 </div>
-                            </div>
-                            <div className="points-explainer">
-                                <div>
-                                    <strong>How points work</strong>
-                                    <p className="m-0">Participate in the community or purchase points. More perks coming soon.</p>
-                                </div>
-                                <Link to="/settings/profile" className="btn btn-outline">
-                                    View Profile
-                                </Link>
-                            </div>
-                        </section>
 
-                        {error ? <p className="red mt-4">{error}</p> : null}
+                                <div className="user-info-content">
+                                <div>
+                                    <p>Current Balance</p>
+                                    <p className="user-greeting-name">
+                                        <strong>{userPoints} pts</strong>
+                                    </p>
+                                </div>
+                                </div>
+                            </div>
+                            </div>               
 
                         <div className="page-body-2 single-container">
                             <div className="posts">
@@ -133,12 +134,30 @@ export default function PointsCenter() {
                                     <div className="points-box">
                                         <span className="points-tag">Participate</span>
 
-                                        <ul className="points-list">
-                                            <li>Answer a question <span>→ 2 points</span></li>
-                                            <li>Share a resource <span>→ 4 points</span></li>
-                                            <li>Collaborate <span>→ 6 points</span></li>
-                                            <li>Teach a skill <span>→ 6 points</span></li>
-                                        </ul>
+                                        <div className="buy-points-card first-points-card">
+                                            <label>
+                                                Answer a question <span>→ 2 points</span>
+                                            </label> 
+                                        </div>
+
+                                        <div className="buy-points-card">
+                                            <label>
+                                                Share a resource <span>→ 4 points</span>
+                                            </label> 
+                                        </div>
+
+                                        <div className="buy-points-card">
+                                            <label>
+                                                Collaborate <span>→ 6 points</span>
+                                            </label> 
+                                        </div>
+
+                                        <div className="buy-points-card">
+                                            <label>
+                                                Teach a skill <span>→ 6 points</span>
+                                            </label> 
+                                        </div>
+
                                     </div>
 
                                     {/* Buy Points */}

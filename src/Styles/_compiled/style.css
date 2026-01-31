@@ -737,6 +737,10 @@ a {
   background: #ffffff;
 }
 
+.page-body .posts {
+  width: 100% !important;
+}
+
 .page-body-2 {
   background-color: #FAFAFA;
 }
@@ -1831,31 +1835,6 @@ a {
     display: none;
   }
 }
-.page-body {
-  margin: 24px 16px 0 0;
-  padding: 16px 16px 0;
-  border-radius: 20px;
-  display: flex;
-  gap: 32px 16px;
-  background: #ffffff;
-}
-
-.page-body-2 {
-  background-color: #FAFAFA;
-}
-
-.single-container {
-  grid-template-columns: 1fr;
-}
-
-.container-3 {
-  display: grid;
-  margin-top: 30px;
-  grid-template-columns: repeat(3, 1fr);
-  padding: 0 16px 0 0;
-  gap: 30px 16px;
-}
-
 .card {
   border-radius: 16px !important;
   border: 1px solid rgba(217, 217, 217, 0.3) !important;
@@ -1941,7 +1920,7 @@ a {
 }
 
 .posts {
-  width: 67%;
+  width: 100%;
 }
 
 .post-form-content .tox.tox-tinymce {
@@ -4066,6 +4045,10 @@ textarea[data-info=content] {
   border-radius: 14px;
   background: #f8fafc;
   border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.first-points-card {
+  margin-top: 26px !important;
 }
 
 .buy-row {

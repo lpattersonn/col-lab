@@ -572,7 +572,7 @@ export default function Collaborations() {
                         </div>
 
                             <div className="jobs-grid">
-                                {questions?.some(Boolean) ? questions : <p>No mentors yet.</p>}
+                                {questions?.some(Boolean) ? questions : <p>No jobs yet.</p>}
                             </div>
                     </div>
                 </div>
