@@ -373,11 +373,19 @@ export default function GetHelp({
         }
     };
 
-    const questions = useMemo(() => {
-        const userField = usersAccountDetails?.acf?.user_feild;
+    const visibleQuestions = useMemo(() => {
         if (!getHelpQuestions?.length) return [];
+        const searchLower = (searchTerm || '').trim().toLowerCase();
 
-        return getHelpQuestions.map((question, index) => {
+        return getHelpQuestions
+            .filter((question) => question?.status === 'publish')
+            .filter((question) => {
+                if (!searchLower) return true;
+                const title = question?.title?.rendered?.toLowerCase?.() || '';
+                const content = question?.content?.rendered?.replace?.(/<[^>]*>/g, ' ').toLowerCase?.() || '';
+                return title.includes(searchLower) || content.includes(searchLower);
+            })
+            .map((question, index) => {
             if (!question) return null;
 
             const author = usersById[question.author];
@@ -387,9 +395,6 @@ export default function GetHelp({
 
             const commentTotal = commentTotalsByPostId[question.id] ?? 0;
             const likeTotal = question?.acf?.like_count ?? 0;
-
-            if (question.status !== 'publish') return null;
-            if (userField && question?.acf?.question_subject_area && userField !== question?.acf?.question_subject_area) return null;
 
             const rendered = question?.content?.rendered || '';
             const plainText = rendered.replace(/<[^>]*>/g, '');
@@ -517,23 +522,7 @@ export default function GetHelp({
                 </div>
             );
         });
-        
-    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads, expandedPosts]);
-          
-    const filteredQuestions = useMemo(() => {
-    if (!questions?.length) return [];
-
-    return questions.filter(Boolean).filter((card) => {
-        const textContent =
-            card.props?.children?.toString?.().toLowerCase() || '';
-
-        const matchesSearch =
-            !searchTerm ||
-            textContent.includes(searchTerm.toLowerCase());
-
-        return matchesSearch;
-    });
-}, [questions, searchTerm]);
+    }, [getHelpQuestions, searchTerm, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads, expandedPosts]);
 
 
     if (!localStorage.getItem('userDetails')) {
@@ -685,7 +674,7 @@ export default function GetHelp({
                                 </div>
 
                                 <div>
-                                    {questions?.some(Boolean) ? questions : <p>No posts yet.</p>}
+                                    {visibleQuestions?.some(Boolean) ? visibleQuestions : <p>No posts yet.</p>}
                                 </div>
                             </div>
 

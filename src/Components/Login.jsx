@@ -74,7 +74,7 @@ export default function Login() {
     useEffect(() => {
         const storedUser = localStorage.getItem('userDetails');
         if (userDetails || storedUser) {
-            navigate('/dashboard', { replace: true });
+            navigate('/', { replace: true });
         }
     }, [userDetails, navigate]);
 
