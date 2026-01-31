@@ -18,7 +18,7 @@ import { dateFormat } from '../helper';
 
 
 
-export default function GetHelp({
+export default function GetHelpMyComments({
     pageTitle = 'Get Help',
     pageSubtitle = 'Answer questions from your peers and get answers to your most burning questions',
     pageDividerText = 'Browse all questions',
@@ -569,8 +569,8 @@ export default function GetHelp({
                     <div className="mt-4">
                         <div className="page-header">
                             <div>
-                                <h1 className="mb-3">{pageTitle}</h1>
-                                <p>{pageSubtitle}</p>
+                                <h1 className="mb-3">My Comments</h1>
+                                <p>View comments you&apos;ve made on other posts</p>
                             </div>
                             <div className="col-12 text-end mt-4">
                                 <button 
@@ -584,167 +584,13 @@ export default function GetHelp({
                         </div>
 
 
-                        <div className="user-details">
-
-                            <div
-                                className="user-detail user-detail-clickable"
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => Navigate('/get-help/my-questions')}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        Navigate('/get-help/my-questions');
-                                    }
-                                }}
-                            >
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>My Questions</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {notifications}
-                                            </div>
-                                    </div>
-                            </div>
-
-                            <div
-                                className="user-detail user-detail-clickable"
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => Navigate('/get-help/my-comments')}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        Navigate('/get-help/my-comments');
-                                    }
-                                }}
-                            >
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>My Comments</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {notifications}
-                                            </div>
-                                    </div>
-                            </div>
-                            </div>               
 
 
 
                         <div className="page-body">
                             <div className="posts">
-                                <div className="page-divider page-divider-home">
-                                    <p>{pageDividerText}</p>
-                                </div>
-
-                                {/* Search + Filters */}
-                                <div className="search-filter-wrap">
-                                    {/* Search Bar */}
-                                    <div className="search-bar">
-                                        <input
-                                            type="text"
-                                            placeholder="Search for anything"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                        />
-                                        <button type="button" className="search-btn">
-                                            <FontAwesomeIcon icon={faMagnifyingGlass} />
-                                        </button>
-                                    </div>
-
-                                    {/* Filters */}
-                                    <div className="filters">
-
-                                        <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
-                                            <option value="">Field</option>
-                                            <option value="Biology">Biology</option>
-                                            <option value="Chemistry">Chemistry</option>
-                                        </select>
-
-
-                                        <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
-                                            <option value="">Category</option>
-                                            <option value="Tehcnical">Technical</option>
-                                            <option value="Advice">Advice</option>
-                                        </select>
-                                    </div>
-                                </div>
-
                                 <div>
                                     {questions?.some(Boolean) ? questions : <p>No posts yet.</p>}
-                                </div>
-                            </div>
-
-                            <div className="calendar upcoming-events-card">
-                                <div className="events-header">
-                                    <h2>Upcoming Events</h2>
-                                </div>
-
-                                <Calendar
-                                    tileClassName={({ date }) => {
-                                        const scheduledEvents = (events || []).some(
-                                            (item) => dateFormat(date) === item?.acf?.mentor_request_date
-                                        );
-                                        return scheduledEvents ? 'scheduled-event' : null;
-                                    }}
-                                    firstDayOfWeek={0}
-                                />
-
-                                <div className="events-schedule">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline"
-                                        onClick={() => setShowScheduleForm((prev) => !prev)}
-                                    >
-                                        Schedule Event
-                                    </button>
-                                    {showScheduleForm ? (
-                                        <form className="schedule-form" onSubmit={handleScheduleSubmit}>
-                                            <input
-                                                type="text"
-                                                placeholder="Event title"
-                                                value={newEventTitle}
-                                                onChange={(e) => setNewEventTitle(e.target.value)}
-                                            />
-                                            <input
-                                                type="date"
-                                                value={newEventDate}
-                                                onChange={(e) => setNewEventDate(e.target.value)}
-                                            />
-                                            <button type="submit" className="btn btn-dark">Add</button>
-                                        </form>
-                                    ) : null}
-                                </div>
-
-                                <div className="events-list">
-                                    <h4>This Week</h4>
-                                    {upcomingThisWeek.length ? (
-                                        upcomingThisWeek.map((item, idx) => (
-                                            <div className="event-item" key={`${item.title}-${idx}`}>
-                                                <strong>{item.title}</strong>
-                                                <span>{item.date}</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="event-item">
-                                            <p>Science Storytelling Challenge</p>
-                                            <span>Sun 1 Feb</span>
-                                        </div>
-                                    )}
                                 </div>
                             </div>
                         </div>

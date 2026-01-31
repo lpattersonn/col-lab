@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight, faMagnifyingGlass, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from './Navigation';
@@ -14,14 +14,14 @@ import SideNavigation from './Navigation/SideNavigation';
 import defaultImage from '../Images/user-profile.svg';
 import likeIcon from '../Images/like-svgrepo-com.svg';
 import commentIcon from '../Images/comment-svgrepo-com.svg';
-import { dateFormat } from '../helper';
+import { dateFormat, humanReadableDate } from '../helper';
 
 
 
-export default function GetHelp({
-    pageTitle = 'Get Help',
-    pageSubtitle = 'Answer questions from your peers and get answers to your most burning questions',
-    pageDividerText = 'Browse all questions',
+export default function MentorshipsMyMentees({
+    pageTitle = 'Mentorships',
+    pageSubtitle = 'Propel your career with expert training and guidance from our mentors',
+    pageDividerText = 'Meet our LabSci Mentors',
 }) {
     const Navigate = useNavigate(); // keep your original naming
     const editorRef = useRef(null);
@@ -68,6 +68,8 @@ export default function GetHelp({
         field: '',
         purpose: '',
     });
+    const [ mentorServices, setMentorServices ] = useState([]);
+    const [ mentorSubmitStatus, setMentorSubmitStatus ] = useState({ loading: false, error: '', success: '' });
 
     const handleScheduleSubmit = (e) => {
         e.preventDefault();
@@ -91,6 +93,46 @@ export default function GetHelp({
             return eventDate >= now && eventDate <= weekFromNow;
         });
     }, [scheduledEventsLocal]);
+
+    const handleMentorSignupSubmit = async (e) => {
+        e.preventDefault();
+        if (!userDetails?.token || !userDetails?.id) return;
+
+        setMentorSubmitStatus({ loading: true, error: '', success: '' });
+
+        try {
+            const headers = {
+                Authorization: `Bearer ${userDetails.token}`,
+            };
+
+            const servicesValue = (mentorServices || []).join(', ');
+
+            const res = await axios.post(
+                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`,
+                {
+                    acf: {
+                        user_mentor_services_offered: servicesValue,
+                    },
+                },
+                { headers }
+            );
+
+            const updatedUser = res?.data;
+            if (updatedUser) {
+                setUsersAccountDetails(updatedUser);
+                setGetUsers((prev) =>
+                    (prev || []).map((user) =>
+                        user.id === updatedUser.id ? updatedUser : user
+                    )
+                );
+            }
+
+            setMentorSubmitStatus({ loading: false, error: '', success: 'Mentor profile updated.' });
+        } catch (err) {
+            console.error(err);
+            setMentorSubmitStatus({ loading: false, error: 'Unable to save services. Please try again.', success: '' });
+        }
+    };
 
 
     useEffect(() => {
@@ -384,9 +426,32 @@ export default function GetHelp({
             const userName = author?.name || '';
             const userProfileImg = author?.acf?.user_profile_picture;
             const userJobInsitution = author?.acf?.['user-job-Insitution'];
+            const likeTotal = question?.acf?.like_count ?? 0;
+            const mentorRole = author?.acf?.user_mentor_current_position || '';
+            const mentorCompany = author?.acf?.user_mentor_current_company || '';
+            const mentorSubtitle = [mentorRole, mentorCompany].filter(Boolean).join(' @ ') || userJobInsitution;
+            const mentorLocation =
+                author?.acf?.user_country ||
+                author?.acf?.user_location ||
+                author?.acf?.user_city ||
+                '';
+            const deadline =
+                question?.acf?.deadline ||
+                question?.acf?.learning_deadline ||
+                question?.acf?.borrow_deadline ||
+                question?.acf?.collaborations_deadline ||
+                '';
+            const rawTags =
+                author?.acf?.user_mentor_services_offered ||
+                question?.acf?.question_subject_area ||
+                '';
+            const mentorTags = Array.isArray(rawTags)
+                ? rawTags
+                : typeof rawTags === 'string'
+                    ? rawTags.split(',').map((tag) => tag.trim()).filter(Boolean)
+                    : [];
 
             const commentTotal = commentTotalsByPostId[question.id] ?? 0;
-            const likeTotal = question?.acf?.like_count ?? 0;
 
             if (question.status !== 'publish') return null;
             if (userField && question?.acf?.question_subject_area && userField !== question?.acf?.question_subject_area) return null;
@@ -401,115 +466,33 @@ export default function GetHelp({
             const isCommentsOpen = Boolean(openComments[question.id]);
 
             return (
-                <div className="card collaboration-card mb-4" key={question.id || index}>
-                    <div className="card-body">
-                        <div className="questions-details">
-                            <div className="questions-details-name">
-                                <img
-                                    className="questions-details-name-img"
-                                    src={userProfileImg ? userProfileImg : defaultImage}
-                                    alt={userName || 'User'}
-                                    loading="lazy"
-                                />
-                                <div className="questions-details-name-info">
-                                    <p><strong>{userName}</strong></p>
-                                    <div className="questions-details-posted">
-                                        <p>{getTimeAgo(question.date)}</p>
-                                    </div>
-                                </div>
-                            </div>
+                <div className="mentor-card" key={question.id || index}>
+                    <img
+                        className="mentor-card-img"
+                        src={userProfileImg || defaultImage}
+                        alt={userName || 'Mentor'}
+                        loading="lazy"
+                    />
+                    <div className="mentor-card-body">
+                        <div className="mentor-card-name">
+                            <strong>{userName || 'Mentor'}</strong>
                         </div>
-
-                        <p><strong className='lead'>{question?.title?.rendered}</strong></p>
-
-                        {rendered ? (
-                            <div>
-                                <div
-                                    dangerouslySetInnerHTML={{
-                                        __html: isExpanded ? rendered : `${snippetText}${ellipsis}`,
-                                    }}
-                                />
-                                {shouldTruncate ? (
-                                    <button
-                                        type="button"
-                                        className="read-more-btn"
-                                        onClick={() =>
-                                            setExpandedPosts((prev) => ({
-                                                ...prev,
-                                                [question.id]: !prev[question.id],
-                                            }))
-                                        }
-                                    >
-                                        {isExpanded ? 'Show less' : 'Read more'}
-                                    </button>
-                                ) : null}
-                            </div>
+                        {mentorSubtitle ? (
+                            <p className="mentor-card-subtitle">{mentorSubtitle}</p>
                         ) : null}
-
-                        <div className="question-actions">
-                            <div className="question-actions-meta">
-                                <button type="button" className="question-actions-item">
-                                    <img src={likeIcon} alt="" className="like-icon" aria-hidden="true" />
-                                    <span>{likeTotal} Like</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="question-actions-btn"
-                                    onClick={() =>
-                                        setOpenComments((prev) => ({
-                                            ...prev,
-                                            [question.id]: !prev[question.id],
-                                        }))
-                                    }
-                                >
-                                    <img src={commentIcon} alt="" className="like-icon" aria-hidden="true" />
-                                    <span>{commentTotal} Comments</span>
-                                </button>
-                            </div>
-                            
+                        {mentorLocation ? (
+                            <p className="mentor-card-location">{mentorLocation}</p>
+                        ) : null}
+                        <div className="mentor-card-tags">
+                            {(mentorTags.length ? mentorTags.slice(0, 2) : ['Services']).map((tag) => (
+                                <span className="mentor-card-tag" key={`${question.id}-${tag}`}>{tag}</span>
+                            ))}
                         </div>
-
-                        {isCommentsOpen ? (
-                            <div className="question-comments">
-                                <div className="question-comments-input">
-                                    <textarea
-                                        placeholder="Write a comment..."
-                                        rows={3}
-                                        value={commentInputs?.[question.id] || ''}
-                                        onChange={(e) => handleCommentChange(question.id, e.target.value)}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline"
-                                        onClick={() => handleCommentSubmit(question.id)}
-                                    >
-                                        Post
-                                    </button>
-                                </div>
-                                <div className="question-comments-list">
-                                    {(commentThreads?.[question.id] || []).map((comment) => (
-                                        <div className="comment-item" key={comment.id}>
-                                            <img
-                                                className="comment-avatar"
-                                                src={defaultImage}
-                                                alt={comment.author}
-                                                loading="lazy"
-                                            />
-                                            <div className="comment-body">
-                                                <div className="comment-meta">
-                                                    <strong>{comment.author}</strong>
-                                                    <span>Just now</span>
-                                                </div>
-                                                <p>{comment.content?.replace?.(/<[^>]*>/g, '') || comment.content}</p>
-                                                <div className="comment-actions">
-                                                    <button type="button" className="comment-like">
-                                                        <img src={likeIcon} alt="" className="like-icon" aria-hidden="true" />
-                                                        <span>Like</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
+                        {deadline ? (
+                            <div className="mentor-card-footer">
+                                <div className="mentor-card-deadline">
+                                    <FontAwesomeIcon icon={faClock} />
+                                    <span>{humanReadableDate(deadline)}</span>
                                 </div>
                             </div>
                         ) : null}
@@ -518,7 +501,7 @@ export default function GetHelp({
             );
         });
         
-    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads, expandedPosts]);
+    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, expandedPosts]);
           
     const filteredQuestions = useMemo(() => {
     if (!questions?.length) return [];
@@ -569,8 +552,8 @@ export default function GetHelp({
                     <div className="mt-4">
                         <div className="page-header">
                             <div>
-                                <h1 className="mb-3">{pageTitle}</h1>
-                                <p>{pageSubtitle}</p>
+                                <h1 className="mb-3">My Mentees</h1>
+                                <p>Track and support your mentees</p>
                             </div>
                             <div className="col-12 text-end mt-4">
                                 <button 
@@ -578,176 +561,14 @@ export default function GetHelp({
                                     type="button"
                                     onClick={() => setIsDrawerOpen(true)}
                                 >
-                                    Ask a Question
+                                    Become a Mentor
                                 </button>
                             </div>
                         </div>
 
-
-                        <div className="user-details">
-
-                            <div
-                                className="user-detail user-detail-clickable"
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => Navigate('/get-help/my-questions')}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        Navigate('/get-help/my-questions');
-                                    }
-                                }}
-                            >
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>My Questions</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {notifications}
-                                            </div>
-                                    </div>
+                            <div className="mentors-grid">
+                                {questions?.some(Boolean) ? questions : <p>No mentors yet.</p>}
                             </div>
-
-                            <div
-                                className="user-detail user-detail-clickable"
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => Navigate('/get-help/my-comments')}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        Navigate('/get-help/my-comments');
-                                    }
-                                }}
-                            >
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>My Comments</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {notifications}
-                                            </div>
-                                    </div>
-                            </div>
-                            </div>               
-
-
-
-                        <div className="page-body">
-                            <div className="posts">
-                                <div className="page-divider page-divider-home">
-                                    <p>{pageDividerText}</p>
-                                </div>
-
-                                {/* Search + Filters */}
-                                <div className="search-filter-wrap">
-                                    {/* Search Bar */}
-                                    <div className="search-bar">
-                                        <input
-                                            type="text"
-                                            placeholder="Search for anything"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                        />
-                                        <button type="button" className="search-btn">
-                                            <FontAwesomeIcon icon={faMagnifyingGlass} />
-                                        </button>
-                                    </div>
-
-                                    {/* Filters */}
-                                    <div className="filters">
-
-                                        <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
-                                            <option value="">Field</option>
-                                            <option value="Biology">Biology</option>
-                                            <option value="Chemistry">Chemistry</option>
-                                        </select>
-
-
-                                        <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
-                                            <option value="">Category</option>
-                                            <option value="Tehcnical">Technical</option>
-                                            <option value="Advice">Advice</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    {questions?.some(Boolean) ? questions : <p>No posts yet.</p>}
-                                </div>
-                            </div>
-
-                            <div className="calendar upcoming-events-card">
-                                <div className="events-header">
-                                    <h2>Upcoming Events</h2>
-                                </div>
-
-                                <Calendar
-                                    tileClassName={({ date }) => {
-                                        const scheduledEvents = (events || []).some(
-                                            (item) => dateFormat(date) === item?.acf?.mentor_request_date
-                                        );
-                                        return scheduledEvents ? 'scheduled-event' : null;
-                                    }}
-                                    firstDayOfWeek={0}
-                                />
-
-                                <div className="events-schedule">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline"
-                                        onClick={() => setShowScheduleForm((prev) => !prev)}
-                                    >
-                                        Schedule Event
-                                    </button>
-                                    {showScheduleForm ? (
-                                        <form className="schedule-form" onSubmit={handleScheduleSubmit}>
-                                            <input
-                                                type="text"
-                                                placeholder="Event title"
-                                                value={newEventTitle}
-                                                onChange={(e) => setNewEventTitle(e.target.value)}
-                                            />
-                                            <input
-                                                type="date"
-                                                value={newEventDate}
-                                                onChange={(e) => setNewEventDate(e.target.value)}
-                                            />
-                                            <button type="submit" className="btn btn-dark">Add</button>
-                                        </form>
-                                    ) : null}
-                                </div>
-
-                                <div className="events-list">
-                                    <h4>This Week</h4>
-                                    {upcomingThisWeek.length ? (
-                                        upcomingThisWeek.map((item, idx) => (
-                                            <div className="event-item" key={`${item.title}-${idx}`}>
-                                                <strong>{item.title}</strong>
-                                                <span>{item.date}</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="event-item">
-                                            <p>Science Storytelling Challenge</p>
-                                            <span>Sun 1 Feb</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
@@ -771,42 +592,87 @@ export default function GetHelp({
         <span className="points-badge">*5 points required</span>
     </div>
 
-    <h1>Ask a Question</h1>
+    <h1>Be a part of shaping the next generation of scientists!</h1>
     <div className="drawer-divider" />
-    <form className="drawer-form">
+    <form className="drawer-form" onSubmit={handleMentorSignupSubmit}>
+        <p>
+            Applying is easy! We already know about you. We just need a bit more information...Mentorship applications are verified
+        </p>
+
         <label className="first-label">
-            Title (150 characters max)
             <input
                 type="text"
-                maxLength={150}
-                placeholder="Give a short but appropriate title."
+                placeholder="Current position"
             />
         </label>
 
         <label>
-            Description
+            <input
+                type="text"
+                placeholder="Current company/institution"
+            />
+        </label>
+
+        <label>
+            <input
+                type="text"
+                placeholder="Key responsibilities in current role"
+            />
+        </label>
+
+        <label>
             <textarea
-                placeholder="Provide additional details."
+                placeholder="Education: please list from most recent, including school and date of completion"
             />
         </label>
 
         <label>
-            Field
-            <select>
-                <option>Choose an option</option>
-                <option>Biology</option>
-                <option>Chemistry</option>
+            <select
+                multiple
+                aria-label="Services provided"
+                value={mentorServices}
+                onChange={(e) =>
+                    setMentorServices(
+                        Array.from(e.target.selectedOptions, (option) => option.value)
+                    )
+                }
+            >
+                <option value="Resume Building">Resume building</option>
+                <option value="Career Advice">Career advice</option>
+                <option value="Networking">Networking</option>
+                <option value="Mock Interviews">Mock interviews</option>
             </select>
         </label>
 
         <label>
-            Category
+            <input
+                type="text"
+                placeholder="Preferred language(s)"
+            />
+        </label>
+
+        <label>
             <select>
-                <option>Choose an option</option>
-                <option>Tehcnical question</option>
-                <option>Advice</option>
+                <option value="">Preferred meet-up: virtual or in-person</option>
+                <option value="Virtual">Virtual</option>
+                <option value="In-person">In-person</option>
             </select>
         </label>
+
+        <div className="drawer-grid">
+            <label>
+                <input
+                    type="number"
+                    placeholder="Rate of Pay"
+                />
+            </label>
+            <label>
+                <input
+                    type="text"
+                    placeholder="Currency"
+                />
+            </label>
+        </div>
 
         <div className="drawer-actions">
             <button
@@ -817,10 +683,19 @@ export default function GetHelp({
                 Cancel
             </button>
 
-            <button type="submit" className="btn btn-dark">
-                Submit
-            </button>
+        <button type="submit" className="btn btn-dark" disabled={mentorSubmitStatus.loading}>
+            {mentorSubmitStatus.loading ? 'Saving...' : 'Sign Up'}
+        </button>
+
         </div>
+
+        {mentorSubmitStatus.error ? (
+            <p className="drawer-error">{mentorSubmitStatus.error}</p>
+        ) : null}
+        {mentorSubmitStatus.success ? (
+            <p className="drawer-success">{mentorSubmitStatus.success}</p>
+        ) : null}
+
     </form>
 </aside>
 

@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight, faMagnifyingGlass, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from './Navigation';
@@ -16,14 +16,8 @@ import likeIcon from '../Images/like-svgrepo-com.svg';
 import commentIcon from '../Images/comment-svgrepo-com.svg';
 import { dateFormat } from '../helper';
 
-
-
-export default function GetHelp({
-    pageTitle = 'Get Help',
-    pageSubtitle = 'Answer questions from your peers and get answers to your most burning questions',
-    pageDividerText = 'Browse all questions',
-}) {
-    const Navigate = useNavigate(); // keep your original naming
+export default function CollaborationsCurrent() {
+    const Navigate = useNavigate();
     const editorRef = useRef(null);
 
     const userDetails = useMemo(() => {
@@ -91,7 +85,6 @@ export default function GetHelp({
             return eventDate >= now && eventDate <= weekFromNow;
         });
     }, [scheduledEventsLocal]);
-
 
     useEffect(() => {
         if (!userDetails?.token) {
@@ -242,66 +235,6 @@ export default function GetHelp({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getHelpQuestions, userDetails?.token]);
 
-    const clearEditor = () => {
-        setCreateComment('');
-        setFile(null);
-        setCommentStatus('not approved');
-        setServerComment('');
-        setSuccessServerComment('');
-        editorRef.current?.setContent('');
-    };
-
-    const handleCommentChange = (postId, value) => {
-        setCommentInputs((prev) => ({ ...prev, [postId]: value }));
-    };
-
-    const handleCommentSubmit = async (postId) => {
-        const content = (commentInputs?.[postId] || '').trim();
-        if (!content) return;
-        if (!userDetails?.token || !userDetails?.id) {
-            Navigate('/');
-            return;
-        }
-
-        try {
-            const headers = { Authorization: `Bearer ${userDetails.token}` };
-            const res = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
-                {
-                    post: postId,
-                    content,
-                    author: userDetails.id,
-                },
-                { headers }
-            );
-
-            const displayName =
-                userDetails?.displayName ||
-                userDetails?.user_display_name ||
-                [userDetails?.firstName, userDetails?.lastName].filter(Boolean).join(' ') ||
-                'User';
-
-            const newComment = {
-                id: res?.data?.id || Date.now(),
-                author: displayName,
-                date: res?.data?.date || new Date().toISOString(),
-                content: res?.data?.content?.rendered || content,
-            };
-
-            setCommentThreads((prev) => ({
-                ...prev,
-                [postId]: [newComment, ...(prev[postId] || [])],
-            }));
-            setCommentInputs((prev) => ({ ...prev, [postId]: '' }));
-            setCommentTotalsByPostId((prev) => ({
-                ...prev,
-                [postId]: (prev[postId] ?? 0) + 1,
-            }));
-        } catch (error) {
-            console.error('Error submitting comment:', error?.response?.data || error.message);
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -373,6 +306,48 @@ export default function GetHelp({
         }
     };
 
+    const handleCommentChange = (postId, value) => {
+        setCommentInputs((prev) => ({
+            ...prev,
+            [postId]: value,
+        }));
+    };
+
+    const handleCommentSubmit = async (postId) => {
+        const comment = commentInputs?.[postId]?.trim();
+        if (!comment) return;
+
+        try {
+            const headers = {
+                Authorization: `Bearer ${userDetails.token}`,
+            };
+
+            const res = await axios.post(
+                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+                {
+                    post: postId,
+                    content: comment,
+                },
+                { headers }
+            );
+
+            const newComment = res?.data;
+            setCommentInputs((prev) => ({ ...prev, [postId]: '' }));
+
+            setCommentThreads((prev) => ({
+                ...prev,
+                [postId]: [ ...(prev[postId] || []), newComment ],
+            }));
+
+            setCommentTotalsByPostId((prev) => ({
+                ...prev,
+                [postId]: (prev[postId] || 0) + 1,
+            }));
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     const questions = useMemo(() => {
         const userField = usersAccountDetails?.acf?.user_feild;
         if (!getHelpQuestions?.length) return [];
@@ -383,10 +358,13 @@ export default function GetHelp({
             const author = usersById[question.author];
             const userName = author?.name || '';
             const userProfileImg = author?.acf?.user_profile_picture;
-            const userJobInsitution = author?.acf?.['user-job-Insitution'];
+            const skills =
+                question?.acf?.collaboration_skills ||
+                question?.acf?.skills_required ||
+                question?.acf?.required_skills ||
+                [];
 
             const commentTotal = commentTotalsByPostId[question.id] ?? 0;
-            const likeTotal = question?.acf?.like_count ?? 0;
 
             if (question.status !== 'publish') return null;
             if (userField && question?.acf?.question_subject_area && userField !== question?.acf?.question_subject_area) return null;
@@ -402,7 +380,7 @@ export default function GetHelp({
 
             return (
                 <div className="card collaboration-card mb-4" key={question.id || index}>
-                    <div className="card-body">
+                    <div className="card-body share-card-body">
                         <div className="questions-details">
                             <div className="questions-details-name">
                                 <img
@@ -418,6 +396,7 @@ export default function GetHelp({
                                     </div>
                                 </div>
                             </div>
+                            <span className="share-card-intention">Intention</span>
                         </div>
 
                         <p><strong className='lead'>{question?.title?.rendered}</strong></p>
@@ -446,12 +425,14 @@ export default function GetHelp({
                             </div>
                         ) : null}
 
+                        <div className="collab-skill-tags">
+                            {(skills.length ? skills.slice(0, 5) : ['Skills']).map((skill) => (
+                                <span className="collab-skill-tag" key={`${question.id}-${skill}`}>{skill}</span>
+                            ))}
+                        </div>
+
                         <div className="question-actions">
                             <div className="question-actions-meta">
-                                <button type="button" className="question-actions-item">
-                                    <img src={likeIcon} alt="" className="like-icon" aria-hidden="true" />
-                                    <span>{likeTotal} Like</span>
-                                </button>
                                 <button
                                     type="button"
                                     className="question-actions-btn"
@@ -466,7 +447,10 @@ export default function GetHelp({
                                     <span>{commentTotal} Comments</span>
                                 </button>
                             </div>
-                            
+                            <div className="share-card-deadline">
+                                <FontAwesomeIcon icon={faClock} />
+                                <span>Deadline</span>
+                            </div>
                         </div>
 
                         {isCommentsOpen ? (
@@ -517,30 +501,36 @@ export default function GetHelp({
                 </div>
             );
         });
-        
-    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads, expandedPosts]);
-          
+    }, [
+        getHelpQuestions,
+        usersAccountDetails?.acf?.user_feild,
+        usersById,
+        commentTotalsByPostId,
+        openComments,
+        commentInputs,
+        commentThreads,
+        expandedPosts,
+    ]);
+
     const filteredQuestions = useMemo(() => {
-    if (!questions?.length) return [];
+        if (!questions?.length) return [];
 
-    return questions.filter(Boolean).filter((card) => {
-        const textContent =
-            card.props?.children?.toString?.().toLowerCase() || '';
+        return questions.filter(Boolean).filter((card) => {
+            const textContent =
+                card.props?.children?.toString?.().toLowerCase() || '';
 
-        const matchesSearch =
-            !searchTerm ||
-            textContent.includes(searchTerm.toLowerCase());
+            const matchesSearch =
+                !searchTerm ||
+                textContent.includes(searchTerm.toLowerCase());
 
-        return matchesSearch;
-    });
-}, [questions, searchTerm]);
-
+            return matchesSearch;
+        });
+    }, [questions, searchTerm]);
 
     if (!localStorage.getItem('userDetails')) {
         window.location.replace('/');
         return null;
     }
-    
 
     if (loading) {
         return (
@@ -569,260 +559,107 @@ export default function GetHelp({
                     <div className="mt-4">
                         <div className="page-header">
                             <div>
-                                <h1 className="mb-3">{pageTitle}</h1>
-                                <p>{pageSubtitle}</p>
+                                <h1 className="mb-3">Current Collaborations</h1>
+                                <p>View and manage your active collaborations</p>
                             </div>
                             <div className="col-12 text-end mt-4">
-                                <button 
-                                    className="btn btn-header" 
+                                <button
+                                    className="btn btn-header"
                                     type="button"
                                     onClick={() => setIsDrawerOpen(true)}
                                 >
-                                    Ask a Question
+                                    Request Collaboration
                                 </button>
                             </div>
                         </div>
 
 
-                        <div className="user-details">
-
-                            <div
-                                className="user-detail user-detail-clickable"
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => Navigate('/get-help/my-questions')}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        Navigate('/get-help/my-questions');
-                                    }
-                                }}
-                            >
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>My Questions</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {notifications}
-                                            </div>
-                                    </div>
-                            </div>
-
-                            <div
-                                className="user-detail user-detail-clickable"
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => Navigate('/get-help/my-comments')}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        Navigate('/get-help/my-comments');
-                                    }
-                                }}
-                            >
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>My Comments</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {notifications}
-                                            </div>
-                                    </div>
-                            </div>
-                            </div>               
-
-
 
                         <div className="page-body">
                             <div className="posts">
-                                <div className="page-divider page-divider-home">
-                                    <p>{pageDividerText}</p>
-                                </div>
-
-                                {/* Search + Filters */}
-                                <div className="search-filter-wrap">
-                                    {/* Search Bar */}
-                                    <div className="search-bar">
-                                        <input
-                                            type="text"
-                                            placeholder="Search for anything"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                        />
-                                        <button type="button" className="search-btn">
-                                            <FontAwesomeIcon icon={faMagnifyingGlass} />
-                                        </button>
-                                    </div>
-
-                                    {/* Filters */}
-                                    <div className="filters">
-
-                                        <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
-                                            <option value="">Field</option>
-                                            <option value="Biology">Biology</option>
-                                            <option value="Chemistry">Chemistry</option>
-                                        </select>
-
-
-                                        <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
-                                            <option value="">Category</option>
-                                            <option value="Tehcnical">Technical</option>
-                                            <option value="Advice">Advice</option>
-                                        </select>
-                                    </div>
-                                </div>
-
                                 <div>
-                                    {questions?.some(Boolean) ? questions : <p>No posts yet.</p>}
+                                    {filteredQuestions?.some(Boolean) ? filteredQuestions : <p>No posts yet.</p>}
                                 </div>
                             </div>
 
-                            <div className="calendar upcoming-events-card">
-                                <div className="events-header">
-                                    <h2>Upcoming Events</h2>
-                                </div>
-
-                                <Calendar
-                                    tileClassName={({ date }) => {
-                                        const scheduledEvents = (events || []).some(
-                                            (item) => dateFormat(date) === item?.acf?.mentor_request_date
-                                        );
-                                        return scheduledEvents ? 'scheduled-event' : null;
-                                    }}
-                                    firstDayOfWeek={0}
-                                />
-
-                                <div className="events-schedule">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline"
-                                        onClick={() => setShowScheduleForm((prev) => !prev)}
-                                    >
-                                        Schedule Event
-                                    </button>
-                                    {showScheduleForm ? (
-                                        <form className="schedule-form" onSubmit={handleScheduleSubmit}>
-                                            <input
-                                                type="text"
-                                                placeholder="Event title"
-                                                value={newEventTitle}
-                                                onChange={(e) => setNewEventTitle(e.target.value)}
-                                            />
-                                            <input
-                                                type="date"
-                                                value={newEventDate}
-                                                onChange={(e) => setNewEventDate(e.target.value)}
-                                            />
-                                            <button type="submit" className="btn btn-dark">Add</button>
-                                        </form>
-                                    ) : null}
-                                </div>
-
-                                <div className="events-list">
-                                    <h4>This Week</h4>
-                                    {upcomingThisWeek.length ? (
-                                        upcomingThisWeek.map((item, idx) => (
-                                            <div className="event-item" key={`${item.title}-${idx}`}>
-                                                <strong>{item.title}</strong>
-                                                <span>{item.date}</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="event-item">
-                                            <p>Science Storytelling Challenge</p>
-                                            <span>Sun 1 Feb</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-                
-{/* Overlay */}
-<div
-    className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
-    onClick={() => setIsDrawerOpen(false)}
-/>
 
-{/* Slide-in Drawer */}
-<aside className={`drawer ${isDrawerOpen ? 'open' : ''}`}>
-    <div className="drawer-header">
-        <button
-            className="back-btn"
-            type="button"
-            onClick={() => setIsDrawerOpen(false)}
-        >
-            ← Back
-        </button>
+                {/* Overlay */}
+                <div
+                    className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
+                    onClick={() => setIsDrawerOpen(false)}
+                />
 
-        <span className="points-badge">*5 points required</span>
-    </div>
+                {/* Slide-in Drawer */}
+                <aside className={`drawer ${isDrawerOpen ? 'open' : ''}`}>
+                    <div className="drawer-header">
+                        <button
+                            className="back-btn"
+                            type="button"
+                            onClick={() => setIsDrawerOpen(false)}
+                        >
+                            ← Back
+                        </button>
 
-    <h1>Ask a Question</h1>
-    <div className="drawer-divider" />
-    <form className="drawer-form">
-        <label className="first-label">
-            Title (150 characters max)
-            <input
-                type="text"
-                maxLength={150}
-                placeholder="Give a short but appropriate title."
-            />
-        </label>
+                        <span className="points-badge">*5 points required</span>
+                    </div>
 
-        <label>
-            Description
-            <textarea
-                placeholder="Provide additional details."
-            />
-        </label>
+                    <h1>Collaboration Request</h1>
+                    <div className="drawer-divider" />
+                    <form className="drawer-form">
+                        <label className="first-label">
+                            Type your request briefly (150 characters max)
+                            <input
+                                type="text"
+                                maxLength={150}
+                                placeholder="ex. Need help creating a knockout cell line."
+                            />
+                        </label>
 
-        <label>
-            Field
-            <select>
-                <option>Choose an option</option>
-                <option>Biology</option>
-                <option>Chemistry</option>
-            </select>
-        </label>
+                        <label>
+                            Description
+                            <textarea
+                                placeholder="Explain your request in further detail. Please keep project explanations sufficiently vague to avoid scooping."
+                            />
+                        </label>
 
-        <label>
-            Category
-            <select>
-                <option>Choose an option</option>
-                <option>Tehcnical question</option>
-                <option>Advice</option>
-            </select>
-        </label>
+                        <label>
+                            Enter major skills required (max. 5)
+                            <input type="text" />
+                        </label>
 
-        <div className="drawer-actions">
-            <button
-                type="button"
-                className="btn btn-outline"
-                onClick={() => setIsDrawerOpen(false)}
-            >
-                Cancel
-            </button>
+                        <label>
+                            Deadline for project completion
+                            <input type="date" />
+                        </label>
 
-            <button type="submit" className="btn btn-dark">
-                Submit
-            </button>
-        </div>
-    </form>
-</aside>
+                        <label>
+                            Compensation
+                            <select>
+                                <option>Choose an option</option>
+                                <option>Points</option>
+                                <option>Co-authorship</option>
+                                <option>Paid</option>
+                            </select>
+                        </label>
+
+                        <div className="drawer-actions">
+                            <button
+                                type="button"
+                                className="btn btn-outline"
+                                onClick={() => setIsDrawerOpen(false)}
+                            >
+                                Cancel
+                            </button>
+
+                            <button type="submit" className="btn btn-dark">
+                                Submit
+                            </button>
+                        </div>
+                    </form>
+                </aside>
 
             </main>
         </>

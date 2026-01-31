@@ -18,7 +18,11 @@ import { dateFormat, humanReadableDate } from '../helper';
 
 
 
-export default function Mentorships() {
+export default function Mentorships({
+    pageTitle = 'Mentorships',
+    pageSubtitle = 'Propel your career with expert training and guidance from our mentors',
+    pageDividerText = 'Meet our LabSci Mentors',
+}) {
     const Navigate = useNavigate(); // keep your original naming
     const editorRef = useRef(null);
 
@@ -58,6 +62,7 @@ export default function Mentorships() {
     const [ commentTotalsByPostId, setCommentTotalsByPostId ] = useState({});
 
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [ isUpcomingMeetingsDrawerOpen, setIsUpcomingMeetingsDrawerOpen ] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [filters, setFilters] = useState({
         country: '',
@@ -89,6 +94,46 @@ export default function Mentorships() {
             return eventDate >= now && eventDate <= weekFromNow;
         });
     }, [scheduledEventsLocal]);
+
+    const upcomingMeetingsHistory = useMemo(() => {
+        const items = [];
+
+        (events || []).forEach((item, idx) => {
+            const title =
+                item?.acf?.mentor_request_title ||
+                item?.title?.rendered ||
+                'Upcoming meeting';
+            const link = item?.link || '#';
+            const date = item?.acf?.mentor_request_date || item?.date || '';
+
+            items.push({
+                id: `meeting-${item?.id || idx}`,
+                title,
+                link,
+                date,
+            });
+        });
+
+        (scheduledEventsLocal || []).forEach((item, idx) => {
+            items.push({
+                id: `scheduled-${idx}`,
+                title: item?.title || 'Scheduled meeting',
+                link: '#',
+                date: item?.date || '',
+            });
+        });
+
+        return items.length
+            ? items
+            : [
+                  {
+                      id: 'meeting-placeholder',
+                      title: 'Science Storytelling Challenge',
+                      link: '#',
+                      date: 'Sun 1 Feb',
+                  },
+              ];
+    }, [events, scheduledEventsLocal]);
 
     const handleMentorSignupSubmit = async (e) => {
         e.preventDefault();
@@ -548,8 +593,8 @@ export default function Mentorships() {
                     <div className="mt-4">
                         <div className="page-header">
                             <div>
-                                <h1 className="mb-3">Mentorships</h1>
-                                <p>Propel your career with expert training and guidance from our mentors</p>
+                                <h1 className="mb-3">{pageTitle}</h1>
+                                <p>{pageSubtitle}</p>
                             </div>
                             <div className="col-12 text-end mt-4">
                                 <button 
@@ -565,7 +610,17 @@ export default function Mentorships() {
 
                         <div className="user-details">
 
-                            <div className="user-detail">
+                            <div
+                                className="user-detail user-detail-clickable"
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => Navigate('/mentorships/my-mentors')}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter' || event.key === ' ') {
+                                        Navigate('/mentorships/my-mentors');
+                                    }
+                                }}
+                            >
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div> */}
@@ -583,7 +638,17 @@ export default function Mentorships() {
                                     </div>
                             </div>
 
-                            <div className="user-detail">
+                            <div
+                                className="user-detail user-detail-clickable"
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => Navigate('/mentorships/my-mentees')}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter' || event.key === ' ') {
+                                        Navigate('/mentorships/my-mentees');
+                                    }
+                                }}
+                            >
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div> */}
@@ -600,7 +665,17 @@ export default function Mentorships() {
                                             </div>
                                     </div>
                             </div>
-                            <div className="user-detail">
+                            <div
+                                className="user-detail user-detail-clickable"
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => setIsUpcomingMeetingsDrawerOpen(true)}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter' || event.key === ' ') {
+                                        setIsUpcomingMeetingsDrawerOpen(true);
+                                    }
+                                }}
+                            >
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div> */}
@@ -624,7 +699,7 @@ export default function Mentorships() {
                         <div className="page-body">
                             <div className="posts">
                                 <div className="page-divider page-divider-home">
-                                    <p>Meet our LabSci Mentors</p>
+                                    <p>{pageDividerText}</p>
                                 </div>
 
                                 {/* Search + Filters */}
@@ -804,6 +879,40 @@ export default function Mentorships() {
         ) : null}
 
     </form>
+</aside>
+
+{/* Overlay */}
+<div
+    className={`drawer-overlay ${isUpcomingMeetingsDrawerOpen ? 'open' : ''}`}
+    onClick={() => setIsUpcomingMeetingsDrawerOpen(false)}
+/>
+
+{/* Slide-in Drawer */}
+<aside className={`drawer ${isUpcomingMeetingsDrawerOpen ? 'open' : ''}`}>
+    <div className="drawer-header">
+        <button
+            className="back-btn"
+            type="button"
+            onClick={() => setIsUpcomingMeetingsDrawerOpen(false)}
+        >
+            ← Back
+        </button>
+    </div>
+
+    <h1>Upcoming Meetings</h1>
+    <div className="drawer-divider" />
+
+    <div className="events-history">
+        {upcomingMeetingsHistory.map((item) => (
+            <div className="events-history-card" key={item.id}>
+                <p className="events-history-title">{item.title}</p>
+                <a className="events-history-link" href={item.link}>
+                    View meeting
+                </a>
+                <span className="events-history-date">{item.date}</span>
+            </div>
+        ))}
+    </div>
 </aside>
 
             </main>

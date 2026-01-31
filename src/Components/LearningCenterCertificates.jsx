@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight, faMagnifyingGlass, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from './Navigation';
@@ -14,14 +14,14 @@ import SideNavigation from './Navigation/SideNavigation';
 import defaultImage from '../Images/user-profile.svg';
 import likeIcon from '../Images/like-svgrepo-com.svg';
 import commentIcon from '../Images/comment-svgrepo-com.svg';
-import { dateFormat } from '../helper';
+import { dateFormat, humanReadableDate } from '../helper';
 
 
 
-export default function GetHelp({
-    pageTitle = 'Get Help',
-    pageSubtitle = 'Answer questions from your peers and get answers to your most burning questions',
-    pageDividerText = 'Browse all questions',
+export default function LearningCenterCertificates({
+    pageTitle = 'Learning Center',
+    pageSubtitle = 'Teaching reinforces knowledge. Train your peers and earn a certificate of expertise to show off your skills!',
+    pageDividerText = 'Browse all requests',
 }) {
     const Navigate = useNavigate(); // keep your original naming
     const editorRef = useRef(null);
@@ -384,9 +384,20 @@ export default function GetHelp({
             const userName = author?.name || '';
             const userProfileImg = author?.acf?.user_profile_picture;
             const userJobInsitution = author?.acf?.['user-job-Insitution'];
+            const intention =
+                question?.acf?.pay ||
+                question?.acf?.learning_pay ||
+                question?.acf?.borrow_pay ||
+                question?.acf?.collaborations_pay ||
+                '';
+            const deadline =
+                question?.acf?.deadline ||
+                question?.acf?.learning_deadline ||
+                question?.acf?.borrow_deadline ||
+                question?.acf?.collaborations_deadline ||
+                '';
 
             const commentTotal = commentTotalsByPostId[question.id] ?? 0;
-            const likeTotal = question?.acf?.like_count ?? 0;
 
             if (question.status !== 'publish') return null;
             if (userField && question?.acf?.question_subject_area && userField !== question?.acf?.question_subject_area) return null;
@@ -401,8 +412,11 @@ export default function GetHelp({
             const isCommentsOpen = Boolean(openComments[question.id]);
 
             return (
-                <div className="card collaboration-card mb-4" key={question.id || index}>
-                    <div className="card-body">
+                <div className="card collaboration-card mb-4 share-card" key={question.id || index}>
+                    <div className="card-body share-card-body">
+                        <span className="share-card-intention">
+                            {intention || 'Intention'}
+                        </span>
                         <div className="questions-details">
                             <div className="questions-details-name">
                                 <img
@@ -448,10 +462,6 @@ export default function GetHelp({
 
                         <div className="question-actions">
                             <div className="question-actions-meta">
-                                <button type="button" className="question-actions-item">
-                                    <img src={likeIcon} alt="" className="like-icon" aria-hidden="true" />
-                                    <span>{likeTotal} Like</span>
-                                </button>
                                 <button
                                     type="button"
                                     className="question-actions-btn"
@@ -466,7 +476,10 @@ export default function GetHelp({
                                     <span>{commentTotal} Comments</span>
                                 </button>
                             </div>
-                            
+                            <div className="share-card-deadline">
+                                <FontAwesomeIcon icon={faClock} />
+                                <span>{deadline ? humanReadableDate(deadline) : 'Deadline'}</span>
+                            </div>
                         </div>
 
                         {isCommentsOpen ? (
@@ -569,8 +582,8 @@ export default function GetHelp({
                     <div className="mt-4">
                         <div className="page-header">
                             <div>
-                                <h1 className="mb-3">{pageTitle}</h1>
-                                <p>{pageSubtitle}</p>
+                                <h1 className="mb-3">Certificates Earned</h1>
+                                <p>Your earned teaching certificates</p>
                             </div>
                             <div className="col-12 text-end mt-4">
                                 <button 
@@ -578,175 +591,21 @@ export default function GetHelp({
                                     type="button"
                                     onClick={() => setIsDrawerOpen(true)}
                                 >
-                                    Ask a Question
+                                    Learn New Skill
                                 </button>
                             </div>
                         </div>
 
 
-                        <div className="user-details">
-
-                            <div
-                                className="user-detail user-detail-clickable"
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => Navigate('/get-help/my-questions')}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        Navigate('/get-help/my-questions');
-                                    }
-                                }}
-                            >
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>My Questions</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {notifications}
-                                            </div>
-                                    </div>
-                            </div>
-
-                            <div
-                                className="user-detail user-detail-clickable"
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => Navigate('/get-help/my-comments')}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        Navigate('/get-help/my-comments');
-                                    }
-                                }}
-                            >
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>My Comments</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {notifications}
-                                            </div>
-                                    </div>
-                            </div>
-                            </div>               
-
-
 
                         <div className="page-body">
                             <div className="posts">
-                                <div className="page-divider page-divider-home">
-                                    <p>{pageDividerText}</p>
-                                </div>
-
-                                {/* Search + Filters */}
-                                <div className="search-filter-wrap">
-                                    {/* Search Bar */}
-                                    <div className="search-bar">
-                                        <input
-                                            type="text"
-                                            placeholder="Search for anything"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                        />
-                                        <button type="button" className="search-btn">
-                                            <FontAwesomeIcon icon={faMagnifyingGlass} />
-                                        </button>
-                                    </div>
-
-                                    {/* Filters */}
-                                    <div className="filters">
-
-                                        <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
-                                            <option value="">Field</option>
-                                            <option value="Biology">Biology</option>
-                                            <option value="Chemistry">Chemistry</option>
-                                        </select>
-
-
-                                        <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
-                                            <option value="">Category</option>
-                                            <option value="Tehcnical">Technical</option>
-                                            <option value="Advice">Advice</option>
-                                        </select>
-                                    </div>
-                                </div>
 
                                 <div>
                                     {questions?.some(Boolean) ? questions : <p>No posts yet.</p>}
                                 </div>
                             </div>
 
-                            <div className="calendar upcoming-events-card">
-                                <div className="events-header">
-                                    <h2>Upcoming Events</h2>
-                                </div>
-
-                                <Calendar
-                                    tileClassName={({ date }) => {
-                                        const scheduledEvents = (events || []).some(
-                                            (item) => dateFormat(date) === item?.acf?.mentor_request_date
-                                        );
-                                        return scheduledEvents ? 'scheduled-event' : null;
-                                    }}
-                                    firstDayOfWeek={0}
-                                />
-
-                                <div className="events-schedule">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline"
-                                        onClick={() => setShowScheduleForm((prev) => !prev)}
-                                    >
-                                        Schedule Event
-                                    </button>
-                                    {showScheduleForm ? (
-                                        <form className="schedule-form" onSubmit={handleScheduleSubmit}>
-                                            <input
-                                                type="text"
-                                                placeholder="Event title"
-                                                value={newEventTitle}
-                                                onChange={(e) => setNewEventTitle(e.target.value)}
-                                            />
-                                            <input
-                                                type="date"
-                                                value={newEventDate}
-                                                onChange={(e) => setNewEventDate(e.target.value)}
-                                            />
-                                            <button type="submit" className="btn btn-dark">Add</button>
-                                        </form>
-                                    ) : null}
-                                </div>
-
-                                <div className="events-list">
-                                    <h4>This Week</h4>
-                                    {upcomingThisWeek.length ? (
-                                        upcomingThisWeek.map((item, idx) => (
-                                            <div className="event-item" key={`${item.title}-${idx}`}>
-                                                <strong>{item.title}</strong>
-                                                <span>{item.date}</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="event-item">
-                                            <p>Science Storytelling Challenge</p>
-                                            <span>Sun 1 Feb</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -771,41 +630,46 @@ export default function GetHelp({
         <span className="points-badge">*5 points required</span>
     </div>
 
-    <h1>Ask a Question</h1>
+    <h1>Learn New Skill</h1>
     <div className="drawer-divider" />
     <form className="drawer-form">
         <label className="first-label">
-            Title (150 characters max)
+            What would you like to learn? (150 characters max)
             <input
                 type="text"
                 maxLength={150}
-                placeholder="Give a short but appropriate title."
+                //placeholder="ex. Need help creating a knockout cell line."
             />
         </label>
 
         <label>
             Description
             <textarea
-                placeholder="Provide additional details."
+                placeholder="Explain your request in further detail."
             />
         </label>
 
         <label>
-            Field
+            Mode
             <select>
                 <option>Choose an option</option>
-                <option>Biology</option>
-                <option>Chemistry</option>
+                <option>In-person</option>
+                <option>Virtual</option>
             </select>
         </label>
 
         <label>
-            Category
+            Compensation
             <select>
                 <option>Choose an option</option>
-                <option>Tehcnical question</option>
-                <option>Advice</option>
+                <option>Free</option>
+                <option>Paid</option>
             </select>
+        </label>
+
+        <label>
+            Deadline for learning to take place
+            <input type="date" />
         </label>
 
         <div className="drawer-actions">

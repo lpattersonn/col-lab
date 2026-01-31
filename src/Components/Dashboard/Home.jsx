@@ -83,6 +83,69 @@ export default function Home() {
     const [ scheduledEventsLocal, setScheduledEventsLocal ] = useState([]);
     const [ newEventTitle, setNewEventTitle ] = useState('');
     const [ newEventDate, setNewEventDate ] = useState('');
+    const [ isPointsDrawerOpen, setIsPointsDrawerOpen ] = useState(false);
+    const [ isEventsDrawerOpen, setIsEventsDrawerOpen ] = useState(false);
+
+    const pointsHistory = [
+        {
+            id: 'points-1',
+            title: "Earned 2 points for replying to Alex's question.",
+            detail: 'Insert breadcrumbs link to the question...',
+            date: 'Today',
+        },
+        {
+            id: 'points-2',
+            title: 'Earned 4 points for sharing a resource.',
+            detail: 'Insert breadcrumbs link to the resource...',
+            date: 'Yesterday',
+        },
+        {
+            id: 'points-3',
+            title: 'Earned 6 points for collaborating on a project.',
+            detail: 'Insert breadcrumbs link to the collaboration...',
+            date: 'Jan 20',
+        },
+    ];
+
+    const eventsHistory = useMemo(() => {
+        const items = [];
+
+        (events || []).forEach((item, idx) => {
+            const title =
+                item?.acf?.mentor_request_title ||
+                item?.title?.rendered ||
+                'Upcoming event';
+            const link = item?.link || '#';
+            const date = item?.acf?.mentor_request_date || item?.date || '';
+
+            items.push({
+                id: `event-${item?.id || idx}`,
+                title,
+                link,
+                date,
+            });
+        });
+
+        (scheduledEventsLocal || []).forEach((item, idx) => {
+            items.push({
+                id: `scheduled-${idx}`,
+                title: item?.title || 'Scheduled event',
+                link: '#',
+                date: item?.date || '',
+            });
+        });
+
+        return items.length
+            ? items
+            : [
+                  {
+                      id: 'event-placeholder',
+                      title: 'Science Storytelling Challenge',
+                      link: '#',
+                      date: 'Sun 1 Feb',
+                  },
+              ];
+    }, [events, scheduledEventsLocal]);
 
     const [ commentTotalsByPostId, setCommentTotalsByPostId ] = useState({});
 
@@ -596,7 +659,11 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            <div className="user-detail user-detail-home">
+                            <button
+                                type="button"
+                                className="user-detail user-detail-home user-detail-button"
+                                onClick={() => setIsPointsDrawerOpen(true)}
+                            >
                                     <div className="user-info-image user-notifcations">
                                         <img src={coinsIcon} alt="" className="user-info-icon" aria-hidden="true" />
                                     </div>
@@ -612,9 +679,13 @@ export default function Home() {
                                                 {notifications}
                                             </div>
                                     </div>
-                            </div>
+                            </button>
 
-                            <div className="user-detail user-detail-home">
+                            <button
+                                type="button"
+                                className="user-detail user-detail-home user-detail-button"
+                                onClick={() => setIsEventsDrawerOpen(true)}
+                            >
                                     <div className="user-info-image user-notifcations">
                                         <img src={calendarEventIcon} alt="" className="user-info-icon" aria-hidden="true" />
                                     </div>
@@ -630,7 +701,7 @@ export default function Home() {
                                                 {events.length}
                                             </div>
                                     </div>
-                            </div>
+                            </button>
 
                         </div>
 
@@ -778,6 +849,73 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
+                {/* Overlay */}
+                <div
+                    className={`drawer-overlay ${isPointsDrawerOpen ? 'open' : ''}`}
+                    onClick={() => setIsPointsDrawerOpen(false)}
+                />
+
+                {/* Slide-in Drawer */}
+                <aside className={`drawer ${isPointsDrawerOpen ? 'open' : ''}`}>
+                    <div className="drawer-header">
+                        <button
+                            className="back-btn"
+                            type="button"
+                            onClick={() => setIsPointsDrawerOpen(false)}
+                        >
+                            ← Back
+                        </button>
+
+                    </div>
+
+                    <h1>Points History</h1>
+                    <div className="drawer-divider" />
+
+                    <div className="points-history">
+                        {pointsHistory.map((item) => (
+                            <div className="points-history-card" key={item.id}>
+                                <p className="points-history-title">{item.title}</p>
+                                <p className="points-history-detail">{item.detail}</p>
+                                <span className="points-history-date">{item.date}</span>
+                            </div>
+                        ))}
+                    </div>
+                </aside>
+
+                {/* Overlay */}
+                <div
+                    className={`drawer-overlay ${isEventsDrawerOpen ? 'open' : ''}`}
+                    onClick={() => setIsEventsDrawerOpen(false)}
+                />
+
+                {/* Slide-in Drawer */}
+                <aside className={`drawer ${isEventsDrawerOpen ? 'open' : ''}`}>
+                    <div className="drawer-header">
+                        <button
+                            className="back-btn"
+                            type="button"
+                            onClick={() => setIsEventsDrawerOpen(false)}
+                        >
+                            ← Back
+                        </button>
+
+                    </div>
+
+                    <h1>Upcoming Events</h1>
+                    <div className="drawer-divider" />
+
+                    <div className="events-history">
+                        {eventsHistory.map((item) => (
+                            <div className="events-history-card" key={item.id}>
+                                <p className="events-history-title">{item.title}</p>
+                                <a className="events-history-link" href={item.link}>
+                                    View event
+                                </a>
+                                <span className="events-history-date">{item.date}</span>
+                            </div>
+                        ))}
+                    </div>
+                </aside>
             </main>
         </>
     );

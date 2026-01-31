@@ -18,7 +18,11 @@ import { dateFormat, humanReadableDate } from '../helper';
 
 
 
-export default function Collaborations() {
+export default function ShareResources({
+    pageTitle = 'Share Resources',
+    pageSubtitle = 'Lend a hand — or an item. It goes a long way!',
+    pageDividerText = 'Browse all requests',
+}) {
     const Navigate = useNavigate(); // keep your original naming
     const editorRef = useRef(null);
 
@@ -578,8 +582,8 @@ export default function Collaborations() {
                     <div className="mt-4">
                         <div className="page-header">
                             <div>
-                                <h1 className="mb-3">Share Resources</h1>
-                                <p>Lend a hand — or an item. It goes a long way!</p>
+                                <h1 className="mb-3">{pageTitle}</h1>
+                                <p>{pageSubtitle}</p>
                             </div>
                             <div className="col-12 text-end mt-4">
                                 <button 
@@ -595,7 +599,17 @@ export default function Collaborations() {
 
                         <div className="user-details">
 
-                            <div className="user-detail">
+                            <div
+                                className="user-detail user-detail-clickable"
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => Navigate('/share-resources/my-requests')}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter' || event.key === ' ') {
+                                        Navigate('/share-resources/my-requests');
+                                    }
+                                }}
+                            >
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div> */}
@@ -613,7 +627,17 @@ export default function Collaborations() {
                                     </div>
                             </div>
 
-                            <div className="user-detail">
+                            <div
+                                className="user-detail user-detail-clickable"
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => Navigate('/share-resources/successful-shares')}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter' || event.key === ' ') {
+                                        Navigate('/share-resources/successful-shares');
+                                    }
+                                }}
+                            >
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div> */}
@@ -638,7 +662,7 @@ export default function Collaborations() {
                         <div className="page-body">
                             <div className="posts">
                                 <div className="page-divider page-divider-home">
-                                    <p>Browse all requests</p>
+                                    <p>{pageDividerText}</p>
                                 </div>
 
                                 {/* Search + Filters */}

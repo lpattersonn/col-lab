@@ -572,6 +572,92 @@ a {
   transform: translateY(-5px);
 }
 
+.user-detail-button {
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+}
+
+.user-detail-button.user-detail-home {
+  width: 100%;
+}
+
+.user-detail-button:focus-visible {
+  outline: 2px solid #0f172a;
+  outline-offset: 4px;
+  border-radius: 22px;
+}
+
+.points-history {
+  display: grid;
+  gap: 16px;
+}
+
+.points-history-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px 20px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.points-history-title {
+  margin: 0 0 8px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.points-history-detail {
+  margin: 0 0 10px;
+  font-size: 1.4rem;
+  color: #475569;
+}
+
+.points-history-date {
+  font-size: 1.2rem;
+  color: #94a3b8;
+}
+
+.events-history {
+  display: grid;
+  gap: 16px;
+}
+
+.events-history-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px 20px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+  display: grid;
+  gap: 8px;
+}
+
+.events-history-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.events-history-link {
+  margin: 0 0 2px;
+  font-size: 1.4rem;
+  color: #475569;
+}
+
+.events-history-link:hover {
+  text-decoration: none;
+}
+
+.events-history-date {
+  font-size: 1.2rem;
+  color: #94a3b8;
+}
+
 .page-divider {
   display: flex;
   align-items: center;

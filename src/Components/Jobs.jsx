@@ -18,7 +18,11 @@ import { dateFormat } from '../helper';
 
 
 
-export default function Collaborations() {
+export default function Jobs({
+    pageTitle = 'Explore Jobs',
+    pageSubtitle = 'Find jobs that match your skill set',
+    pageDividerText = 'Browse all job postings',
+}) {
     const Navigate = useNavigate(); // keep your original naming
     const editorRef = useRef(null);
 
@@ -467,8 +471,8 @@ export default function Collaborations() {
                     <div className="mt-4">
                         <div className="page-header">
                             <div>
-                                <h1 className="mb-3">Explore Jobs</h1>
-                                <p>Find jobs that match your skill set</p>
+                                <h1 className="mb-3">{pageTitle}</h1>
+                                <p>{pageSubtitle}</p>
                             </div>
                             <div className="col-12 text-end mt-4">
                                 <button 
@@ -484,7 +488,17 @@ export default function Collaborations() {
 
                         <div className="user-details">
 
-                            <div className="user-detail">
+                            <div
+                                className="user-detail user-detail-clickable"
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => Navigate('/jobs/my-postings')}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter' || event.key === ' ') {
+                                        Navigate('/jobs/my-postings');
+                                    }
+                                }}
+                            >
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div> */}
@@ -502,7 +516,17 @@ export default function Collaborations() {
                                     </div>
                             </div>
 
-                            <div className="user-detail">
+                            <div
+                                className="user-detail user-detail-clickable"
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => Navigate('/jobs/applied')}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter' || event.key === ' ') {
+                                        Navigate('/jobs/applied');
+                                    }
+                                }}
+                            >
                                     {/* <div className="user-info-image user-notifcations">
                                         <FontAwesomeIcon icon={faStar} />
                                     </div> */}
@@ -526,7 +550,7 @@ export default function Collaborations() {
                         <div className="page-body">
                             <div className="posts">
                                 <div className="page-divider page-divider-home">
-                                    <p>Browse all job postings</p>
+                                    <p>{pageDividerText}</p>
                                 </div>
 
                                 {/* Search + Filters */}

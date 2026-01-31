@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight, faMagnifyingGlass, faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from './Navigation';
@@ -18,10 +18,10 @@ import { dateFormat } from '../helper';
 
 
 
-export default function GetHelp({
-    pageTitle = 'Get Help',
-    pageSubtitle = 'Answer questions from your peers and get answers to your most burning questions',
-    pageDividerText = 'Browse all questions',
+export default function JobsApplied({
+    pageTitle = 'Explore Jobs',
+    pageSubtitle = 'Find jobs that match your skill set',
+    pageDividerText = 'Browse all job postings',
 }) {
     const Navigate = useNavigate(); // keep your original naming
     const editorRef = useRef(null);
@@ -384,9 +384,11 @@ export default function GetHelp({
             const userName = author?.name || '';
             const userProfileImg = author?.acf?.user_profile_picture;
             const userJobInsitution = author?.acf?.['user-job-Insitution'];
+            const jobLocation = question?.acf?.job_location || 'Toronto, ON M5V 3T4';
+            const jobTags = Array.isArray(question?.acf?.job_tags) ? question.acf.job_tags : [];
+            const fallbackJobTags = [ '$24.12 an hour', 'Full-time', 'Weekends as needed +2', 'On-site parking' ];
 
             const commentTotal = commentTotalsByPostId[question.id] ?? 0;
-            const likeTotal = question?.acf?.like_count ?? 0;
 
             if (question.status !== 'publish') return null;
             if (userField && question?.acf?.question_subject_area && userField !== question?.acf?.question_subject_area) return null;
@@ -401,118 +403,18 @@ export default function GetHelp({
             const isCommentsOpen = Boolean(openComments[question.id]);
 
             return (
-                <div className="card collaboration-card mb-4" key={question.id || index}>
+                <div className="card job-card mb-4" key={question.id || index}>
                     <div className="card-body">
-                        <div className="questions-details">
-                            <div className="questions-details-name">
-                                <img
-                                    className="questions-details-name-img"
-                                    src={userProfileImg ? userProfileImg : defaultImage}
-                                    alt={userName || 'User'}
-                                    loading="lazy"
-                                />
-                                <div className="questions-details-name-info">
-                                    <p><strong>{userName}</strong></p>
-                                    <div className="questions-details-posted">
-                                        <p>{getTimeAgo(question.date)}</p>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="job-card-header">
+                            <h3 className="job-card-title">{question?.title?.rendered || 'Job title'}</h3>
                         </div>
-
-                        <p><strong className='lead'>{question?.title?.rendered}</strong></p>
-
-                        {rendered ? (
-                            <div>
-                                <div
-                                    dangerouslySetInnerHTML={{
-                                        __html: isExpanded ? rendered : `${snippetText}${ellipsis}`,
-                                    }}
-                                />
-                                {shouldTruncate ? (
-                                    <button
-                                        type="button"
-                                        className="read-more-btn"
-                                        onClick={() =>
-                                            setExpandedPosts((prev) => ({
-                                                ...prev,
-                                                [question.id]: !prev[question.id],
-                                            }))
-                                        }
-                                    >
-                                        {isExpanded ? 'Show less' : 'Read more'}
-                                    </button>
-                                ) : null}
-                            </div>
-                        ) : null}
-
-                        <div className="question-actions">
-                            <div className="question-actions-meta">
-                                <button type="button" className="question-actions-item">
-                                    <img src={likeIcon} alt="" className="like-icon" aria-hidden="true" />
-                                    <span>{likeTotal} Like</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="question-actions-btn"
-                                    onClick={() =>
-                                        setOpenComments((prev) => ({
-                                            ...prev,
-                                            [question.id]: !prev[question.id],
-                                        }))
-                                    }
-                                >
-                                    <img src={commentIcon} alt="" className="like-icon" aria-hidden="true" />
-                                    <span>{commentTotal} Comments</span>
-                                </button>
-                            </div>
-                            
+                        <p className="job-card-company">{userJobInsitution || 'Company/Institution'}</p>
+                        <p className="job-card-location">{jobLocation}</p>
+                        <div className="job-card-tags">
+                            {(jobTags.length ? jobTags : fallbackJobTags).map((tag) => (
+                                <span className="job-card-tag" key={`${question.id}-${tag}`}>{tag}</span>
+                            ))}
                         </div>
-
-                        {isCommentsOpen ? (
-                            <div className="question-comments">
-                                <div className="question-comments-input">
-                                    <textarea
-                                        placeholder="Write a comment..."
-                                        rows={3}
-                                        value={commentInputs?.[question.id] || ''}
-                                        onChange={(e) => handleCommentChange(question.id, e.target.value)}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline"
-                                        onClick={() => handleCommentSubmit(question.id)}
-                                    >
-                                        Post
-                                    </button>
-                                </div>
-                                <div className="question-comments-list">
-                                    {(commentThreads?.[question.id] || []).map((comment) => (
-                                        <div className="comment-item" key={comment.id}>
-                                            <img
-                                                className="comment-avatar"
-                                                src={defaultImage}
-                                                alt={comment.author}
-                                                loading="lazy"
-                                            />
-                                            <div className="comment-body">
-                                                <div className="comment-meta">
-                                                    <strong>{comment.author}</strong>
-                                                    <span>Just now</span>
-                                                </div>
-                                                <p>{comment.content?.replace?.(/<[^>]*>/g, '') || comment.content}</p>
-                                                <div className="comment-actions">
-                                                    <button type="button" className="comment-like">
-                                                        <img src={likeIcon} alt="" className="like-icon" aria-hidden="true" />
-                                                        <span>Like</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        ) : null}
                     </div>
                 </div>
             );
@@ -569,8 +471,8 @@ export default function GetHelp({
                     <div className="mt-4">
                         <div className="page-header">
                             <div>
-                                <h1 className="mb-3">{pageTitle}</h1>
-                                <p>{pageSubtitle}</p>
+                                <h1 className="mb-3">Jobs I Applied To</h1>
+                                <p>Track my job applications</p>
                             </div>
                             <div className="col-12 text-end mt-4">
                                 <button 
@@ -578,176 +480,14 @@ export default function GetHelp({
                                     type="button"
                                     onClick={() => setIsDrawerOpen(true)}
                                 >
-                                    Ask a Question
+                                    Create Job Posting
                                 </button>
                             </div>
                         </div>
 
-
-                        <div className="user-details">
-
-                            <div
-                                className="user-detail user-detail-clickable"
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => Navigate('/get-help/my-questions')}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        Navigate('/get-help/my-questions');
-                                    }
-                                }}
-                            >
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>My Questions</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {notifications}
-                                            </div>
-                                    </div>
+                            <div className="jobs-grid">
+                                {questions?.some(Boolean) ? questions : <p>No jobs yet.</p>}
                             </div>
-
-                            <div
-                                className="user-detail user-detail-clickable"
-                                role="button"
-                                tabIndex={0}
-                                onClick={() => Navigate('/get-help/my-comments')}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter' || event.key === ' ') {
-                                        Navigate('/get-help/my-comments');
-                                    }
-                                }}
-                            >
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>My Comments</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {notifications}
-                                            </div>
-                                    </div>
-                            </div>
-                            </div>               
-
-
-
-                        <div className="page-body">
-                            <div className="posts">
-                                <div className="page-divider page-divider-home">
-                                    <p>{pageDividerText}</p>
-                                </div>
-
-                                {/* Search + Filters */}
-                                <div className="search-filter-wrap">
-                                    {/* Search Bar */}
-                                    <div className="search-bar">
-                                        <input
-                                            type="text"
-                                            placeholder="Search for anything"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                        />
-                                        <button type="button" className="search-btn">
-                                            <FontAwesomeIcon icon={faMagnifyingGlass} />
-                                        </button>
-                                    </div>
-
-                                    {/* Filters */}
-                                    <div className="filters">
-
-                                        <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
-                                            <option value="">Field</option>
-                                            <option value="Biology">Biology</option>
-                                            <option value="Chemistry">Chemistry</option>
-                                        </select>
-
-
-                                        <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
-                                            <option value="">Category</option>
-                                            <option value="Tehcnical">Technical</option>
-                                            <option value="Advice">Advice</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    {questions?.some(Boolean) ? questions : <p>No posts yet.</p>}
-                                </div>
-                            </div>
-
-                            <div className="calendar upcoming-events-card">
-                                <div className="events-header">
-                                    <h2>Upcoming Events</h2>
-                                </div>
-
-                                <Calendar
-                                    tileClassName={({ date }) => {
-                                        const scheduledEvents = (events || []).some(
-                                            (item) => dateFormat(date) === item?.acf?.mentor_request_date
-                                        );
-                                        return scheduledEvents ? 'scheduled-event' : null;
-                                    }}
-                                    firstDayOfWeek={0}
-                                />
-
-                                <div className="events-schedule">
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline"
-                                        onClick={() => setShowScheduleForm((prev) => !prev)}
-                                    >
-                                        Schedule Event
-                                    </button>
-                                    {showScheduleForm ? (
-                                        <form className="schedule-form" onSubmit={handleScheduleSubmit}>
-                                            <input
-                                                type="text"
-                                                placeholder="Event title"
-                                                value={newEventTitle}
-                                                onChange={(e) => setNewEventTitle(e.target.value)}
-                                            />
-                                            <input
-                                                type="date"
-                                                value={newEventDate}
-                                                onChange={(e) => setNewEventDate(e.target.value)}
-                                            />
-                                            <button type="submit" className="btn btn-dark">Add</button>
-                                        </form>
-                                    ) : null}
-                                </div>
-
-                                <div className="events-list">
-                                    <h4>This Week</h4>
-                                    {upcomingThisWeek.length ? (
-                                        upcomingThisWeek.map((item, idx) => (
-                                            <div className="event-item" key={`${item.title}-${idx}`}>
-                                                <strong>{item.title}</strong>
-                                                <span>{item.date}</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="event-item">
-                                            <p>Science Storytelling Challenge</p>
-                                            <span>Sun 1 Feb</span>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 
@@ -771,41 +511,65 @@ export default function GetHelp({
         <span className="points-badge">*5 points required</span>
     </div>
 
-    <h1>Ask a Question</h1>
+    <h1>Post a Job</h1>
     <div className="drawer-divider" />
     <form className="drawer-form">
         <label className="first-label">
-            Title (150 characters max)
+            Name of Company/Institution
             <input
                 type="text"
-                maxLength={150}
-                placeholder="Give a short but appropriate title."
+                placeholder=""
             />
         </label>
 
         <label>
-            Description
-            <textarea
-                placeholder="Provide additional details."
-            />
+            Office location
+            <input type="text" placeholder="" />
         </label>
 
         <label>
-            Field
-            <select>
-                <option>Choose an option</option>
-                <option>Biology</option>
-                <option>Chemistry</option>
-            </select>
+            Job type
+            <input type="text" placeholder="part-time, full-time" />
         </label>
 
         <label>
-            Category
-            <select>
-                <option>Choose an option</option>
-                <option>Tehcnical question</option>
-                <option>Advice</option>
-            </select>
+            Full job description
+            <textarea placeholder="" />
+        </label>
+
+        <label>
+            Benefits &amp; Pay
+            <textarea placeholder="" />
+        </label>
+
+        <label>
+            Language requirements
+            <input type="text" placeholder="English essential, French good to have" />
+        </label>
+
+        <label>
+            Work location
+            <input type="text" placeholder="Work from home" />
+        </label>
+
+        <label>
+            Schedule
+            <input type="text" placeholder="Mon to Fri, 9am to 5pm, 40hrs/wk" />
+        </label>
+
+        <label>
+            Instructions to Apply
+            <textarea placeholder="" />
+        </label>
+
+        <label>
+            Application deadline
+            <input type="date" />
+        </label>
+
+        <label>
+            Expected start date
+            <input type="date" />
         </label>
 
         <div className="drawer-actions">
