@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faFolder, faGlobe, faStar, faCartArrowDown, faBullhorn } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faFolder, faCircleQuestion, faStar, faCartArrowDown, faBullhorn, faGraduationCap, faBriefcase } from '@fortawesome/free-solid-svg-icons';
 
 export default function SideNavigation() {
     const location = useLocation();
@@ -27,24 +27,24 @@ export default function SideNavigation() {
                 className={isActive("/collaborations") ? "active" : ""}
             >
                 <span className='icon-container'>
-                    <FontAwesomeIcon icon={faFolder} />
+                    <FontAwesomeIcon icon={faBullhorn} />
                 </span>
                 Collaborations
             </Link>
 
             <Link 
-                to="/contact-us" 
-                className={isActive("/contact-us") ? "active" : ""}
+                to="/get-help" 
+                className={isActive("/get-help") ? "active" : ""}
             >
                 <span className='icon-container'>
-                    <FontAwesomeIcon icon={faGlobe} />
+                    <FontAwesomeIcon icon={faCircleQuestion} />
                 </span>
                 Get Help
             </Link>
 
             <Link 
-                to="/mentorship-opportunities" 
-                className={isActive("/mentorship-opportunities") ? "active" : ""}
+                to="/mentorships" 
+                className={isActive("/mentorships") ? "active" : ""}
             >
                 <span className='icon-container'>
                     <FontAwesomeIcon icon={faStar} />
@@ -53,11 +53,11 @@ export default function SideNavigation() {
             </Link>
 
             <Link 
-                to="/borrow-items" 
-                className={isActive("/borrow-items") ? "active" : ""}
+                to="/share-resources" 
+                className={isActive("/share-resources") ? "active" : ""}
             >
                 <span className='icon-container'>
-                    <FontAwesomeIcon icon={faBullhorn} />
+                    <FontAwesomeIcon icon={faCartArrowDown} />
                 </span>
                 Share Resources
             </Link>
@@ -67,7 +67,7 @@ export default function SideNavigation() {
                 className={isActive("/jobs") ? "active" : ""}
             >
                 <span className='icon-container'>
-                    <FontAwesomeIcon icon={faBullhorn} />
+                    <FontAwesomeIcon icon={faBriefcase} />
                 </span>
                 Explore Jobs
             </Link>
@@ -77,7 +77,7 @@ export default function SideNavigation() {
                 className={isActive("/learning-center") ? "active" : ""}
             >
                 <span className='icon-container'>
-                    <FontAwesomeIcon icon={faCartArrowDown} />
+                    <FontAwesomeIcon icon={faGraduationCap} />
                 </span>
                 Learning Center
             </Link>

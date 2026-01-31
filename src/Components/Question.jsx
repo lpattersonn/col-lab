@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useParams } from "react-router-dom";
 import Navigation from "./Navigation";
-import defaultImage from '../Images/5402435_account_profile_user_avatar_man_icon.svg';
+import defaultImage from '../Images/user-profile.svg';
 import { Editor } from '@tinymce/tinymce-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';

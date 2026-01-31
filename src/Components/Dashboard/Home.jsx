@@ -6,7 +6,13 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight, faThumbsUp, faComment, faPlusSquare, faXmark, faImage, faFaceSmile } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight, faPlusSquare, faXmark } from '@fortawesome/free-solid-svg-icons';
+import likeIcon from '../../Images/like-svgrepo-com.svg';
+import commentIcon from '../../Images/comment-svgrepo-com.svg';
+import addPhotoIcon from '../../Images/add-photo-svgrepo-com.svg';
+import emojiSmileIcon from '../../Images/emoji-smile-svgrepo-com.svg';
+import coinsIcon from '../../Images/coins-hand-svgrepo-com.svg';
+import calendarEventIcon from '../../Images/calendar-circle-exclamation-svgrepo-com.svg';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from '../Navigation';
@@ -73,6 +79,10 @@ export default function Home() {
     const [ commentInputs, setCommentInputs ] = useState({});
     const [ commentThreads, setCommentThreads ] = useState({});
     const [ expandedPosts, setExpandedPosts ] = useState({});
+    const [ showScheduleForm, setShowScheduleForm ] = useState(false);
+    const [ scheduledEventsLocal, setScheduledEventsLocal ] = useState([]);
+    const [ newEventTitle, setNewEventTitle ] = useState('');
+    const [ newEventDate, setNewEventDate ] = useState('');
 
     const [ commentTotalsByPostId, setCommentTotalsByPostId ] = useState({});
 
@@ -357,6 +367,29 @@ export default function Home() {
         }
     };
 
+    const handleScheduleSubmit = (e) => {
+        e.preventDefault();
+        if (!newEventTitle.trim() || !newEventDate) return;
+        setScheduledEventsLocal((prev) => [
+            { title: newEventTitle.trim(), date: newEventDate },
+            ...prev,
+        ]);
+        setNewEventTitle('');
+        setNewEventDate('');
+        setShowScheduleForm(false);
+    };
+
+    const upcomingThisWeek = useMemo(() => {
+        const now = new Date();
+        const weekFromNow = new Date();
+        weekFromNow.setDate(now.getDate() + 7);
+
+        return (scheduledEventsLocal || []).filter((event) => {
+            const eventDate = new Date(event.date);
+            return eventDate >= now && eventDate <= weekFromNow;
+        });
+    }, [scheduledEventsLocal]);
+
     const questions = useMemo(() => {
         const userField = usersAccountDetails?.acf?.user_feild;
         if (!getHelpQuestions?.length) return [];
@@ -433,7 +466,7 @@ export default function Home() {
                         <div className="question-actions">
                             <div className="question-actions-meta">
                                 <button type="button" className="question-actions-item">
-                                    <FontAwesomeIcon icon={faThumbsUp} />
+                                    <img src={likeIcon} alt="" className="like-icon" aria-hidden="true" />
                                     <span>{likeTotal} Like</span>
                                 </button>
                                 <button
@@ -446,7 +479,7 @@ export default function Home() {
                                         }))
                                     }
                                 >
-                                    <FontAwesomeIcon icon={faComment} />
+                                    <img src={commentIcon} alt="" className="like-icon" aria-hidden="true" />
                                     <span>{commentTotal} Comments</span>
                                 </button>
                             </div>
@@ -487,7 +520,7 @@ export default function Home() {
                                                 <p>{comment.content?.replace?.(/<[^>]*>/g, '') || comment.content}</p>
                                                 <div className="comment-actions">
                                                     <button type="button" className="comment-like">
-                                                        <FontAwesomeIcon icon={faThumbsUp} />
+                                                        <img src={likeIcon} alt="" className="like-icon" aria-hidden="true" />
                                                         <span className='comment-like-text'>Like</span>
                                                     </button>
                                                 </div>
@@ -565,7 +598,7 @@ export default function Home() {
 
                             <div className="user-detail user-detail-home">
                                     <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
+                                        <img src={coinsIcon} alt="" className="user-info-icon" aria-hidden="true" />
                                     </div>
                                     <div className="user-info-content notifcations">
 
@@ -583,7 +616,7 @@ export default function Home() {
 
                             <div className="user-detail user-detail-home">
                                     <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
+                                        <img src={calendarEventIcon} alt="" className="user-info-icon" aria-hidden="true" />
                                     </div>
                                     <div className="user-info-content notifcations">
 
@@ -609,14 +642,6 @@ export default function Home() {
                                             <div className="post-form-title">
                                                 <h2>Create a Post</h2>
                                             </div>
-                                            <button
-                                                type="button"
-                                                className="post-form-close"
-                                                aria-label="Close"
-                                                onClick={clearEditor}
-                                            >
-                                                <FontAwesomeIcon icon={faXmark} />
-                                            </button>
 
                                         </div>
                                         <div className="post-form-content">
@@ -653,10 +678,10 @@ export default function Home() {
                                             <div className="post-form-footer">
                                                 <div className="post-form-icons">
                                                     <button type="button" className="post-icon-btn" aria-label="Add media">
-                                                        <FontAwesomeIcon icon={faImage} />
+                                                        <img src={addPhotoIcon} alt="" className="post-icon-img" aria-hidden="true" />
                                                     </button>
                                                     <button type="button" className="post-icon-btn" aria-label="Add emoji">
-                                                        <FontAwesomeIcon icon={faFaceSmile} />
+                                                        <img src={emojiSmileIcon} alt="" className="post-icon-img" aria-hidden="true" />
                                                     </button>
                                                 </div>
                                                 <button type="submit" className="btn btn-dark">
@@ -692,7 +717,11 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            <div className="calendar">
+                            <div className="calendar upcoming-events-card">
+                                <div className="events-header">
+                                    <h2>Upcoming Events</h2>
+                                </div>
+
                                 <Calendar
                                     tileClassName={({ date }) => {
                                         const scheduledEvents = (events || []).some(
@@ -701,17 +730,50 @@ export default function Home() {
                                         return scheduledEvents ? 'scheduled-event' : null;
                                     }}
                                     firstDayOfWeek={0}
-                                    onClickDay={(value) => {
-                                        const clicked = dateFormat(value);
-                                        const dayEvents = (events || []).filter(
-                                            (item) => item?.acf?.mentor_request_date === clicked
-                                        );
-
-                                        if (!dayEvents.length) return;
-
-                                        alert(`Events on ${clicked}: ${dayEvents.length}`);
-                                    }}
                                 />
+
+                                <div className="events-schedule">
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline"
+                                        onClick={() => setShowScheduleForm((prev) => !prev)}
+                                    >
+                                        Schedule Event
+                                    </button>
+                                    {showScheduleForm ? (
+                                        <form className="schedule-form" onSubmit={handleScheduleSubmit}>
+                                            <input
+                                                type="text"
+                                                placeholder="Event title"
+                                                value={newEventTitle}
+                                                onChange={(e) => setNewEventTitle(e.target.value)}
+                                            />
+                                            <input
+                                                type="date"
+                                                value={newEventDate}
+                                                onChange={(e) => setNewEventDate(e.target.value)}
+                                            />
+                                            <button type="submit" className="btn btn-dark">Add</button>
+                                        </form>
+                                    ) : null}
+                                </div>
+
+                                <div className="events-list">
+                                    <h4>This Week</h4>
+                                    {upcomingThisWeek.length ? (
+                                        upcomingThisWeek.map((item, idx) => (
+                                            <div className="event-item" key={`${item.title}-${idx}`}>
+                                                <strong>{item.title}</strong>
+                                                <span>{item.date}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="event-item">
+                                            <p>Science Storytelling Challenge</p>
+                                            <span>Sun 1 Feb</span>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

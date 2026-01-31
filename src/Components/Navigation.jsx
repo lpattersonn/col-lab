@@ -65,7 +65,7 @@ export default function Navigation({ user }) {
     -------------------------------- */
 
     const navItems = [
-        { to: '/dashboard', label: 'Home' },
+        { to: '/', label: 'Home' },
         { to: '/chat-room', label: 'Chat Room' },
         { to: '/points-center', label: 'Points Center' },
         { to: '/settings/support', label: 'Contact Us' },

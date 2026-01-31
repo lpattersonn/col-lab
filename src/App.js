@@ -11,7 +11,7 @@ import Question from './Components/Question';
 import Jobs from './Components/Jobs';
 import CreateJob from './Components/CreateJob';
 import Job from './Components/Job';
-import Mentors from './Components/Mentors';
+import Mentorships from './Components/Mentorships';
 import MentorSignup from './Components/MentorSignup';
 import Mentor from './Components/Mentor';
 import MentorChat from './Components/MentorChat';
@@ -21,8 +21,8 @@ import CollaborationChat from './Components/CollaborationChat';
 import Request from './Components/Request';
 import LearningCenter from './Components/LearningCenter';
 import LearningRequest from './Components/LearningRequest';
-import ContactUs from './Components/ContactUs';
-import BorrowItems from './Components/BorrowItems';
+import GetHelp from './Components/GetHelp';
+import ShareResources from './Components/ShareResources';
 import BorrowRequest from './Components/BorrowRequest';
 import CreateQuestion from './Components/CreateQuestion';
 import BorrowItemsChat from './Components/BorrowItemsChat';
@@ -43,9 +43,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login/>} />
+        <Route path="/login" element={<Login/>} />
         <Route path="/registration" element={<Registration/>} />
-        <Route path="/dashboard" element={<Home/>} />
+        <Route path="/" element={<Home/>} />
         <Route path="/chat-room" element={<ChatRoom/>} />
         <Route path="/chat-room/collaborations" element={<ChatRoomCollaborations/>} />
         <Route path="/chat-room/mentorships" element={<ChatRoomMentorships/>} />
@@ -61,7 +61,7 @@ function App() {
         <Route path="/jobs" element={<Jobs/>} />
         <Route path="/create-job" element={<CreateJob/>} />
         <Route path="/job/:param1" element={<Job/>} />
-        <Route path="/mentorship-opportunities" element={<Mentors/>} />
+        <Route path="/mentorships" element={<Mentorships/>} />
         <Route path="/mentor-signup" element={<MentorSignup/>} />
         <Route path="/mentor/:param1" element={<Mentor/>} />
         <Route path="/mentor-chat/:param1" element={<MentorChat/>} />
@@ -71,8 +71,8 @@ function App() {
         <Route path="/collaboration-chat/:param1" element={<CollaborationChat />} />
         <Route path="/learning-center" element={<LearningCenter />} />
         <Route path="/learning-request" element={<LearningRequest />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/borrow-items" element={<BorrowItems />} />
+        <Route path="/get-help" element={<GetHelp />} />
+        <Route path="/share-resources" element={<ShareResources />} />
         <Route path="/borrow-items-chat/:param1" element={<BorrowItemsChat />} />
         <Route path="/borrow-request" element={<BorrowRequest />} />
         <Route path="/create-question" element={<CreateQuestion />} />

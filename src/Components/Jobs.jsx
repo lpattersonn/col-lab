@@ -1,632 +1,825 @@
-import React, { useState, useEffect } from "react";
-import Navigation from "./Navigation";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { renderedQuestion } from "../helper"
-import ReactPaginate from 'react-paginate';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import { Editor } from '@tinymce/tinymce-react';
+import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquareCheck, faHouse } from '@fortawesome/free-solid-svg-icons';
-import { submitReport, humanReadableDate } from '../helper';
+import { faStar, faArrowRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { TailSpin } from 'react-loader-spinner';
 
-export default function Jobs() {
-    const userDetails = JSON.parse(localStorage.getItem('userDetails'));
-    const [search, setSearch] = useState('');
-    const [users, setUsers] = useState([]);
-    const [jobs, setJobs] = useState([]);
-    const [activeTab, setActiveTab] = useState("active");
-    
-    useEffect(() => {
-        Promise.all([
-            // Api for jobs
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/jobs`,
-                {
-                    headers: { Authorization: `Bearer ${userDetails.token }`}
-                }
-            ),
-            // Return users
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
-                {
-                    headers: {
-                        Authorization: `Bearer ${userDetails.token}`
-                        }
-                }
-            )
-        ])
-        .then(([allJobs, allUsers]) => {
-            setJobs(allJobs?.data); // Set jobs
-            setUsers(allUsers.data); // Set users
-            localStorage.setItem('countActiveJobs', 0);
-            localStorage.setItem('countExpiredJobs', 0);
-        }).catch(error => {
-            console.error(error);
-        })
-    }, [search]);
+import Navigation from './Navigation';
+import SideNavigation from './Navigation/SideNavigation';
+import defaultImage from '../Images/user-profile.svg';
+import likeIcon from '../Images/like-svgrepo-com.svg';
+import commentIcon from '../Images/comment-svgrepo-com.svg';
+import { dateFormat } from '../helper';
 
-    // Start paginated active jobs
 
-    function ActiveItem({ currentItems }) {
 
-        const [optionDisplay, setOptionDisplay] = useState({});
-        let [buttonClick, setButtonClick] = useState(0);
+export default function Collaborations() {
+    const Navigate = useNavigate(); // keep your original naming
+    const editorRef = useRef(null);
 
-        const handleToggleOptions = (index) => {
-            setOptionDisplay(prevState => ({
-                ...prevState,
-                [index]: prevState[index] === 'show' ? 'hide' : 'show'
-            }));
-        };
-
-        const handleHideCollaboration = (index) => {
-            setButtonClick(prev => prev + 1); // Trigger a re-render by updating state
-        };
-
-        return (
-        <>
-            {currentItems.map((job, index) => {
-                console.log(job)
-
-                let posted = Date.now() - new Date(job.date);
-
-            // Calculate total days
-                let totalDays = Math.floor(posted / (86400 * 1000));
-
-                // Calculate years
-                let years = Math.floor(totalDays / 365);
-
-                // Calculate remaining days after extracting years
-                let remainingDaysAfterYears = totalDays % 365;
-
-                // Calculate months
-                let months = Math.floor(remainingDaysAfterYears / 30);
-
-                // Calculate remaining days after extracting months
-                let days = remainingDaysAfterYears % 30;
-
-            let deadlineString = job.acf.jobs_application_deadline;
-            let find = '-';
-            let re = new RegExp(find, 'g');
-            deadlineString  = deadlineString.replace(re, '');
-
-            // Extract year, month, and day from the string
-            let year = deadlineString.substring(0, 4);
-            let month = deadlineString.substring(4, 6) - 1; // Month is 0-indexed in JavaScript
-            let day = deadlineString.substring(6, 8);
-            
-            // Create a new Date object
-            let deadline = new Date(year, month, day);
-            
-            // Convert the date to epoch time
-            let deadlineDate = deadline.getTime();
-
-            if ( Date.now() <= deadlineDate && job.status == "publish" ) { 
-                
-                localStorage.setItem('countActiveJobs', Number(localStorage.getItem('countActiveJobs')) + 1);
-
-                if (search.length > 0 && job.title.rendered.toLowerCase().includes(search.toLowerCase()) || job.acf.jobs_institution.toLowerCase().includes(search.toLowerCase())) {
-                    let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
-                    let userProfile = "";
-                    let showJob =  localStorage.getItem(`show_job${index}`);
-                    for (let name of users) {
-                        if ( name.id == job.author) {
-                        userProfile = name;
-                        }
-                    }
-                    return (
-                        <div className={`job ${showJob}`} key={index}>
-                        <div className="card collaboration">
-                            <div className="card-body">
-                            {/* Top Section */}
-                                <div className="collaboration-header" style={{marginBottom: "1rem",}}>
-                                    <div className="d-flex flex-direction-row">
-                                        <div className="d-flex" style={{marginRight: "6rem"}}>
-                                            <div className="d-flex flex-row align-items-baseline">
-                                            <strong><div style={{marginRight: "10px", fontSize: "16px",}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.title?.rendered, search) : job?.title?.rendered}} /></strong>
-                                                <div className="d-flex flex-row align-items-center" >
-                                                    <span className="option-button" style={{marginRight: ".5rem"}}></span><p className="postedDate" style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="options-container">
-                                        <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                        </div>
-                                        <div className={`option-items ${optionDisplay[index]}`}>
-                                            <div className="option-item" onClick={() => {
-                                                localStorage.setItem(`show_job${index}`, 'hide')
-                                                handleHideCollaboration(index)
-                                                }}>Hide</div>
-                                            <div className="option-item" onClick={()=>{
-                                                submitReport(job, userDetails);
-                                            }}>Report</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* Middle Section */}
-                                <div style={{marginBottom: "1.8rem"}}>
-                                    <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}} /></strong>
-                                    <p className="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
-                                    <div className="row mb-1 d-flex align-items-center">
-                                        <div className="col-10">
-                                            <div className="d-flex flex-direction-row my-3">
-                                                <div className="designation-button">
-                                                    <span className="small">{job?.acf?.["jobs_job_type"]}</span>
-                                                </div>
-                                                <div className="due-button">
-                                                    <span className="small">Deadline {humanReadableDate(job?.acf?.["jobs_application_deadline"])}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-2 d-flex justify-content-end">
-                                            {seeIfchecked.includes(userDetails?.id?.toString()) ?
-                                            (<div className="checked-mark">
-                                            <FontAwesomeIcon icon={faSquareCheck} /> <span className="small grey">Applied</span>
-                                            </div>) : ''}
-                                        </div>
-                                    </div>
-                                    <div dangerouslySetInnerHTML={{ __html: job?.excerpt?.rendered?.length > 250 ? job?.excerpt?.rendered?.slice(0, 250)+"..." : job?.excerpt?.rendered}} />
-                                </div>
-                                {/* Bottom Section */}
-                                <div className="row d-flex justify-content-between flex-row">                                        
-            
-                                    <div className="col-auto ml-auto">
-                                        <a href={"/job/"+job["id"]} className="btn btn-primary collab-btn">Explore Job</a>
-                                    </div>
-                            
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    )
-                }
-                if (search.length == 0) {
-                    let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
-                    let userProfile = "";
-                    let showJob =  localStorage.getItem(`show_job${index}`);
-                    for (let name of users) {
-                        if ( name.id == job.author) {
-                        userProfile = name;
-                        }
-                    }
-                    return (
-                <div className={`job ${showJob} mb-5`} key={index}>
-                <div className="card collaboration">
-                    <div className="card-body">
-                    {/* Top Section */}
-                        <div className="collaboration-header" style={{marginBottom: "1rem",}}>
-                            <div className="d-flex flex-direction-row">
-                                <div className="d-flex" style={{marginRight: "6rem"}}>
-                                    <div className="d-flex flex-row align-items-baseline">
-                                        <strong><div style={{marginRight: "10px", fontSize: "16px",}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job.title.rendered, search) : job.title.rendered}} /></strong>
-                                        <div className="d-flex flex-row align-items-center" >
-                                            <span className="option-button" style={{marginRight: ".5rem"}}></span><p className="postedDate" style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="options-container">
-                                <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
-                                    <div className="option-button"></div>
-                                    <div className="option-button"></div>
-                                    <div className="option-button"></div>
-                                </div>
-                                <div className={`option-items ${optionDisplay[index]}`}>
-                                    <div className="option-item" onClick={() => {
-                                        localStorage.setItem(`show_job${index}`, 'hide')
-                                        handleHideCollaboration(index)
-                                        }}>Hide</div>
-                                    <div className="option-item" onClick={()=>{
-                                        submitReport(job, userDetails);
-                                    }}>Report</div>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Middle Section */}
-                        <div style={{marginBottom: "1.8rem"}}>
-                            <h3 style={{fontSize: "1.4rem", marginBottom: "1rem"}}>{search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}</h3>
-                            <p className="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
-                            <div className="row mb-1 d-flex align-items-center">
-                                <div className="col-10">
-                                    <div className="d-flex flex-direction-row my-3">
-                                        <div className="designation-button">
-                                            <span className="small">{job?.acf?.["jobs_job_type"]}</span>
-                                        </div>
-                                        <div className="due-button">
-                                            <span className="small">Deadline {job?.acf?.["jobs_application_deadline"]}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-2 d-flex justify-content-end">
-                                    {seeIfchecked.includes(userDetails?.id?.toString()) ?
-                                    (<div className="checked-mark">
-                                    <FontAwesomeIcon icon={faSquareCheck} /> <span className="small grey">Applied</span>
-                                    </div>) : ''}
-                                </div>
-                            </div>
-                            <div dangerouslySetInnerHTML={{ __html: job?.excerpt?.rendered?.length > 250 ? job?.excerpt?.rendered?.slice(0, 250)+"..." : job?.excerpt?.rendered}} />
-                        </div>
-                        {/* Bottom Section */}
-                        <div className="row d-flex justify-content-between flex-row">                                        
-
-                            <div className="col-auto ml-auto">
-                                <a href={"/job/"+job["id"]} className="btn btn-primary collab-btn">Explore Job</a>
-                            </div>
-                    
-                        </div>
-                    </div>
-                </div>
-            </div>
-                    )
-                }
-            }
+    const userDetails = useMemo(() => {
+        try {
+            return JSON.parse(localStorage.getItem('userDetails'));
+        } catch {
+            return null;
         }
-    )
-    }
-        </>
-        );
-    }
-    
-    function ActivePaginatedItems({ itemsPerPage }) {
-        // Here we use item offsets; we could also use page offsets
-        // following the API or data you're working with.
-        const [itemOffset, setItemOffset] = useState(0);
-    
-        // Simulate fetching items from another resources.
-        // (This could be items from props; or items loaded in a local state
-        // from an API endpoint with useEffect and useState)
-        const endOffset = itemOffset + itemsPerPage;
+    }, []);
 
-        
-        const currentItems = jobs.slice(itemOffset, endOffset);
-        const pageCount = Math.ceil(jobs.length / itemsPerPage);
-    
-        // Invoke when user click to request another page.
-        const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % jobs.length;
+    const [ getHelpQuestions, setGetHelpQuestions ] = useState([]);
+    const [ getUsers, setGetUsers ] = useState([]);
+    const [ usersAccountDetails, setUsersAccountDetails ] = useState(null);
 
-        setItemOffset(newOffset);
-        };
-    
-        return (
-        <>
-            <div className="jobs-grid">
-                <ActiveItem currentItems={currentItems} />
-            </div>
-            <ReactPaginate
-            breakLabel="..."
-            nextLabel="»"
-            onPageChange={handlePageClick}
-            pageRangeDisplayed={3}
-            pageCount={pageCount}
-            previousLabel="«"
-            renderOnZeroPageCount={null}
-            />
-        </>
-        );
-        
-    }
-    
-    // End paginated active jobs
+    const [ notifications, setNotifications ] = useState(0);
+    const [ events, setEvents ] = useState([]);
+    const [ collaborations, setCollaborations ] = useState(0);
+    const [ mentorships, setMentorships ] = useState(0);
+    const [ showScheduleForm, setShowScheduleForm ] = useState(false);
+    const [ scheduledEventsLocal, setScheduledEventsLocal ] = useState([]);
+    const [ newEventTitle, setNewEventTitle ] = useState('');
+    const [ newEventDate, setNewEventDate ] = useState('');
 
-    // Start paginated expired jobs
+    const [ loading, setLoading ] = useState(true);
+    const [ openComments, setOpenComments ] = useState({});
+    const [ commentInputs, setCommentInputs ] = useState({});
+    const [ commentThreads, setCommentThreads ] = useState({});
+    const [ expandedPosts, setExpandedPosts ] = useState({});
 
-    function ExpiredItem({ currentItems }) {
-        const [optionDisplay, setOptionDisplay] = useState({});
-        let [buttonClick, setButtonClick] = useState(0);
+    const [ createComment, setCreateComment ] = useState('');
+    const [ file, setFile ] = useState(null);
+    const [ commentStatus, setCommentStatus ] = useState('not approved');
+    const [ serverComment, setServerComment ] = useState('');
+    const [ successServerComment, setSuccessServerComment ] = useState('');
 
-        const handleToggleOptions = (index) => {
-            setOptionDisplay(prevState => ({
-                ...prevState,
-                [index]: prevState[index] === 'show' ? 'hide' : 'show'
-            }));
-        };
+    const [ commentTotalsByPostId, setCommentTotalsByPostId ] = useState({});
 
-        const handleHideCollaboration = (index) => {
-            setButtonClick(prev => prev + 1); // Trigger a re-render by updating state
-        };
-        return (
-        <>
-            {currentItems.map((job, index) => {
-            let posted = Date.now() - new Date(job.date);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filters, setFilters] = useState({
+        country: '',
+        field: '',
+        purpose: '',
+    });
 
-            // Calculate total days
-            let totalDays = Math.floor(posted / (86400 * 1000));
-
-            // Calculate years
-            let years = Math.floor(totalDays / 365);
-
-            // Calculate remaining days after extracting years
-            let remainingDaysAfterYears = totalDays % 365;
-
-            // Calculate months
-            let months = Math.floor(remainingDaysAfterYears / 30);
-
-            // Calculate remaining days after extracting months
-            let days = remainingDaysAfterYears % 30;
-
-            let deadlineString = job.acf.jobs_application_deadline;
-            let find = '-';
-            let re = new RegExp(find, 'g');
-            deadlineString  = deadlineString.replace(re, '');
-
-            // Extract year, month, and day from the string
-            let year = deadlineString.substring(0, 4);
-            let month = deadlineString.substring(4, 6) - 1; // Month is 0-indexed in JavaScript
-            let day = deadlineString.substring(6, 8);
-            
-            // Create a new Date object
-            let deadline = new Date(year, month, day);
-            
-            // Convert the date to epoch time
-            let deadlineDate = deadline.getTime();
-
-            if ( Date.now() > deadlineDate && job.status == "publish") { 
-                
-                localStorage.setItem('countExpiredJobs', Number(localStorage.getItem('countExpiredJobs')) + 1);
-
-                if (search.length > 0 && job.title.rendered.toLowerCase().includes(search.toLowerCase()) || job.acf.jobs_institution.toLowerCase().includes(search.toLowerCase())) {
-                    let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
-                    let showJob =  localStorage.getItem(`show_job${index}`);
-                    return (
-                        <div className={`job ${showJob} mb-5`} key={index}>
-                        <div className="card collaboration">
-                            <div className="card-body">
-                            {/* Top Section */}
-                                <div className="collaboration-header" style={{marginBottom: "1rem",}}>
-                                    <div className="d-flex flex-direction-row">
-                                        <div className="d-flex" style={{marginRight: "6rem"}}>
-                                            <div className="d-flex flex-row align-items-baseline">
-                                                <strong><div style={{marginRight: "10px", fontSize: "16px",}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.title?.rendered, search) : job?.title?.rendered}} /></strong>
-                                                <div className="d-flex flex-row align-items-center" >
-                                                    <span className="option-button" style={{marginRight: ".5rem"}}></span><p className="postedDate" style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="options-container">
-                                        <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                        </div>
-                                        <div className={`option-items ${optionDisplay[index]}`}>
-                                            <div className="option-item" onClick={() => {
-                                                localStorage.setItem(`show_job${index}`, 'hide')
-                                                handleHideCollaboration(index)
-                                                }}>Hide</div>
-                                            <div className="option-item" onClick={()=>{
-                                                submitReport(job, userDetails);
-                                            }}>Report</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* Middle Section */}
-                                <div style={{marginBottom: "1.8rem"}}>
-                                    <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}} /></strong>
-                                    <p className="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
-                                    <div className="row mb-1 d-flex align-items-center">
-                                        <div className="col-10">
-                                            <div className="d-flex flex-direction-row my-3">
-                                                <div className="designation-button">
-                                                    <span className="small">{job?.acf?.["jobs_job_type"]}</span>
-                                                </div>
-                                                <div className="due-button">
-                                                    <span className="small">Deadline {humanReadableDate(job?.acf?.["jobs_application_deadline"])}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-2 d-flex justify-content-end">
-                                            {seeIfchecked.includes(userDetails?.id?.toString()) ?
-                                            (<div className="checked-mark">
-                                            <FontAwesomeIcon icon={faSquareCheck} /> <span className="small grey">Applied</span>
-                                            </div>) : ''}
-                                        </div>
-                                    </div>
-                                    <div dangerouslySetInnerHTML={{ __html: job?.excerpt?.rendered?.length > 250 ? job?.excerpt?.rendered?.slice(0, 250)+"..." : job?.excerpt?.rendered}} />
-                                </div>
-                                {/* Bottom Section */}
-                                <div className="row d-flex justify-content-between flex-row">                                        
-            
-                                    <div className="col-auto ml-auto">
-                                        <a href={"/job/"+job["id"]} className="btn btn-primary collab-btn">Explore Job</a>
-                                    </div>
-                            
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    )
-                }
-                if (search.length == 0) {
-                    let seeIfchecked = job?.acf?.jobs_applied_users?.split(' ');
-                    let showJob =  localStorage.getItem(`show_job${index}`);
-                    return (
-                        <div className={`job ${showJob}`} key={index}>
-                        <div className="card collaboration">
-                            <div className="card-body">
-                            {/* Top Section */}
-                                <div className="collaboration-header" style={{marginBottom: "1rem",}}>
-                                    <div className="d-flex flex-direction-row">
-                                        <div className="d-flex" style={{marginRight: "6rem"}}>
-                                            <div className="d-flex flex-row align-items-baseline">
-                                            <strong><div style={{marginRight: "10px", fontSize: "16px",}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.title?.rendered, search) : job?.title?.rendered}} /></strong>
-                                                <div className="d-flex flex-row align-items-center" >
-                                                    <span className="option-button" style={{marginRight: ".5rem"}}></span><p className="postedDate" style={{marginBottom: 0}}>{years > 0 ? `${years} years ago` : months > 0 ? `${months} months ago` : days == 0 ? "Posted today" : `${days} days ago`}</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="options-container">
-                                        <div className='d-flex flex-direction-row justify-content-end options' onClick={() => handleToggleOptions(index)}>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                            <div className="option-button"></div>
-                                        </div>
-                                        <div className={`option-items ${optionDisplay[index]}`}>
-                                            <div className="option-item" onClick={() => {
-                                                localStorage.setItem(`show_job${index}`, 'hide')
-                                                handleHideCollaboration(index)
-                                                }}>Hide</div>
-                                            <div className="option-item" onClick={()=>{
-                                                submitReport(job, userDetails);
-                                            }}>Report</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* Middle Section */}
-                                <div style={{marginBottom: "1.8rem"}}>
-                                    <strong><div style={{fontSize: "1.4rem", marginBottom: "1rem"}} dangerouslySetInnerHTML={{ __html: search.length > 0 ? renderedQuestion(job?.acf?.jobs_institution, search) : job?.acf?.jobs_institution}} /></strong>
-                                    <p className="p-0 m-0">{job?.acf?.["jobs_city"]} | {job?.acf?.["jobs_country"]}</p>
-                                    <div className="row mb-1 d-flex align-items-center">
-                                        <div className="col-10">
-                                            <div className="d-flex flex-direction-row my-3">
-                                                <div className="designation-button">
-                                                    <span className="small">{job?.acf?.["jobs_job_type"]}</span>
-                                                </div>
-                                                <div className="due-button">
-                                                    <span className="small">Deadline {job?.acf?.["jobs_application_deadline"]}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-2 d-flex justify-content-end">
-                                            {seeIfchecked.includes(userDetails?.id?.toString()) ?
-                                            (<div className="checked-mark">
-                                            <FontAwesomeIcon icon={faSquareCheck} /> <span className="small grey">Applied</span>
-                                            </div>) : ''}
-                                        </div>
-                                    </div>
-                                    <div dangerouslySetInnerHTML={{ __html: job?.excerpt?.rendered?.length > 250 ? job?.excerpt?.rendered?.slice(0, 250)+"..." : job?.excerpt?.rendered}} />
-                                </div>
-                                {/* Bottom Section */}
-                                <div className="row d-flex justify-content-between flex-row">                                        
-                                    <div className="col-auto ml-auto">
-                                        <a href={"/job/"+job["id"]} className="btn btn-primary collab-btn">Explore Job</a>
-                                    </div>                           
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    )
-                }
-            }
-        }
-    )
-  }
-      </>
-    );
-  }
-  
-  function ExpiredPaginatedItems({ itemsPerPage }) {
-    // Here we use item offsets; we could also use page offsets
-    // following the API or data you're working with.
-    const [itemOffset, setItemOffset] = useState(0);
-  
-    // Simulate fetching items from another resources.
-    // (This could be items from props; or items loaded in a local state
-    // from an API endpoint with useEffect and useState)
-    const endOffset = itemOffset + itemsPerPage;
-    
-    const currentItems = jobs.slice(itemOffset, endOffset);
-    const pageCount = Math.ceil(jobs.length / itemsPerPage);
-  
-    // Invoke when user click to request another page.
-    const handlePageClick = (event) => {
-      const newOffset = (event.selected * itemsPerPage) % jobs.length;
-      setItemOffset(newOffset);
+    const handleScheduleSubmit = (e) => {
+        e.preventDefault();
+        if (!newEventTitle.trim() || !newEventDate) return;
+        setScheduledEventsLocal((prev) => [
+            { title: newEventTitle.trim(), date: newEventDate },
+            ...prev,
+        ]);
+        setNewEventTitle('');
+        setNewEventDate('');
+        setShowScheduleForm(false);
     };
-  
-    return (
-      <>
-        <div className="jobs-grid">
-            <ExpiredItem currentItems={currentItems} />
-        </div>
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel="»"
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={3}
-          pageCount={pageCount}
-          previousLabel="«"
-          renderOnZeroPageCount={null}
-        />
-      </>
-    );
-    
-  }
-  
-// End paginated expired jobs
 
-  if (userDetails != null) {
-    return(
-    <>
-        <Navigation user={userDetails} />
-        <main className="jobs">
-            <div className="container primary">
-                <div className="page-filter">
-                    <div className="row mb-5">
-                        <div className="col-12 d-flex">
-                            <Link to="/" className="link-dark small d-flex align-items-center"><FontAwesomeIcon icon={faHouse} /></Link><span className="breadcrumb-slash">>></span><span className="small d-flex align-items-center">Jobs</span>
-                        </div>
-                    </div>
-                    <div className="row mb-5">
-                            <div className="col-lg-12">
-                                <p className="lead"><strong>Find jobs that match your skill set!</strong></p>
+    const upcomingThisWeek = useMemo(() => {
+        const now = new Date();
+        const weekFromNow = new Date();
+        weekFromNow.setDate(now.getDate() + 7);
+
+        return (scheduledEventsLocal || []).filter((event) => {
+            const eventDate = new Date(event.date);
+            return eventDate >= now && eventDate <= weekFromNow;
+        });
+    }, [scheduledEventsLocal]);
+
+
+    useEffect(() => {
+        if (!userDetails?.token) {
+            Navigate('/');
+            return;
+        }
+
+        let isMounted = true;
+
+        const headers = {
+            Authorization: `Bearer ${userDetails.token}`,
+        };
+
+        Promise.all([
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`, { headers }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, { headers }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`, { headers }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests`, { headers }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`, { headers }),
+            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`, { headers }),
+        ])
+            .then(([ apiQuestion, apiUsers, currentUserApi, mentorRequest, allCollaborations, allMentorChats ]) => {
+                if (!isMounted) return;
+
+                setGetHelpQuestions(apiQuestion?.data || []);
+                setGetUsers(apiUsers?.data || []);
+
+                const currentUser = currentUserApi?.data || null;
+                setUsersAccountDetails(currentUser);
+
+                const points = currentUser?.acf?.['user-points'] ?? 0;
+                localStorage.setItem('userPoints', JSON.stringify(points));
+
+                const relatedResponse = (mentorRequest?.data || [])
+                    .filter((item) => item?.acf?.mentor_id === userDetails?.id || item?.acf?.mentee_id === userDetails?.id)
+                    .filter((item) => item?.acf?.mentor_agree === 'Agree');
+
+                setEvents(relatedResponse);
+
+                let userCollaborations = 0;
+                (allCollaborations?.data || []).forEach((chat) => {
+                    if (chat?.acf?.participant_id === userDetails?.id || chat?.acf?.requestor_id === userDetails?.id) {
+                        userCollaborations += 1;
+                    }
+                });
+                setCollaborations(userCollaborations);
+
+                let userMentorships = 0;
+                (allMentorChats?.data || []).forEach((chat) => {
+                    if (chat?.acf?.mentee_id === userDetails?.id || chat?.acf?.mentor_id === userDetails?.id) {
+                        userMentorships += 1;
+                    }
+                });
+                setMentorships(userMentorships);
+
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error(error);
+                setLoading(false);
+            });
+
+        return () => {
+            isMounted = false;
+        };
+    }, [Navigate, userDetails?.id, userDetails?.token]);
+
+    const usersById = useMemo(() => {
+        const map = {};
+        (getUsers || []).forEach((u) => {
+            map[u.id] = u;
+        });
+        return map;
+    }, [getUsers]);
+
+    const getTimeAgo = (date) => {
+        if (!date) return '';
+        const diff = Date.now() - new Date(date).getTime();
+        const totalDays = Math.floor(diff / (86400 * 1000));
+        const years = Math.floor(totalDays / 365);
+        const months = Math.floor((totalDays % 365) / 30);
+        const days = totalDays % 30;
+
+        if (years > 0) return `${years} years ago`;
+        if (months > 0) return `${months} months ago`;
+        if (days === 0) return 'Posted today';
+        return `${days} days ago`;
+    };
+
+    useEffect(() => {
+        if (!userDetails?.token) return;
+        if (!getHelpQuestions?.length) return;
+
+        let isMounted = true;
+
+        const headers = {
+            Authorization: `Bearer ${userDetails.token}`,
+        };
+
+        const fetchTotals = async () => {
+            try {
+                const ids = getHelpQuestions
+                    .filter((q) => q?.id)
+                    .map((q) => q.id);
+
+                const missing = ids.filter((id) => typeof commentTotalsByPostId[id] !== 'number');
+                if (!missing.length) return;
+
+                const requests = missing.map((postId) =>
+                    axios.get(
+                        `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+                        {
+                            headers,
+                            params: {
+                                post: postId,
+                                per_page: 1,
+                            },
+                        }
+                    )
+                        .then((res) => {
+                            const total = parseInt(res.headers?.['x-wp-total'] || '0', 10);
+                            return [ postId, Number.isFinite(total) ? total : 0 ];
+                        })
+                        .catch(() => [ postId, 0 ])
+                );
+
+                const results = await Promise.all(requests);
+
+                if (!isMounted) return;
+
+                setCommentTotalsByPostId((prev) => {
+                    const next = { ...prev };
+                    results.forEach(([ id, total ]) => {
+                        next[id] = total;
+                    });
+                    return next;
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        fetchTotals();
+
+        return () => {
+            isMounted = false;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [getHelpQuestions, userDetails?.token]);
+
+    const clearEditor = () => {
+        setCreateComment('');
+        setFile(null);
+        setCommentStatus('not approved');
+        setServerComment('');
+        setSuccessServerComment('');
+        editorRef.current?.setContent('');
+    };
+
+    const handleCommentChange = (postId, value) => {
+        setCommentInputs((prev) => ({ ...prev, [postId]: value }));
+    };
+
+    const handleCommentSubmit = async (postId) => {
+        const content = (commentInputs?.[postId] || '').trim();
+        if (!content) return;
+        if (!userDetails?.token || !userDetails?.id) {
+            Navigate('/');
+            return;
+        }
+
+        try {
+            const headers = { Authorization: `Bearer ${userDetails.token}` };
+            const res = await axios.post(
+                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+                {
+                    post: postId,
+                    content,
+                    author: userDetails.id,
+                },
+                { headers }
+            );
+
+            const displayName =
+                userDetails?.displayName ||
+                userDetails?.user_display_name ||
+                [userDetails?.firstName, userDetails?.lastName].filter(Boolean).join(' ') ||
+                'User';
+
+            const newComment = {
+                id: res?.data?.id || Date.now(),
+                author: displayName,
+                date: res?.data?.date || new Date().toISOString(),
+                content: res?.data?.content?.rendered || content,
+            };
+
+            setCommentThreads((prev) => ({
+                ...prev,
+                [postId]: [newComment, ...(prev[postId] || [])],
+            }));
+            setCommentInputs((prev) => ({ ...prev, [postId]: '' }));
+            setCommentTotalsByPostId((prev) => ({
+                ...prev,
+                [postId]: (prev[postId] ?? 0) + 1,
+            }));
+        } catch (error) {
+            console.error('Error submitting comment:', error?.response?.data || error.message);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        setServerComment('');
+        setSuccessServerComment('');
+
+        if (!userDetails?.token) {
+            Navigate('/');
+            return;
+        }
+
+        const stripped = (createComment || '').replace(/<[^>]*>/g, '').trim();
+        if (!stripped) {
+            setServerComment('Please write something before submitting.');
+            return;
+        }
+
+        try {
+            const headers = {
+                Authorization: `Bearer ${userDetails.token}`,
+            };
+
+            let imageUrl = '';
+
+            if (file) {
+                const options = {
+                    maxSizeMB: 1,
+                    maxWidthOrHeight: 1280,
+                    useWebWorker: true,
+                };
+
+                const compressed = await imageCompression(file, options);
+                const finalFile = new File([compressed], file.name, { type: file.type });
+
+                const formData = new FormData();
+                formData.append('file', finalFile);
+
+                const mediaRes = await axios.post(
+                    `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
+                    formData,
+                    { headers }
+                );
+
+                imageUrl = mediaRes?.data?.source_url || '';
+            }
+
+            const created = await axios.post(
+                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`,
+                {
+                    title: stripped.slice(0, 80) || 'New Question',
+                    content: createComment,
+                    status: 'publish',
+                    acf: imageUrl ? { question_image: imageUrl } : undefined,
+                },
+                { headers }
+            );
+
+            setSuccessServerComment('Success! Your post has been published.');
+            setCommentStatus(created?.data?.status || 'approved');
+
+            editorRef.current?.setContent('');
+            setCreateComment('');
+            setFile(null);
+
+            setGetHelpQuestions((prev) => [ created.data, ...(prev || []) ]);
+        } catch (err) {
+            console.error(err);
+            setServerComment('Something went wrong. Please try again.');
+        }
+    };
+
+    const questions = useMemo(() => {
+        const userField = usersAccountDetails?.acf?.user_feild;
+        if (!getHelpQuestions?.length) return [];
+
+        return getHelpQuestions.map((question, index) => {
+            if (!question) return null;
+
+            const author = usersById[question.author];
+            const userName = author?.name || '';
+            const userProfileImg = author?.acf?.user_profile_picture;
+            const userJobInsitution = author?.acf?.['user-job-Insitution'];
+
+            const commentTotal = commentTotalsByPostId[question.id] ?? 0;
+
+            if (question.status !== 'publish') return null;
+            if (userField && question?.acf?.question_subject_area && userField !== question?.acf?.question_subject_area) return null;
+
+            const rendered = question?.content?.rendered || '';
+            const plainText = rendered.replace(/<[^>]*>/g, '');
+            const isExpanded = Boolean(expandedPosts[question.id]);
+            const shouldTruncate = plainText.length > 250;
+            const snippetText = rendered.substring(0, 250);
+            const ellipsis = shouldTruncate ? '...' : '';
+
+            const isCommentsOpen = Boolean(openComments[question.id]);
+
+            return (
+                <div className="card collaboration-card mb-4" key={question.id || index}>
+                    <div className="card-body">
+                        <div className="questions-details">
+                            <div className="questions-details-name">
+                                <img
+                                    className="questions-details-name-img"
+                                    src={userProfileImg ? userProfileImg : defaultImage}
+                                    alt={userName || 'User'}
+                                    loading="lazy"
+                                />
+                                <div className="questions-details-name-info">
+                                    <p><strong>{userName}</strong></p>
+                                    <div className="questions-details-posted">
+                                        <p>{getTimeAgo(question.date)}</p>
+                                    </div>
+                                </div>
                             </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-lg-4">
-                            <p><strong>Browse all job opportunities</strong></p>
                         </div>
-                        <div className="col-lg-4">
-                            <input type="search" name="search" className="form-control" placeholder='Start typing to search' value={search} onChange={(e) => {
-                                setSearch(e.target.value)
-                             }} />
-                        </div>
-                        <div className="col-lg-4 text-end">
-                            <Link to="/create-job" className="btn btn-outline-info btn-lg">Create a Job Posting</Link>
-                        </div>
-                    </div>
-                </div>
-                <div className="mentors mt-5">
-                    <ul className="nav nav-tabs mb-5" role="tablist">
-                        <li className="nav-item" role="presentation">
-                        <button
-                            className={`nav-link ${activeTab === "active" ? "active" : ""}`}
-                            onClick={() => setActiveTab("active")}
-                        >
-                            Active Requests
-                        </button>
-                        </li>
-                        <li className="nav-item" role="presentation">
-                        <button
-                            className={`nav-link ${activeTab === "archived" ? "active" : ""}`}
-                            onClick={() => setActiveTab("archived")}
-                        >
-                            Archived
-                        </button>
-                        </li>
-                    </ul>
 
-                    <div className="tab-content">
-                        {activeTab === "active" && (
-                        <div className="tab-pane fade show active">
-                            <ActivePaginatedItems itemsPerPage={15} />
+                        <p><strong className='lead'>{question?.title?.rendered}</strong></p>
+
+                        {rendered ? (
+                            <div>
+                                <div
+                                    dangerouslySetInnerHTML={{
+                                        __html: isExpanded ? rendered : `${snippetText}${ellipsis}`,
+                                    }}
+                                />
+                                {shouldTruncate ? (
+                                    <button
+                                        type="button"
+                                        className="read-more-btn"
+                                        onClick={() =>
+                                            setExpandedPosts((prev) => ({
+                                                ...prev,
+                                                [question.id]: !prev[question.id],
+                                            }))
+                                        }
+                                    >
+                                        {isExpanded ? 'Show less' : 'Read more'}
+                                    </button>
+                                ) : null}
+                            </div>
+                        ) : null}
+
+                        <div className="question-actions">
+                            <div className="question-actions-meta">
+                                <button
+                                    type="button"
+                                    className="question-actions-btn"
+                                    onClick={() =>
+                                        setOpenComments((prev) => ({
+                                            ...prev,
+                                            [question.id]: !prev[question.id],
+                                        }))
+                                    }
+                                >
+                                    <img src={commentIcon} alt="" className="like-icon" aria-hidden="true" />
+                                    <span>{commentTotal} Comments</span>
+                                </button>
+                            </div>
+                            
                         </div>
-                        )}
-                        {activeTab === "archived" && (
-                        <div className="tab-pane fade show active">
-                            <ExpiredPaginatedItems itemsPerPage={15} />
-                        </div>
-                        )}
+
+                        {isCommentsOpen ? (
+                            <div className="question-comments">
+                                <div className="question-comments-input">
+                                    <textarea
+                                        placeholder="Write a comment..."
+                                        rows={3}
+                                        value={commentInputs?.[question.id] || ''}
+                                        onChange={(e) => handleCommentChange(question.id, e.target.value)}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline"
+                                        onClick={() => handleCommentSubmit(question.id)}
+                                    >
+                                        Post
+                                    </button>
+                                </div>
+                                <div className="question-comments-list">
+                                    {(commentThreads?.[question.id] || []).map((comment) => (
+                                        <div className="comment-item" key={comment.id}>
+                                            <img
+                                                className="comment-avatar"
+                                                src={defaultImage}
+                                                alt={comment.author}
+                                                loading="lazy"
+                                            />
+                                            <div className="comment-body">
+                                                <div className="comment-meta">
+                                                    <strong>{comment.author}</strong>
+                                                    <span>Just now</span>
+                                                </div>
+                                                <p>{comment.content?.replace?.(/<[^>]*>/g, '') || comment.content}</p>
+                                                <div className="comment-actions">
+                                                    <button type="button" className="comment-like">
+                                                        <img src={likeIcon} alt="" className="like-icon" aria-hidden="true" />
+                                                        <span>Like</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
-            </div>
-        </main>
-    </>
+            );
+        });
+        
+    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads, expandedPosts]);
+          
+    const filteredQuestions = useMemo(() => {
+    if (!questions?.length) return [];
+
+    return questions.filter(Boolean).filter((card) => {
+        const textContent =
+            card.props?.children?.toString?.().toLowerCase() || '';
+
+        const matchesSearch =
+            !searchTerm ||
+            textContent.includes(searchTerm.toLowerCase());
+
+        return matchesSearch;
+    });
+}, [questions, searchTerm]);
+
+
+    if (!localStorage.getItem('userDetails')) {
+        window.location.replace('/');
+        return null;
+    }
+    
+
+    if (loading) {
+        return (
+            <TailSpin
+                visible={true}
+                height="80"
+                width="80"
+                color="#001923"
+                ariaLabel="tail-spin-loading"
+                radius="1"
+                wrapperStyle={{ position: 'absolute', top: 0, left: 0, right: 0 }}
+                wrapperClass="spinner"
+            />
+        );
+    }
+
+    return (
+        <>
+           <Navigation user={userDetails} />
+            <main>
+                <div className="page-body-container">
+                    <div className="side-navigation-container" style={{ background: '#ffffff' }}>
+                        <SideNavigation />
+                    </div>
+
+                    <div className="mt-4">
+                        <div className="page-header">
+                            <div>
+                                <h1 className="mb-3">Collaborations</h1>
+                                <p>Find meaningful partnerships to move your research along</p>
+                            </div>
+                            <div className="col-12 text-end mt-4">
+                                <button 
+                                    className="btn btn-header" 
+                                    type="button"
+                                    onClick={() => setIsDrawerOpen(true)}
+                                >
+                                    Request Collaboration
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div className="user-details">
+
+                            <div className="user-detail">
+                                    {/* <div className="user-info-image user-notifcations">
+                                        <FontAwesomeIcon icon={faStar} />
+                                    </div> */}
+                                    <div className="user-info-content notifcations">
+
+                                        <div className="title-row">
+                                            <p>My Collaboration Requests</p>
+                                                <span className="arrow-icon">
+                                                    <FontAwesomeIcon icon={faArrowRight} />
+                                                </span>
+                                        </div>
+                                            <div className="link-item">
+                                                {notifications}
+                                            </div>
+                                    </div>
+                            </div>
+
+                            <div className="user-detail">
+                                    {/* <div className="user-info-image user-notifcations">
+                                        <FontAwesomeIcon icon={faStar} />
+                                    </div> */}
+                                    <div className="user-info-content notifcations">
+
+                                        <div className="title-row">
+                                            <p>Current Collaborations</p>
+                                                <span className="arrow-icon">
+                                                    <FontAwesomeIcon icon={faArrowRight} />
+                                                </span>
+                                        </div>
+                                            <div className="link-item">
+                                                {notifications}
+                                            </div>
+                                    </div>
+                            </div>
+                            <div className="user-detail">
+                                    {/* <div className="user-info-image user-notifcations">
+                                        <FontAwesomeIcon icon={faStar} />
+                                    </div> */}
+                                    <div className="user-info-content notifcations">
+
+                                        <div className="title-row">
+                                            <p>Completed Collaborations</p>
+                                                <span className="arrow-icon">
+                                                    <FontAwesomeIcon icon={faArrowRight} />
+                                                </span>
+                                        </div>
+                                            <div className="link-item">
+                                                {events.length}
+                                            </div>
+                                    </div>
+                            </div>
+                            </div>               
+
+
+
+                        <div className="page-body">
+                            <div className="posts">
+                                <div className="page-divider page-divider-home">
+                                    <p>Browse all collaboration opportunities</p>
+                                </div>
+
+                                {/* Search + Filters */}
+                                <div className="search-filter-wrap">
+                                    {/* Search Bar */}
+                                    <div className="search-bar">
+                                        <input
+                                            type="text"
+                                            placeholder="Search for anything"
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                        />
+                                        <button type="button" className="search-btn">
+                                            <FontAwesomeIcon icon={faMagnifyingGlass} />
+                                        </button>
+                                    </div>
+
+                                    {/* Filters */}
+                                    <div className="filters">
+                                        <select onChange={(e) => setFilters({ ...filters, country: e.target.value })}>
+                                            <option value="">Country</option>
+                                            <option value="Canada">Canada</option>
+                                            <option value="USA">USA</option>
+                                        </select>
+
+                                        <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
+                                            <option value="">Field</option>
+                                            <option value="Biology">Biology</option>
+                                            <option value="Chemistry">Chemistry</option>
+                                        </select>
+
+
+                                        <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
+                                            <option value="">Purpose</option>
+                                            <option value="Collaboration">Collaboration</option>
+                                            <option value="Mentorship">Mentorship</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    {questions?.some(Boolean) ? questions : <p>No posts yet.</p>}
+                                </div>
+                            </div>
+
+                            <div className="calendar upcoming-events-card">
+                                <div className="events-header">
+                                    <h2>Upcoming Events</h2>
+                                </div>
+
+                                <Calendar
+                                    tileClassName={({ date }) => {
+                                        const scheduledEvents = (events || []).some(
+                                            (item) => dateFormat(date) === item?.acf?.mentor_request_date
+                                        );
+                                        return scheduledEvents ? 'scheduled-event' : null;
+                                    }}
+                                    firstDayOfWeek={0}
+                                />
+
+                                <div className="events-schedule">
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline"
+                                        onClick={() => setShowScheduleForm((prev) => !prev)}
+                                    >
+                                        Schedule Event
+                                    </button>
+                                    {showScheduleForm ? (
+                                        <form className="schedule-form" onSubmit={handleScheduleSubmit}>
+                                            <input
+                                                type="text"
+                                                placeholder="Event title"
+                                                value={newEventTitle}
+                                                onChange={(e) => setNewEventTitle(e.target.value)}
+                                            />
+                                            <input
+                                                type="date"
+                                                value={newEventDate}
+                                                onChange={(e) => setNewEventDate(e.target.value)}
+                                            />
+                                            <button type="submit" className="btn btn-dark">Add</button>
+                                        </form>
+                                    ) : null}
+                                </div>
+
+                                <div className="events-list">
+                                    <h4>This Week</h4>
+                                    {upcomingThisWeek.length ? (
+                                        upcomingThisWeek.map((item, idx) => (
+                                            <div className="event-item" key={`${item.title}-${idx}`}>
+                                                <strong>{item.title}</strong>
+                                                <span>{item.date}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="event-item">
+                                            <p>Science Storytelling Challenge</p>
+                                            <span>Sun 1 Feb</span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+{/* Overlay */}
+<div
+    className={`drawer-overlay ${isDrawerOpen ? 'open' : ''}`}
+    onClick={() => setIsDrawerOpen(false)}
+/>
+
+{/* Slide-in Drawer */}
+<aside className={`drawer ${isDrawerOpen ? 'open' : ''}`}>
+    <div className="drawer-header">
+        <button
+            className="back-btn"
+            type="button"
+            onClick={() => setIsDrawerOpen(false)}
+        >
+            ← Back
+        </button>
+
+        <span className="points-badge">*5 points required</span>
+    </div>
+
+    <h1>Collaboration Request</h1>
+    <div className="drawer-divider" />
+    <form className="drawer-form">
+        <label className="first-label">
+            Type your request briefly (150 characters max)
+            <input
+                type="text"
+                maxLength={150}
+                placeholder="ex. Need help creating a knockout cell line."
+            />
+        </label>
+
+        <label>
+            Description
+            <textarea
+                placeholder="Explain your request in further detail. Please keep project explanations sufficiently vague to avoid scooping."
+            />
+        </label>
+
+        <label>
+            Enter major skills required (max. 5)
+            <input type="text" />
+        </label>
+
+        <label>
+            Deadline for project completion
+            <input type="date" />
+        </label>
+
+        <label>
+            Compensation
+            <select>
+                <option>Choose an option</option>
+                <option>Points</option>
+                <option>Co-authorship</option>
+                <option>Paid</option>
+            </select>
+        </label>
+
+        <div className="drawer-actions">
+            <button
+                type="button"
+                className="btn btn-outline"
+                onClick={() => setIsDrawerOpen(false)}
+            >
+                Cancel
+            </button>
+
+            <button type="submit" className="btn btn-dark">
+                Submit
+            </button>
+        </div>
+    </form>
+</aside>
+
+            </main>
+        </>
     );
-      } else {
-        window.location.replace("/");
-      }
 }
