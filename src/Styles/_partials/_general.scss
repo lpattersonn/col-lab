@@ -1233,6 +1233,11 @@ a {
   outline: none !important;
 }
 
+.filters select:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 .login-text {
   margin: 0 0 0 0 !important;
 }
@@ -2643,6 +2648,126 @@ header.active-header {
   color: #fff;
 }
 
+.mentors-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 2.5rem;
+}
+
+.mentor-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.mentor-card-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+.mentor-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mentor-card-name {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #000000;
+}
+
+.mentor-card-subtitle,
+.mentor-card-location {
+  margin: 0;
+  font-size: 1.4rem;
+  color: #212529;
+}
+
+.mentor-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.mentor-card-tag {
+  background: #f0f0f0;
+  color: #111827;
+  border-radius: 2px;
+  padding: 10px 15px;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.mentor-card-intention {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #fff1e8;
+  color: #111827;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 6px 12px;
+  border-radius: 10px;
+}
+
+.mentor-card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.mentor-card-deadline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.3rem;
+  color: #111827;
+}
+
+.mentor-card-deadline svg {
+  font-size: 1.2rem;
+}
+
+.share-card-body {
+  position: relative;
+}
+
+.share-card-intention {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #fff1e8;
+  color: #212529;
+  font-weight: 600;
+  font-size: 1.4rem;
+  padding: 10px 15px;
+  border-radius: 10px;
+  border-radius: 2px;
+}
+
+
+.share-card-deadline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 1.3rem;
+  color: #111827;
+}
+
+.share-card-deadline svg {
+  font-size: 1.2rem;
+}
+
 .mentor-details-img {
   width: 7rem;
   height: 9rem;
@@ -3382,6 +3507,7 @@ textarea[data-info=content] {
   gap: 0.8rem;
   font-size: 1.4rem;
   color: #334155;
+  padding-left: 0 !important;
 }
 .question-actions-item svg {
   font-size: 1.6rem;
@@ -3532,6 +3658,56 @@ textarea[data-info=content] {
 
 .drawer-form textarea {
   min-height: 100px;
+}
+
+.drawer-form .drawer-intro {
+  font-size: 14px;
+  color: #111827;
+  margin: 8px 0 18px;
+}
+
+.drawer-form .drawer-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 8px 0 12px;
+  color: #111827;
+}
+
+.drawer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.drawer-submit {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.drawer-legal {
+  margin-top: 12px;
+  font-size: 13px;
+  color: #6b7280;
+  text-align: center;
+}
+
+.drawer-legal a {
+  color: #0f9ed5;
+  text-decoration: underline;
+}
+
+.drawer-error {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #b91c1c;
+  text-align: center;
+}
+
+.drawer-success {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #15803d;
+  text-align: center;
 }
 
 .drawer-actions {

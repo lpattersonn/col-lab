@@ -6,7 +6,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
 import imageCompression from 'browser-image-compression';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faArrowRight, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faArrowRight, faMagnifyingGlass, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
 import Navigation from './Navigation';
@@ -14,7 +14,7 @@ import SideNavigation from './Navigation/SideNavigation';
 import defaultImage from '../Images/user-profile.svg';
 import likeIcon from '../Images/like-svgrepo-com.svg';
 import commentIcon from '../Images/comment-svgrepo-com.svg';
-import { dateFormat } from '../helper';
+import { dateFormat, humanReadableDate } from '../helper';
 
 
 
@@ -380,6 +380,18 @@ export default function Collaborations() {
             const userName = author?.name || '';
             const userProfileImg = author?.acf?.user_profile_picture;
             const userJobInsitution = author?.acf?.['user-job-Insitution'];
+            const intention =
+                question?.acf?.pay ||
+                question?.acf?.learning_pay ||
+                question?.acf?.borrow_pay ||
+                question?.acf?.collaborations_pay ||
+                '';
+            const deadline =
+                question?.acf?.deadline ||
+                question?.acf?.learning_deadline ||
+                question?.acf?.borrow_deadline ||
+                question?.acf?.collaborations_deadline ||
+                '';
 
             const commentTotal = commentTotalsByPostId[question.id] ?? 0;
 
@@ -396,8 +408,11 @@ export default function Collaborations() {
             const isCommentsOpen = Boolean(openComments[question.id]);
 
             return (
-                <div className="card collaboration-card mb-4" key={question.id || index}>
-                    <div className="card-body">
+                <div className="card collaboration-card mb-4 share-card" key={question.id || index}>
+                    <div className="card-body share-card-body">
+                        <span className="share-card-intention">
+                            {intention || 'Intention'}
+                        </span>
                         <div className="questions-details">
                             <div className="questions-details-name">
                                 <img
@@ -457,7 +472,10 @@ export default function Collaborations() {
                                     <span>{commentTotal} Comments</span>
                                 </button>
                             </div>
-                            
+                            <div className="share-card-deadline">
+                                <FontAwesomeIcon icon={faClock} />
+                                <span>{deadline ? humanReadableDate(deadline) : 'Deadline'}</span>
+                            </div>
                         </div>
 
                         {isCommentsOpen ? (
@@ -560,8 +578,8 @@ export default function Collaborations() {
                     <div className="mt-4">
                         <div className="page-header">
                             <div>
-                                <h1 className="mb-3">Collaborations</h1>
-                                <p>Find meaningful partnerships to move your research along</p>
+                                <h1 className="mb-3">Share Resources</h1>
+                                <p>Lend a hand — or an item. It goes a long way!</p>
                             </div>
                             <div className="col-12 text-end mt-4">
                                 <button 
@@ -569,7 +587,7 @@ export default function Collaborations() {
                                     type="button"
                                     onClick={() => setIsDrawerOpen(true)}
                                 >
-                                    Request Collaboration
+                                    Make a Request
                                 </button>
                             </div>
                         </div>
@@ -584,7 +602,7 @@ export default function Collaborations() {
                                     <div className="user-info-content notifcations">
 
                                         <div className="title-row">
-                                            <p>My Collaboration Requests</p>
+                                            <p>My Requests</p>
                                                 <span className="arrow-icon">
                                                     <FontAwesomeIcon icon={faArrowRight} />
                                                 </span>
@@ -602,7 +620,7 @@ export default function Collaborations() {
                                     <div className="user-info-content notifcations">
 
                                         <div className="title-row">
-                                            <p>Current Collaborations</p>
+                                            <p>Successful Shares</p>
                                                 <span className="arrow-icon">
                                                     <FontAwesomeIcon icon={faArrowRight} />
                                                 </span>
@@ -612,23 +630,7 @@ export default function Collaborations() {
                                             </div>
                                     </div>
                             </div>
-                            <div className="user-detail">
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
 
-                                        <div className="title-row">
-                                            <p>Completed Collaborations</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {events.length}
-                                            </div>
-                                    </div>
-                            </div>
                             </div>               
 
 
@@ -636,7 +638,7 @@ export default function Collaborations() {
                         <div className="page-body">
                             <div className="posts">
                                 <div className="page-divider page-divider-home">
-                                    <p>Browse all collaboration opportunities</p>
+                                    <p>See all requests</p>
                                 </div>
 
                                 {/* Search + Filters */}
@@ -663,16 +665,18 @@ export default function Collaborations() {
                                         </select>
 
                                         <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
-                                            <option value="">Field</option>
-                                            <option value="Biology">Biology</option>
-                                            <option value="Chemistry">Chemistry</option>
+                                            <option value="">Intention</option>
+                                            <option value="Free">Free</option>
+                                            <option value="Replace">Replace</option>
+                                            <option value="Paid">Paid</option>
+                                            <option value="Collaboration">Collaboration</option>
                                         </select>
 
 
                                         <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
-                                            <option value="">Purpose</option>
-                                            <option value="Collaboration">Collaboration</option>
-                                            <option value="Mentorship">Mentorship</option>
+                                            <option value="">Type</option>
+                                            <option value="Item">Item</option>
+                                            <option value="Protocol">Protocol</option>
                                         </select>
                                     </div>
                                 </div>
@@ -764,44 +768,51 @@ export default function Collaborations() {
         <span className="points-badge">*5 points required</span>
     </div>
 
-    <h1>Collaboration Request</h1>
+    <h1>Create a Borrow Request</h1>
     <div className="drawer-divider" />
     <form className="drawer-form">
         <label className="first-label">
-            Type your request briefly (150 characters max)
+            Brief description of item (150 characters max)
             <input
                 type="text"
                 maxLength={150}
-                placeholder="ex. Need help creating a knockout cell line."
+                // placeholder="ex. Need help creating a knockout cell line."
             />
         </label>
 
         <label>
             Description
             <textarea
-                placeholder="Explain your request in further detail. Please keep project explanations sufficiently vague to avoid scooping."
+                // placeholder="Explain your request in further detail. Please keep project explanations sufficiently vague to avoid scooping."
             />
         </label>
 
         <label>
-            Enter major skills required (max. 5)
-            <input type="text" />
+            Intention
+            <select>
+                <option>Choose an option</option>
+                <option>Free</option>
+                <option>Replace</option>
+                <option>Paid</option>
+                <option>Collaboration</option>
+            </select>
         </label>
 
         <label>
-            Deadline for project completion
+            Type
+            <select>
+                <option>Choose an option</option>
+                <option>Item</option>
+                <option>Protocol</option>
+            </select>
+        </label>
+
+
+        <label>
+            I need this by...
             <input type="date" />
         </label>
 
-        <label>
-            Compensation
-            <select>
-                <option>Choose an option</option>
-                <option>Points</option>
-                <option>Co-authorship</option>
-                <option>Paid</option>
-            </select>
-        </label>
 
         <div className="drawer-actions">
             <button

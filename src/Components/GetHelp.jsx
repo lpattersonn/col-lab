@@ -18,7 +18,7 @@ import { dateFormat } from '../helper';
 
 
 
-export default function ContactUs() {
+export default function GetHelp() {
     const Navigate = useNavigate(); // keep your original naming
     const editorRef = useRef(null);
 
@@ -382,6 +382,7 @@ export default function ContactUs() {
             const userJobInsitution = author?.acf?.['user-job-Insitution'];
 
             const commentTotal = commentTotalsByPostId[question.id] ?? 0;
+            const likeTotal = question?.acf?.like_count ?? 0;
 
             if (question.status !== 'publish') return null;
             if (userField && question?.acf?.question_subject_area && userField !== question?.acf?.question_subject_area) return null;
@@ -443,6 +444,10 @@ export default function ContactUs() {
 
                         <div className="question-actions">
                             <div className="question-actions-meta">
+                                <button type="button" className="question-actions-item">
+                                    <img src={likeIcon} alt="" className="like-icon" aria-hidden="true" />
+                                    <span>{likeTotal} Like</span>
+                                </button>
                                 <button
                                     type="button"
                                     className="question-actions-btn"
@@ -560,8 +565,8 @@ export default function ContactUs() {
                     <div className="mt-4">
                         <div className="page-header">
                             <div>
-                                <h1 className="mb-3">Collaborations</h1>
-                                <p>Find meaningful partnerships to move your research along</p>
+                                <h1 className="mb-3">Get Help</h1>
+                                <p>Answer questions from your peers and get answers to your most burning questions</p>
                             </div>
                             <div className="col-12 text-end mt-4">
                                 <button 
@@ -569,7 +574,7 @@ export default function ContactUs() {
                                     type="button"
                                     onClick={() => setIsDrawerOpen(true)}
                                 >
-                                    Request Collaboration
+                                    Ask a Question
                                 </button>
                             </div>
                         </div>
@@ -584,7 +589,7 @@ export default function ContactUs() {
                                     <div className="user-info-content notifcations">
 
                                         <div className="title-row">
-                                            <p>My Collaboration Requests</p>
+                                            <p>My Questions</p>
                                                 <span className="arrow-icon">
                                                     <FontAwesomeIcon icon={faArrowRight} />
                                                 </span>
@@ -602,30 +607,13 @@ export default function ContactUs() {
                                     <div className="user-info-content notifcations">
 
                                         <div className="title-row">
-                                            <p>Current Collaborations</p>
+                                            <p>My Comments</p>
                                                 <span className="arrow-icon">
                                                     <FontAwesomeIcon icon={faArrowRight} />
                                                 </span>
                                         </div>
                                             <div className="link-item">
                                                 {notifications}
-                                            </div>
-                                    </div>
-                            </div>
-                            <div className="user-detail">
-                                    {/* <div className="user-info-image user-notifcations">
-                                        <FontAwesomeIcon icon={faStar} />
-                                    </div> */}
-                                    <div className="user-info-content notifcations">
-
-                                        <div className="title-row">
-                                            <p>Completed Collaborations</p>
-                                                <span className="arrow-icon">
-                                                    <FontAwesomeIcon icon={faArrowRight} />
-                                                </span>
-                                        </div>
-                                            <div className="link-item">
-                                                {events.length}
                                             </div>
                                     </div>
                             </div>
@@ -636,7 +624,7 @@ export default function ContactUs() {
                         <div className="page-body">
                             <div className="posts">
                                 <div className="page-divider page-divider-home">
-                                    <p>Browse all collaboration opportunities</p>
+                                    <p>Browse all questions</p>
                                 </div>
 
                                 {/* Search + Filters */}
@@ -656,11 +644,6 @@ export default function ContactUs() {
 
                                     {/* Filters */}
                                     <div className="filters">
-                                        <select onChange={(e) => setFilters({ ...filters, country: e.target.value })}>
-                                            <option value="">Country</option>
-                                            <option value="Canada">Canada</option>
-                                            <option value="USA">USA</option>
-                                        </select>
 
                                         <select onChange={(e) => setFilters({ ...filters, field: e.target.value })}>
                                             <option value="">Field</option>
@@ -670,9 +653,9 @@ export default function ContactUs() {
 
 
                                         <select onChange={(e) => setFilters({ ...filters, purpose: e.target.value })}>
-                                            <option value="">Purpose</option>
-                                            <option value="Collaboration">Collaboration</option>
-                                            <option value="Mentorship">Mentorship</option>
+                                            <option value="">Category</option>
+                                            <option value="Tehcnical">Technical</option>
+                                            <option value="Advice">Advice</option>
                                         </select>
                                     </div>
                                 </div>
@@ -764,42 +747,40 @@ export default function ContactUs() {
         <span className="points-badge">*5 points required</span>
     </div>
 
-    <h1>Collaboration Request</h1>
+    <h1>Ask a Question</h1>
     <div className="drawer-divider" />
     <form className="drawer-form">
         <label className="first-label">
-            Type your request briefly (150 characters max)
+            Title (150 characters max)
             <input
                 type="text"
                 maxLength={150}
-                placeholder="ex. Need help creating a knockout cell line."
+                placeholder="Give a short but appropriate title."
             />
         </label>
 
         <label>
             Description
             <textarea
-                placeholder="Explain your request in further detail. Please keep project explanations sufficiently vague to avoid scooping."
+                placeholder="Provide additional details."
             />
         </label>
 
         <label>
-            Enter major skills required (max. 5)
-            <input type="text" />
-        </label>
-
-        <label>
-            Deadline for project completion
-            <input type="date" />
-        </label>
-
-        <label>
-            Compensation
+            Field
             <select>
                 <option>Choose an option</option>
-                <option>Points</option>
-                <option>Co-authorship</option>
-                <option>Paid</option>
+                <option>Biology</option>
+                <option>Chemistry</option>
+            </select>
+        </label>
+
+        <label>
+            Category
+            <select>
+                <option>Choose an option</option>
+                <option>Tehcnical question</option>
+                <option>Advice</option>
             </select>
         </label>
 
