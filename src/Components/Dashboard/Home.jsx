@@ -621,7 +621,7 @@ export default function Home() {
 
     return (
         <>
-            <Navigation user={usersAccountDetails} />
+            <Navigation user={userDetails} />
             <main>
                 <div className="page-body-container">
                     <div className="side-navigation-container" style={{ background: '#ffffff' }}>
