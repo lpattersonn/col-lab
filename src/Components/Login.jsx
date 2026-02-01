@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import Brand from '../Images/colLAB-logo.svg';
+import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -32,6 +33,32 @@ export default function Login() {
         setIsSubmitting(true);
         setApiSettings({ ...userLogin });
     }
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem('userDetails');
+
+        if (!storedUser) return;
+
+        const parsed = JSON.parse(storedUser);
+        const token = parsed?.token;
+
+        if (!token) return;
+
+        try {
+            const decoded = jwtDecode(token);
+            const now = Date.now() / 1000;
+
+            if (decoded.exp < now) {
+                localStorage.removeItem('userDetails');
+                return;
+            }
+
+            navigate('/', { replace: true });
+        } catch {
+            localStorage.removeItem('userDetails');
+        }
+    }, [navigate]);
+
 
     // 🔐 Login request
     useEffect(() => {
@@ -71,9 +98,16 @@ export default function Login() {
     }, [apiSettings]);
 
     // ✅ Redirect after login OR if already logged in
+    // useEffect(() => {
+    //     const storedUser = localStorage.getItem('userDetails');
+    //     if (userDetails || storedUser) {
+    //         navigate('/', { replace: true });
+    //     }
+    // }, [userDetails, navigate]);
+
+    // Redirect only after successful login
     useEffect(() => {
-        const storedUser = localStorage.getItem('userDetails');
-        if (userDetails || storedUser) {
+        if (userDetails?.token) {
             navigate('/', { replace: true });
         }
     }, [userDetails, navigate]);

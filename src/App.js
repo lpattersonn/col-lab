@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {BrowserRouter as Router, Route, Routes, Switch} from "react-router-dom";
 // import './Styles/_compiled/style.css';
 import Dashboard from './Components/Dashboard';
+import axios from 'axios';
 import Home from './Components/Dashboard/Home';
 import Login from './Components/Login';
 import Registration from './Components/Registration';
@@ -55,6 +56,24 @@ import LearningCenterCertificates from './Components/LearningCenterCertificates'
 import LearningCenterUpcomingMeetings from './Components/LearningCenterUpcomingMeetings';
 
 function App() {
+
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      response => response,
+      error => {
+        if (error?.response?.data?.code === "jwt_auth_invalid_token") {
+          localStorage.removeItem('userDetails');
+          window.location.replace('/login');
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, []);
+
   return (
     <Router>
       <Routes>

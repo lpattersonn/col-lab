@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faLock, faCreditCard, faLifeRing } from '@fortawesome/free-solid-svg-icons';
@@ -6,6 +6,7 @@ import Navigation from './Navigation';
 import SideNavigation from './Navigation/SideNavigation';
 
 export default function SettingsLayout({ children }) {
+    const [ usersAccountDetails, setUsersAccountDetails ] = useState(null);
     const userDetails = useMemo(() => {
         try {
             return JSON.parse(localStorage.getItem('userDetails'));
@@ -25,7 +26,7 @@ export default function SettingsLayout({ children }) {
 
     return (
         <>
-            <Navigation user={userDetails} />
+            <Navigation user={usersAccountDetails} />
             <main>
                 <div className="page-body-container">
                     <div className="side-navigation-container" style={{ background: '#ffffff' }}>

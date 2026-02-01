@@ -572,7 +572,7 @@ export default function ShareResources({
 
     return (
         <>
-           <Navigation user={userDetails} />
+           <Navigation user={usersAccountDetails} />
             <main>
                 <div className="page-body-container">
                     <div className="side-navigation-container" style={{ background: '#ffffff' }}>

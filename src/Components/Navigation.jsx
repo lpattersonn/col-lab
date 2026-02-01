@@ -15,7 +15,7 @@ export default function Navigation({ user }) {
     const logout = useCallback(() => {
         setShowMenu(false);
         localStorage.clear();
-        navigate('/');
+        navigate('/login');
     }, [navigate]);
 
     /* -------------------------------
