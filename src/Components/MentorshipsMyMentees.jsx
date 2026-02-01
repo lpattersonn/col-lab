@@ -520,7 +520,7 @@ export default function MentorshipsMyMentees({
 
 
     if (!localStorage.getItem('userDetails')) {
-        window.location.replace('/');
+        window.location.replace('/login');
         return null;
     }
     

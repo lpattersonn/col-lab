@@ -565,7 +565,7 @@ export default function Collaborations({
 
 
     if (!localStorage.getItem('userDetails')) {
-        window.location.replace('/');
+        window.location.replace('/login');
         return null;
     }
     

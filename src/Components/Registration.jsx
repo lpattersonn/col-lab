@@ -117,7 +117,7 @@ export default function Registration() {
                     'registrationMessage',
                     'Thank you for registering with us. You are now a member of our community. Login to explore collabb.'
                 );
-                window.location.replace('/');
+                window.location.replace('/login');
             })
             .catch((err) => {
                 setServerMessage(err?.response?.data?.message || 'Error');

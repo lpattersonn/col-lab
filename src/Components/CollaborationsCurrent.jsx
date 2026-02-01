@@ -528,7 +528,7 @@ export default function CollaborationsCurrent() {
     }, [questions, searchTerm]);
 
     if (!localStorage.getItem('userDetails')) {
-        window.location.replace('/');
+        window.location.replace('/login');
         return null;
     }
 

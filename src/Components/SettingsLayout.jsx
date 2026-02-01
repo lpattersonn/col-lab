@@ -20,7 +20,7 @@ export default function SettingsLayout({ children }) {
         prefixes.some((prefix) => location.pathname.startsWith(prefix));
 
     if (!localStorage.getItem('userDetails')) {
-        window.location.replace('/');
+        window.location.replace('/login');
         return null;
     }
 

@@ -33,7 +33,7 @@ export default function SettingsProfile() {
 
     useEffect(() => {
         if (!userDetails?.token || !userDetails?.id) {
-            window.location.replace('/');
+            window.location.replace('/login');
             return;
         }
 

@@ -170,6 +170,6 @@ export default function PointsCenter() {
         )
       }
     } else {
-        window.location.replace("/");
+        window.location.replace("/login");
     }
 };

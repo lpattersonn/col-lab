@@ -526,7 +526,7 @@ export default function GetHelp({
 
 
     if (!localStorage.getItem('userDetails')) {
-        window.location.replace('/');
+        window.location.replace('/login');
         return null;
     }
     

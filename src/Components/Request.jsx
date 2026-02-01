@@ -124,6 +124,6 @@ export default function Request() {
         )
       }
       } else {
-        window.location.replace("/");
+        window.location.replace("/login");
       }
 };

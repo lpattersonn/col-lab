@@ -332,6 +332,6 @@ export default function Dashboard() {
   )
 }
   } else {
-    window.location.replace("/");
+    window.location.replace("/login");
   }
 }

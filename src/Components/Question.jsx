@@ -473,6 +473,6 @@ return (
   )
 }
       } else {
-        window.location.replace("/");
+        window.location.replace("/login");
       }
 }
