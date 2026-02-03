@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import api from '../../services/api';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
@@ -9,12 +9,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faArrowRight, faMagnifyingGlass, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
 
-import Navigation from './Navigation';
-import SideNavigation from './Navigation/SideNavigation';
-import defaultImage from '../Images/user-profile.svg';
-import likeIcon from '../Images/like-svgrepo-com.svg';
-import commentIcon from '../Images/comment-svgrepo-com.svg';
-import { dateFormat, humanReadableDate } from '../helper';
+import Navigation from '../Navigation';
+import SideNavigation from '../Navigation/SideNavigation';
+import defaultImage from '../../Images/user-profile.svg';
+import likeIcon from '../../Images/like-svgrepo-com.svg';
+import commentIcon from '../../Images/comment-svgrepo-com.svg';
+import { dateFormat, humanReadableDate } from '../../helper';
 
 
 
@@ -102,7 +102,7 @@ export default function Collaborations({
         let isMounted = true;
 
         Promise.all([
-            api.get(`/wp-json/wp/v2/questions`),
+            api.get(`/wp-json/wp/v2/collaborations`),
             api.get(`/wp-json/wp/v2/users`),
             api.get(`/wp-json/wp/v2/users/${userDetails.id}`),
             api.get(`/wp-json/wp/v2/mentor-requests`),
@@ -403,6 +403,8 @@ export default function Collaborations({
             const ellipsis = shouldTruncate ? '...' : '';
 
             const isCommentsOpen = Boolean(openComments[question.id]);
+
+            console.log(question);
 
             return (
                 <div className="card collaboration-card mb-4 share-card" key={question.id || index}>

@@ -16,7 +16,7 @@ import Mentorships from './Components/Mentorships';
 import MentorSignup from './Components/MentorSignup';
 import Mentor from './Components/Mentor';
 import MentorChat from './Components/MentorChat';
-import Collaborations from './Components/Collaborations';
+import Collaborations from './Components/Collaboration/Collaborations';
 import CollaborationsMyRequests from './Components/CollaborationsMyRequests';
 import CollaborationsCurrent from './Components/CollaborationsCurrent';
 import CollaborationsCompleted from './Components/CollaborationsCompleted';

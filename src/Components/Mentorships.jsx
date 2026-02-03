@@ -180,7 +180,7 @@ export default function Mentorships({
         let isMounted = true;
 
         Promise.all([
-            api.get(`/wp-json/wp/v2/questions`),
+            api.get(`/wp-json/wp/v2/users`),
             api.get(`/wp-json/wp/v2/users`),
             api.get(`/wp-json/wp/v2/users/${userDetails.id}`),
             api.get(`/wp-json/wp/v2/mentor-requests`),

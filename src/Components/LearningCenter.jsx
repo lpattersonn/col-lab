@@ -147,7 +147,7 @@ export default function LearningCenter({
         };
 
         Promise.all([
-            api.get(`/wp-json/wp/v2/questions`, { headers }),
+            api.get(`/wp-json/wp/v2/learning-center`, { headers }),
             api.get(`/wp-json/wp/v2/users`, { headers }),
             api.get(`/wp-json/wp/v2/users/${userDetails.id}`, { headers }),
             api.get(`/wp-json/wp/v2/mentor-requests`, { headers }),

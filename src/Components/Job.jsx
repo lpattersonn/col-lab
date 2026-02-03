@@ -16,7 +16,7 @@ export default function CreateJob() {
 
     useEffect(() => {
       api({
-        url: `/wp-json/wp/v2/jobs/${param1}`,
+        url: `/wp-json/wp/v2/job/${param1}`,
         method: 'GET',
         headers: {
           Authorization: `Bearer ${userDetails.token}`
@@ -33,7 +33,7 @@ export default function CreateJob() {
     function handelCheckedChange(e) {
         let checked = e.target.checked;
         if (checked === true) {
-            api.post(`/wp-json/wp/v2/jobs/${param1}`,{acf: {
+            api.post(`/wp-json/wp/v2/job/${param1}`,{acf: {
                 'jobs_applied_users': `${jobDetails?.acf?.jobs_applied_users} ${JSON.stringify(userDetails.id)} `
               }
             },
