@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navigation from "./Navigation";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import api from '../services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { reducePoints } from "../helper";
@@ -34,9 +34,10 @@ export default function CreateJob() {
 
     // Retreive cities from api
     useEffect(() => {
-        axios.get("https://restcountries.com/v3.1/all")
-        .then((response) => {
-            setGetCountries(response.data);
+        fetch("https://restcountries.com/v3.1/all")
+        .then((response) => response.json())
+        .then((data) => {
+            setGetCountries(data);
         })
         .catch((error) => {
         })
@@ -59,8 +60,8 @@ export default function CreateJob() {
     if (success === true) {
         try {
             // Upload image if file exists
-                const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/jobs`,
+                const response = await api.post(
+                `/wp-json/wp/v2/jobs`,
                     {   
                         'title':  createJob.title,
                         'content': createComment,

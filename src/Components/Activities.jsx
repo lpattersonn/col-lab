@@ -4,7 +4,7 @@ import ReactPaginate from 'react-paginate';
 import UserComment from "../Images/user-comment.svg";
 import { renderedQuestion, humanReadableDate, deletePost } from '../helper';
 import UserProfile from '../Images/user-profile.svg'
-import axios from 'axios';
+import api from '../services/api';
 
 export default function Activities({selected, activities, keyword, users, setUpdateState}) {
    // Can add in context
@@ -83,7 +83,7 @@ export default function Activities({selected, activities, keyword, users, setUpd
                     useEffect(() => {
                         if (!collaboration?._links?.replies?.['0']?.href) return;
                 
-                        axios.get(collaboration._links.replies['0'].href, {
+                        api.get(collaboration._links.replies['0'].href, {
                             headers: { Authorization: `Bearer ${userDetails.token}` }
                         })
                         .then((response) => {
@@ -127,7 +127,7 @@ export default function Activities({selected, activities, keyword, users, setUpd
                 // Create Collaboration chat 
                 const createMentorChat = async (e) => {
                     try {
-                        const createChat = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`,
+                        const createChat = await api.post(`/wp-json/wp/v2/collaboration-chats`,
                             {
                                 author: userDetails.id,
                                 title: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,
@@ -295,29 +295,29 @@ export default function Activities({selected, activities, keyword, users, setUpd
 
     // Start activity tab
     // Set URL for the desired outcome
-    let url = `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`
+    let url = `/wp-json/wp/v2/questions`
     let [myActivity, setMyActivity] = useState();
     // Change value of url based on the value of selected
     switch(selected) {
         case 'questions':
-        url = `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`;
+        url = `/wp-json/wp/v2/questions`;
         break;
         case 'collaborations':
-        url = `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations`;
+        url = `/wp-json/wp/v2/collaborations`;
         break;
         case 'borrow-items':
-        url = `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items`;
+        url = `/wp-json/wp/v2/borrow-items`;
         break;  
         case 'jobs':
-        url = `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/jobs`;
+        url = `/wp-json/wp/v2/jobs`;
         break;   
         case 'learning-center':
-        url = `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center`;
+        url = `/wp-json/wp/v2/learning-center`;
         break; 
     }
 
     useEffect(() => {
-        axios.get(url, {
+        api.get(url, {
             headers: `Bearer ${userDetails.token}`
         })
         .then(async (response) => {
@@ -330,7 +330,7 @@ export default function Activities({selected, activities, keyword, users, setUpd
                             const replyUrl = question?._links?.replies?.[0]?.href;
                             if (!replyUrl) return false;
         
-                            const res = await axios.get(replyUrl);
+                            const res = await api.get(replyUrl);
                             const authors = res.data.map(comment => comment.author);
         
                             return authors.includes(userDetails.id);
@@ -407,7 +407,7 @@ export default function Activities({selected, activities, keyword, users, setUpd
                     useEffect(() => {
                         if (!collaboration?._links?.replies?.['0']?.href) return;
                 
-                        axios.get(collaboration._links.replies['0'].href, {
+                        api.get(collaboration._links.replies['0'].href, {
                             headers: { Authorization: `Bearer ${userDetails.token}` }
                         })
                         .then((response) => {
@@ -451,7 +451,7 @@ export default function Activities({selected, activities, keyword, users, setUpd
                 // Create Collaboration chat 
                 const createMentorChat = async (e) => {
                     try {
-                        const createChat = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`,
+                        const createChat = await api.post(`/wp-json/wp/v2/collaboration-chats`,
                             {
                                 author: userDetails.id,
                                 title: `New Collaboration Request For ${collaboration?.title?.rendered} Requestee: ${userDetails?.displayName}`,

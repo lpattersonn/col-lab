@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import SectionImage from "../Images/rb_2582.png";
 import { reducePoints } from "../helper";
-import axios from "axios";
+import api from '../services/api';
 
 export default function LearningRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -36,8 +36,8 @@ export default function LearningRequest() {
         
         if (success === true) {
             try {
-                const response = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center/`,
+                const response = await api.post(
+                    `/wp-json/wp/v2/learning-center/`,
                     {   
                         'title':  createLearningRequest.learning_description,
                         'content': createLearningRequest.learning_features,

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import SectionImage from "../Images/rb_2582.png";
 import { reducePoints } from '../helper';
-import axios from "axios";
+import api from '../services/api';
 
 export default function BorrowRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -35,8 +35,8 @@ export default function BorrowRequest() {
     if (success === true) {
         try {
             // Upload image if file exists
-                const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items`,
+                const response = await api.post(
+                `/wp-json/wp/v2/borrow-items`,
                     {   
                         'title':  createLearningRequest.borrow_description,
                         'content': createLearningRequest.borrow_features,

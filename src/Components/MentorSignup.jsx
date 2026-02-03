@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import { reducePoints } from '../helper';
-import axios from "axios";
+import api from '../services/api';
 
 export default function MentorSignup() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -31,15 +31,9 @@ export default function MentorSignup() {
     useEffect(() => {
         Promise.all([
         // Countries
-        axios.get("https://restcountries.com/v3.1/all"),
+        api.get("https://restcountries.com/v3.1/all"),
         // Single user
-        axios({
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
-            method: 'GET',
-            headers: {
-            Authorization: `Bearer ${userDetails.token}`
-            }
-        })
+        api.get(`/wp-json/wp/v2/users/${userDetails?.id}`)
         ])
         .then(([contries, singleUser]) => {
             // Countries
@@ -72,9 +66,9 @@ export default function MentorSignup() {
         if (success === true) {
         try {
             // Upload image if file exists
-                const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
-                    {   
+                const response = await api.post(
+                `/wp-json/wp/v2/users/${userDetails?.id}`,
+                    {
                         'acf' : {
                             'user_is_mentor': 'Yes',
                             'user_mentor_current_position': createMentor.user_mentor_current_position,
@@ -91,11 +85,6 @@ export default function MentorSignup() {
                             'user_institution_number': createMentor.user_institution_number,
                             'user_mentor_bio': createMentor.user_mentor_bio,
                             'user_mentor_services_offered': createMentor.user_mentor_services_offered,
-                        }
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${userDetails.token}`
                         }
                     }
                 )

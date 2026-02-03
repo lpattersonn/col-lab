@@ -11,7 +11,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { dateFormat } from "../helper.js";
 import { TailSpin } from "react-loader-spinner";
-import axios from 'axios';
+import api from '../services/api';
 import defaultImage from '../Images/user-profile.svg';
 
 export default function Dashboard() {
@@ -33,53 +33,17 @@ export default function Dashboard() {
   useEffect(() => {
     Promise.all([
       // Api for questions
-      axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`, 
-        {
-          headers: {
-            Authorization: `Bearer ${userDetails.token}`
-          }
-        }
-      ),
+      api.get('/wp-json/wp/v2/questions'),
       // Api for users
-      axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`,
-        {
-          headers: {
-            Authorization: `Bearer ${userDetails.token}`
-          }
-        }
-      ),
+      api.get('/wp-json/wp/v2/users'),
       // Api for current user
-      axios({
-        url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${userDetails.token}`
-        }
-      }),
+      api.post(`/wp-json/wp/v2/users/${userDetails?.id}`),
       // Get mentor requests
-      axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
-        {
-            headers: {
-                Authorization: `Bearer ${userDetails.token}`
-            }
-        }
-      ),
+      api.get('/wp-json/wp/v2/mentor-requests/'),
       // Collaborations
-      axios({
-        url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`,
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${userDetails.token}`
-        }
-      }),
+      api.get('/wp-json/wp/v2/collaboration-chats'),
       // Mentorship Chat
-      axios({
-        url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`,
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${userDetails.token}`
-        }
-      }),
+      api.get('/wp-json/wp/v2/mentor-chats'),
     ])
     .then(([apiQuestion, apiUsers, currentUserApi, mentorRequest, allCollaborations, allMentorChats]) => {
       // Api for questions
@@ -152,7 +116,7 @@ export default function Dashboard() {
         }
 
         function commentCount() {
-          return axios.get(`${question._links.replies['0'].href}`)
+          return api.get(question._links.replies['0'].href)
           .then((response) => {
             numberOfComments[0].count = response.data.length;
             localStorage.setItem(`comment_count(${question.title.rendered})`, numberOfComments[0].count)

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { TailSpin } from "react-loader-spinner";
 import Navigation from '../Components/Navigation';
 import Activities from '../Components/Activities';
-import axios from 'axios';
+import api from '../services/api';
 
 export default function MyActivity() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -22,47 +22,47 @@ export default function MyActivity() {
     useEffect(() => {
         Promise.all([
         // My questions
-        axios({
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`,
+        api({
+            url: `/wp-json/wp/v2/questions`,
             method: 'GET',
             headers: {
             Authorization: `Bearer ${userDetails.token}`
             }
         }),
         // All Borrow request
-        axios({
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/borrow-items`,
+        api({
+            url: `/wp-json/wp/v2/borrow-items`,
             method: 'GET',
             headers: {
             Authorization: `Bearer ${userDetails.token}`
             }
         }),
         // All Jobs
-        axios({
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/jobs`,
+        api({
+            url: `/wp-json/wp/v2/jobs`,
             method: 'GET',
             headers: {
             Authorization: `Bearer ${userDetails.token}`
             }
         }),
         // All learning center
-        axios({
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/learning-center`,
+        api({
+            url: `/wp-json/wp/v2/learning-center`,
             method: 'GET',
             headers: {
             Authorization: `Bearer ${userDetails.token}`
             }
         }),
         // All collaborations
-        axios({
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations`,
+        api({
+            url: `/wp-json/wp/v2/collaborations`,
             method: 'GET',
             headers: {
             Authorization: `Bearer ${userDetails.token}`
             }
         }),
         // Users
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, 
+        api.get(`/wp-json/wp/v2/users`, 
         {
             headers: {
                 Authorization: `Bearer ${userDetails.token}`

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
 import defaultImage from '../Images/user-profile.svg';
-import axios from 'axios';
+import api from '../services/api';
 import { Link } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
@@ -30,15 +30,15 @@ export default function AskQuestions() {
   useEffect(() => {
     Promise.all([
         // Get all questions
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions?per_page=100`, {
+        api.get(`/wp-json/wp/v2/questions?per_page=100`, {
             headers: { Authorization: `Bearer ${userDetails.token }`}
         }),
         // Get all users
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, {
+        api.get(`/wp-json/wp/v2/users`, {
             headers: { Authorization: `Bearer ${userDetails.token}`}
         }),
         // Get single user detials
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`, {
+        api.get(`/wp-json/wp/v2/users/${userDetails?.id}`, {
             headers: { Authorization: `Bearer ${userDetails.token}` }
         })
     ]).then(
@@ -112,7 +112,7 @@ export default function AskQuestions() {
                 }
         
                 function commentCount() {
-                    return axios.get(`${question._links.replies['0'].href}`)
+                    return api.get(`${question._links.replies['0'].href}`)
                     .then((response) => {
                     numberOfComments[0].count = response.data.length;
                     localStorage.setItem(`comment_count(${question.title.rendered})`, numberOfComments[0].count)

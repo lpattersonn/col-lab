@@ -6,7 +6,7 @@ import { Editor } from '@tinymce/tinymce-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from "react-loader-spinner";
-import axios from "axios";
+import api from '../services/api';
 import imageCompression from "browser-image-compression";
 
 export default function Question() {
@@ -28,7 +28,7 @@ export default function Question() {
     useEffect(() => {
       Promise.all([
         // Single question
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions/${param1}`,
+        api.get(`/wp-json/wp/v2/questions/${param1}`,
           {
             headers: {
               Authorization: `Bearer ${userDetails.token}`
@@ -36,7 +36,7 @@ export default function Question() {
           }
         ),
         // Comments
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}`,
+        api.get(`/wp-json/wp/v2/comments?post=${param1}`,
           {
             headers: {
               Authorization: `Bearer ${userDetails.token}`
@@ -44,7 +44,7 @@ export default function Question() {
           }
         ),
         // All users
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`,
+        api.get(`/wp-json/wp/v2/users`,
           {
             headers: {
               Authorization: `Bearer ${userDetails.token}`
@@ -219,8 +219,8 @@ export default function Question() {
           console.log("Uploading image...");
     
           // Upload the image
-          const response = await axios.post(
-            `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
+          const response = await api.post(
+            `/wp-json/wp/v2/media`,
             formData,
             {
               headers: {
@@ -232,8 +232,8 @@ export default function Question() {
         }
     
         // Create comment
-        const commentResponse = await axios.post(
-          `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+        const commentResponse = await api.post(
+          `/wp-json/wp/v2/comments`,
           {
             author: userDetails.id,
             author_email: userDetails.email,
@@ -263,8 +263,8 @@ export default function Question() {
     
         console.log("Updating user points...");
     
-        await axios.post(
-          `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`,
+        await api.post(
+          `/wp-json/wp/v2/users/${userDetails.id}`,
           {
             acf: {
               "user-points": updatedPoints,

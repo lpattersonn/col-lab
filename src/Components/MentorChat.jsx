@@ -2,7 +2,7 @@ import React, { Component, useState, useEffect } from 'react';
 import { render } from "react-dom";
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import Navigation from './Navigation';
-import axios from 'axios';
+import api from '../services/api';
 import SendIcon from '../Images/send_icon.svg';
 import WinkIcon from '../Images/grinning-face-with-smiling-eyes-emoji-icon.svg';
 import SearchIcon from '../Images/search_icon.svg';
@@ -38,9 +38,7 @@ export default function MentorChat() {
     const Navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`, {
-            headers: { Authorization: `Bearer ${userDetails.token}` }
-        })
+        api.get(`/wp-json/wp/v2/mentor-chats`)
         .then((response) => {
             let filteredData = response?.data;
     
@@ -68,18 +66,10 @@ export default function MentorChat() {
     const fetchData = async () => {
         try {
             const [allMentorRequests, singleChat, singleUserDetails, allComments] = await Promise.all([
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`, {
-                    headers: { Authorization: `Bearer ${userDetails.token}` }
-                }),
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats/${param1}`, {
-                    headers: { Authorization: `Bearer ${userDetails.token}` }
-                }),
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`, {
-                    headers: { Authorization: `Bearer ${userDetails.token}` }
-                }),
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}&per_page=100`, {
-                    headers: { Authorization: `Bearer ${userDetails.token}` }
-                }),
+                api.get(`/wp-json/wp/v2/mentor-requests/`),
+                api.get(`/wp-json/wp/v2/mentor-chats/${param1}`),
+                api.get(`/wp-json/wp/v2/users/${userDetails?.id}`),
+                api.get(`/wp-json/wp/v2/comments?post=${param1}&per_page=100`),
             ]);
 
             setRequest(allMentorRequests?.data?.filter(item => 
@@ -110,12 +100,8 @@ useEffect(() => {
     const fetchMentorMentee = async () => {
         try {
             const [mentorDetails, menteeDetails] = await Promise.all([
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${mentorChatDetails.acf.mentors_id}`, {
-                    headers: { Authorization: `Bearer ${userDetails.token}` }
-                }),
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${mentorChatDetails.acf.mentee_id}`, {
-                    headers: { Authorization: `Bearer ${userDetails.token}` }
-                })
+                api.get(`/wp-json/wp/v2/users/${mentorChatDetails.acf.mentors_id}`),
+                api.get(`/wp-json/wp/v2/users/${mentorChatDetails.acf.mentee_id}`)
             ]);
 
             setMentor(mentorDetails.data);
@@ -138,13 +124,7 @@ useEffect(() => {
  
     const SideBarChats = allMentorChats.map((mentorChat, index) => {
         if (userDetails?.id === mentorChat?.acf?.mentors_id || userDetails?.id === mentorChat?.acf?.mentee_id) {
-            axios({
-                method: 'GET',
-                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${mentorChat.id}&per_page=100`,
-                headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                    }
-            })
+            api.get(`/wp-json/wp/v2/comments?post=${mentorChat.id}&per_page=100`)
             .then((response) => {
                 localStorage.setItem(`sideBarChat${index}`, JSON.stringify(response.data))
             })
@@ -233,17 +213,11 @@ useEffect(() => {
         
         if (!userDetails?.id || !comment.trim()) return; // Prevent empty comments
     
-        axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+        api.post(`/wp-json/wp/v2/comments`,
             {
                 post: param1, // Ensure it's a valid post ID (Number, not String)
                 content: comment,
                 author: userDetails.id, // Only pass this if the user is logged in
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${userDetails?.token}`,
-                    "Content-Type": "application/json"
-                }
             }
         )
         .then((res) => {
@@ -413,6 +387,6 @@ if (userDetails !== null) {
     )
   }
 } else {
-    Navigate('/')
+    Navigate('/login')
 }
 };

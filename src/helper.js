@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "./services/api";
 
 // Return user first
 export function userFirstName(prop) {
@@ -7,7 +7,7 @@ export function userFirstName(prop) {
   }
 
 export function test(prop) {
-  return axios.get(`${prop}`)
+  return api.get(`${prop}`)
   .then((response) => {
     return response.data;
   }).catch((err) => {})
@@ -89,9 +89,9 @@ export function humanReadableDate(args) {
 }
 
 // Submit a report
+// Note: Uses api client which auto-attaches token and handles refresh
 export function submitReport(argPostType, userDetails) {
-  // Create a axios post request that creates a post request that creates a request post type. 
-  return axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/report-post`,
+  return api.post(`/wp-json/wp/v2/report-post`,
     {
       title: `Misconduct from ${userDetails?.firstName} on ${argPostType?.type}`,
       author: userDetails?.id,
@@ -104,12 +104,6 @@ export function submitReport(argPostType, userDetails) {
           'offence_type': `${argPostType?.type}`,
           'offence_authorid': `${argPostType?.author}`,
       },
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${userDetails?.token}`,
-        'Content-Type': 'application/json',
-      }
     }
     ).then((res) => {
         alert("Thank you. The post has been reported.")
@@ -119,66 +113,43 @@ export function submitReport(argPostType, userDetails) {
 }
 
 // Reduce user points
+// Note: Uses api client which auto-attaches token and handles refresh
 export async function reducePoints(user, fee, required) {
   try {
       // Fetch user data
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${user.id}`, {
-          headers: {
-              Authorization: `Bearer ${user.token}`,
-          },
-      });
+      const response = await api.get(`/wp-json/wp/v2/users/${user.id}`);
 
-      if (!response.ok) {
-          throw new Error('Failed to fetch user details');
-      }
-
-      const userDetails = await response.json();
+      const userDetails = response.data;
       const currentPoints = Number(userDetails?.acf?.["user-points"]) || 0;
 
       // Check if user has enough points
       if (currentPoints < Number(required)) {
-          alert(`⚠️ You don\’t have enough points to submit this request.Visit the Points Center to earn more points and try again!`);
+          alert(`You don\'t have enough points to submit this request. Visit the Points Center to earn more points and try again!`);
           return;
       }
 
       const updatedPoints = currentPoints - Number(fee);
 
       // Update user points via POST
-      const updateResponse = await fetch(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${user.id}`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${user.token}`,
+      const updateResponse = await api.post(`/wp-json/wp/v2/users/${user.id}`, {
+          acf: {
+              "user-points": updatedPoints,
           },
-          body: JSON.stringify({
-              acf: {
-                  "user-points": updatedPoints,
-              },
-          }),
       });
 
-      if (!updateResponse.ok) {
-          throw new Error('Failed to update user points');
-      } else {
-        const updatedUser = await updateResponse.json();
-
-        console.log("User points updated successfully:", updatedUser);
-        return true;
-      }
+      console.log("User points updated successfully:", updateResponse.data);
+      return true;
   } catch (error) {
       console.error("Error reducing points:", error);
   }
 }
 
 // Delete Post
+// Note: Uses api client which auto-attaches token and handles refresh
 export async function deletePost(user, link, id, setUpdateState) {
   console.log(link, id)
   try {
-    const response = await axios.delete(`${link}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      }
-    });
+    const response = await api.delete(`${link}/${id}`);
 
     alert("This post has been deleted");
     setUpdateState(prev => !prev);

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import Brand from '../Images/colLAB-logo.svg';
 import { jwtDecode } from "jwt-decode";
+import authService from '../services/authService';
+import tokenService from '../services/tokenService';
 
 export default function Login() {
     const navigate = useNavigate();
 
-    const [userDetails, setUserDetails] = useState(null);
     const [serverMessage, setServerMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -17,23 +17,36 @@ export default function Login() {
         pass: '',
     });
 
-    const [apiSettings, setApiSettings] = useState(null);
-
     function handleChange(e) {
         const { name, value } = e.target;
         setUserLogin((prev) => ({ ...prev, [name]: value }));
     }
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
         if (isSubmitting) return;
 
         setServerMessage('');
         localStorage.removeItem('registrationMessage');
         setIsSubmitting(true);
-        setApiSettings({ ...userLogin });
+
+        try {
+            // Use auth service for login (handles token storage automatically)
+            const userData = await authService.login(userLogin.user, userLogin.pass);
+
+            if (userData?.token) {
+                navigate('/', { replace: true });
+            } else {
+                setServerMessage('Invalid login response.');
+            }
+        } catch (error) {
+            setServerMessage(error.message || 'Login failed.');
+        } finally {
+            setIsSubmitting(false);
+        }
     }
 
+    // Check if already logged in with valid token
     useEffect(() => {
         const storedUser = localStorage.getItem('userDetails');
 
@@ -49,7 +62,22 @@ export default function Login() {
             const now = Date.now() / 1000;
 
             if (decoded.exp < now) {
-                localStorage.removeItem('userDetails');
+                // Token expired - check if we can refresh
+                const refreshToken = tokenService.getRefreshToken();
+
+                if (refreshToken) {
+                    // Try to refresh the token
+                    authService.refreshAccessToken()
+                        .then(() => {
+                            navigate('/', { replace: true });
+                        })
+                        .catch(() => {
+                            // Refresh failed - clear tokens
+                            tokenService.clearTokens();
+                        });
+                } else {
+                    localStorage.removeItem('userDetails');
+                }
                 return;
             }
 
@@ -58,59 +86,6 @@ export default function Login() {
             localStorage.removeItem('userDetails');
         }
     }, [navigate]);
-
-
-    // 🔐 Login request
-    useEffect(() => {
-        if (!apiSettings?.user || !apiSettings?.pass) {
-            setIsSubmitting(false);
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('username', apiSettings.user);
-        formData.append('password', apiSettings.pass);
-
-        axios
-            .post(
-                `${process.env.REACT_APP_API_URL}/wp-json/jwt-auth/v1/token`,
-                formData
-            )
-            .then((response) => {
-                if (response?.data?.data) {
-                    localStorage.setItem(
-                        'userDetails',
-                        JSON.stringify(response.data.data)
-                    );
-                    setUserDetails(response.data.data);
-                } else {
-                    setServerMessage('Invalid login response.');
-                }
-            })
-            .catch((err) => {
-                setServerMessage(
-                    err?.response?.data?.message || 'Login failed.'
-                );
-            })
-            .finally(() => {
-                setIsSubmitting(false);
-            });
-    }, [apiSettings]);
-
-    // ✅ Redirect after login OR if already logged in
-    // useEffect(() => {
-    //     const storedUser = localStorage.getItem('userDetails');
-    //     if (userDetails || storedUser) {
-    //         navigate('/', { replace: true });
-    //     }
-    // }, [userDetails, navigate]);
-
-    // Redirect only after successful login
-    useEffect(() => {
-        if (userDetails?.token) {
-            navigate('/', { replace: true });
-        }
-    }, [userDetails, navigate]);
 
     function userServerMessage() {
         if (!serverMessage) return null;
@@ -199,7 +174,7 @@ export default function Login() {
             }}
         >
             {showPassword ? (
-                // 👁️ Eye Off
+                // Eye Off
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="22"
@@ -217,7 +192,7 @@ export default function Login() {
                     <path d="M10.73 5.08A10.94 10.94 0 0 1 12 4c5 0 9.27 3.89 11 8a11.64 11.64 0 0 1-2.06 3.06" />
                 </svg>
             ) : (
-                // 👁️ Eye
+                // Eye
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="22"

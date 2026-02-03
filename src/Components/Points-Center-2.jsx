@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { TailSpin } from "react-loader-spinner";
 import Navigation from './Navigation';
-import axios from 'axios';
+import api from '../services/api';
 
 export default function PointsCenter() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -11,8 +11,8 @@ export default function PointsCenter() {
     
     useEffect(() => {
         // Api for current user
-        axios({
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`,
+        api({
+            url: `/wp-json/wp/v2/users/${userDetails?.id}`,
             method: 'POST',
             headers: {
             Authorization: `Bearer ${userDetails.token}`

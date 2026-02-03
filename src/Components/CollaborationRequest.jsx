@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse } from '@fortawesome/free-solid-svg-icons';
 import SectionImage from "../Images/rb_2582.png";
 import { reducePoints } from '../helper';
-import axios from "axios";
+import api from '../services/api';
 
 export default function CollaborationRequest() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -35,9 +35,9 @@ export default function CollaborationRequest() {
     if (success === true) {
         try {
             // Upload image if file exists
-                const response = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations/`,
-                    {   
+                const response = await api.post(
+                `/wp-json/wp/v2/collaborations/`,
+                    {
                         'title':  createCollaborationRequest.collaborations_description,
                         'content': createCollaborationRequest.collaborations_features,
                         'excerpt': createCollaborationRequest.collaborations_features,
@@ -49,11 +49,6 @@ export default function CollaborationRequest() {
                             'pay': createCollaborationRequest.collaborations_pay,
                             'perk': createCollaborationRequest.collaborations_perk,
                             'deadline': createCollaborationRequest.collaborations_deadline
-                        }
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${userDetails.token}`
                         }
                     }
                 )

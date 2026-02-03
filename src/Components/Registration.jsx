@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { scienceBranches } from '../helper';
 
 export default function Registration() {
@@ -88,8 +88,8 @@ export default function Registration() {
     useEffect(() => {
         if (!apiSettings.username) return;
 
-        axios({
-            url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`,
+        api({
+            url: `/wp-json/wp/v2/users`,
             method: 'POST',
             data: {
                 username: apiSettings.username,
@@ -124,12 +124,12 @@ export default function Registration() {
             });
     }, [apiSettings]);
 
-    // 🌍 Fetch countries + cities (countriesnow API)
+    // Fetch countries + cities (countriesnow API - external, no auth needed)
     useEffect(() => {
-        axios
-            .get('https://countriesnow.space/api/v0.1/countries')
-            .then((res) => {
-                setCountries(res?.data?.data || []);
+        fetch('https://countriesnow.space/api/v0.1/countries')
+            .then((res) => res.json())
+            .then((data) => {
+                setCountries(data?.data || []);
             })
             .catch(() => {});
     }, []);

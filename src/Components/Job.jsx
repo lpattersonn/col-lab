@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { TailSpin } from "react-loader-spinner";
 import { faClock, faLocationDot, faHouse } from '@fortawesome/free-solid-svg-icons';
-import axios from "axios";
+import api from '../services/api';
 
 
 
@@ -15,8 +15,8 @@ export default function CreateJob() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-      axios({
-        url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/jobs/${param1}`,
+      api({
+        url: `/wp-json/wp/v2/jobs/${param1}`,
         method: 'GET',
         headers: {
           Authorization: `Bearer ${userDetails.token}`
@@ -33,7 +33,7 @@ export default function CreateJob() {
     function handelCheckedChange(e) {
         let checked = e.target.checked;
         if (checked === true) {
-            axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/jobs/${param1}`,{acf: {
+            api.post(`/wp-json/wp/v2/jobs/${param1}`,{acf: {
                 'jobs_applied_users': `${jobDetails?.acf?.jobs_applied_users} ${JSON.stringify(userDetails.id)} `
               }
             },

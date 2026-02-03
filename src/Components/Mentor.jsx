@@ -4,7 +4,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { TailSpin } from "react-loader-spinner";
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
-import axios from "axios";
+import api from '../services/api';
 import SectionImage from "../Images/rb_2582.png";
 
 
@@ -19,13 +19,7 @@ export default function Mentor() {
 
     // Get mentor information
     useEffect(() => {
-      axios({
-        url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${param1}`,
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${userDetails.token}`
-          }
-      })
+      api.get(`/wp-json/wp/v2/users/${param1}`)
       .then((response) => {
         setMentorDetails(response.data);
         setLoading(false);
@@ -35,16 +29,8 @@ export default function Mentor() {
 
     // Get all mentor chats
         useEffect(() => {
-            axios({
-                method: 'GET',
-                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                }
-            }
-        ).then((res) => {
+            api.get(`/wp-json/wp/v2/mentor-chats`)
+        .then((res) => {
             setMentorChats(res.data)
         }).catch(err => console.log(err))
     }, [])
@@ -62,16 +48,10 @@ export default function Mentor() {
     function handelCheckedChange(e) {
         let checked = e.target.checked;
         if (checked === true) {
-            axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/jobs/${param1}`,{acf: {
+            api.post(`/wp-json/wp/v2/jobs/${param1}`,{acf: {
                 'jobs_applied_users': `${mentorDetails?.acf?.jobs_applied_users} ${JSON.stringify(userDetails.id)} `
               }
-            },
-            {
-                    headers: {
-                    Authorization: `Bearer ${userDetails.token}`
-                }
-            } 
-              )
+            })
               .then(res => {
                 setMentorDetails(res.data)})
               .catch(err => {console.log(err)})
@@ -92,7 +72,7 @@ export default function Mentor() {
  
   const createMentorChat = async (e) => {
     try {
-        const createChat = await axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`,
+        const createChat = await api.post(`/wp-json/wp/v2/mentor-chats`,
             {
                 author: userDetails.id,
                 title: `Mentor: ${ mentorDetails?.name}, Mentee: ${userDetails?.displayName}`,
@@ -104,11 +84,6 @@ export default function Mentor() {
                     'mentee_id': `${userDetails.id}`,
                     'mentors_image': `${mentorDetails?.acf?.user_profile_picture}`,
                     'mentee_image': `${mentorDetails?.acf?.user_profile_picture}`,
-                }
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${userDetails.token}`
                 }
             }
         ).then((response) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navigation from './Navigation';
-import axios from 'axios';
+import api from '../services/api';
 import SendIcon from '../Images/send_icon.svg';
 import SearchIcon from '../Images/search_icon.svg';
 import SlidingPane from "react-sliding-pane";
@@ -30,9 +30,7 @@ export default function CollaborationChat() {
     const Navigate = useNavigate();
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`, {
-            headers: { Authorization: `Bearer ${userDetails?.token}` }
-        })
+        api.get(`/wp-json/wp/v2/collaboration-chats`)
         .then((response) => {
             let filteredData = response?.data;
     
@@ -60,18 +58,10 @@ export default function CollaborationChat() {
     const fetchData = async () => {
         try {
             const [allMentorRequests, singleChat, singleUserDetails, allComments] = await Promise.all([
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`, {
-                    headers: { Authorization: `Bearer ${userDetails?.token}` }
-                }),
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats/${param1}`, {
-                    headers: { Authorization: `Bearer ${userDetails?.token}` }
-                }),
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails?.id}`, {
-                    headers: { Authorization: `Bearer ${userDetails?.token}` }
-                }),
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${param1}&per_page=100`, {
-                    headers: { Authorization: `Bearer ${userDetails?.token}` }
-                }),
+                api.get(`/wp-json/wp/v2/mentor-requests/`),
+                api.get(`/wp-json/wp/v2/collaboration-chats/${param1}`),
+                api.get(`/wp-json/wp/v2/users/${userDetails?.id}`),
+                api.get(`/wp-json/wp/v2/comments?post=${param1}&per_page=100`),
             ]);
 
             setChatDetails(singleChat?.data);
@@ -97,12 +87,8 @@ useEffect(() => {
     const fetchMentorMentee = async () => {
         try {
             const [requestorDetails, participantDetails] = await Promise.all([
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${chatDetails.acf.requestor_id}`, {
-                    headers: { Authorization: `Bearer ${userDetails?.token}` }
-                }),
-                axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${chatDetails.acf.participant_id}`, {
-                    headers: { Authorization: `Bearer ${userDetails?.token}` }
-                })
+                api.get(`/wp-json/wp/v2/users/${chatDetails.acf.requestor_id}`),
+                api.get(`/wp-json/wp/v2/users/${chatDetails.acf.participant_id}`)
             ]);
 
             setRequestor(requestorDetails.data);
@@ -117,13 +103,7 @@ useEffect(() => {
  
     const SideBarChats = allChats.map((chat, index) => {
         if (userDetails?.id === chat?.acf?.requestor_id || userDetails?.id === chat?.acf?.participant_id) {
-            axios({
-                method: 'GET',
-                url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments?post=${chat.id}&per_page=100`,
-                headers: {
-                    Authorization: `Bearer ${userDetails?.token}`
-                    }
-            })
+            api.get(`/wp-json/wp/v2/comments?post=${chat.id}&per_page=100`)
             .then((response) => {
                 localStorage.setItem(`sideBarCollaborationChat${index}`, JSON.stringify(response.data))
             })
@@ -212,17 +192,11 @@ useEffect(() => {
         
         if (!userDetails?.id || !comment.trim()) return; // Prevent empty comments
     
-        axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+        api.post(`/wp-json/wp/v2/comments`,
             {
                 post: param1, // Ensure it's a valid post ID (Number, not String)
                 content: comment,
                 author: userDetails.id, // Only pass this if the user is logged in
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${userDetails?.token}`,
-                    "Content-Type": "application/json"
-                }
             }
         )
         .then((res) => {

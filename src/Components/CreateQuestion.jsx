@@ -7,7 +7,7 @@ import { scienceBranches } from '../helper';
 import { Editor } from '@tinymce/tinymce-react';
 import SectionImage from "../Images/rb_2582.png";
 import { reducePoints } from '../helper';
-import axios from "axios";
+import api from '../services/api';
 
 export default function CreateQuestion() {
     const userDetails = JSON.parse(localStorage.getItem('userDetails'));
@@ -52,8 +52,8 @@ export default function CreateQuestion() {
                 if (file && userDetails) {
                     const formData = new FormData();
                     formData.append('file', file);
-                    const response = await axios.post(
-                        `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
+                    const response = await api.post(
+                        `/wp-json/wp/v2/media`,
                         formData,
                         {
                             headers: {
@@ -66,8 +66,8 @@ export default function CreateQuestion() {
                 }
 
                 // Create comment
-                const commentResponse = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`,
+                const commentResponse = await api.post(
+                    `/wp-json/wp/v2/questions`,
                     {
                         author: userDetails.id,
                         title: askQuestionApi.title,

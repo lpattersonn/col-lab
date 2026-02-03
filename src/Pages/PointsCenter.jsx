@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faPlay, faArrowRight, faMagnifyingGlass, faClock } from '@fortawesome/free-solid-svg-icons';
 import { TailSpin } from 'react-loader-spinner';
@@ -31,7 +31,7 @@ export default function PointsCenter() {
 
     useEffect(() => {
         if (!userDetails?.token) {
-            Navigate('/');
+            Navigate('/login');
             return;
         }
 
@@ -41,7 +41,7 @@ export default function PointsCenter() {
             Authorization: `Bearer ${userDetails.token}`,
         };
 
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`, { headers })
+        api.get(`/wp-json/wp/v2/users/${userDetails.id}`, { headers })
             .then((currentUserApi) => {
                 if (!isMounted) return;
 

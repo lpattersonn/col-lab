@@ -57,13 +57,20 @@ import LearningCenterUpcomingMeetings from './Components/LearningCenterUpcomingM
 
 function App() {
 
+  // Global interceptor for legacy axios calls (fallback safety net)
+  // New code should use 'api' from services/api.js which handles refresh tokens
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       response => response,
       error => {
-        if (error?.response?.data?.code === "jwt_auth_invalid_token") {
-          localStorage.removeItem('userDetails');
-          window.location.replace('/login');
+        const errorCode = error?.response?.data?.code;
+        console.log('Global axios interceptor caught error:', errorCode, error?.response?.data?.message);
+
+        // Only clear tokens if explicitly invalid (not just expired)
+        // The api.js interceptor will handle refresh token logic
+        if (errorCode === "jwt_auth_invalid_token") {
+          console.warn('Invalid token detected by global interceptor');
+          // Don't auto-logout here - let the user see what's happening
         }
         return Promise.reject(error);
       }

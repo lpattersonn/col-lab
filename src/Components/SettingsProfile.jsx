@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import imageCompression from 'browser-image-compression';
 import SettingsLayout from './SettingsLayout';
 import defaultAvatar from '../Images/user-icon-placeholder-1.png';
@@ -41,7 +41,7 @@ export default function SettingsProfile() {
             Authorization: `Bearer ${userDetails.token}`,
         };
 
-        axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`, { headers })
+        api.get(`/wp-json/wp/v2/users/${userDetails.id}`, { headers })
             .then((res) => {
                 const user = res?.data || {};
                 const acf = user?.acf || {};
@@ -113,8 +113,8 @@ export default function SettingsProfile() {
                 const formData = new FormData();
                 formData.append('file', finalFile);
 
-                const mediaRes = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
+                const mediaRes = await api.post(
+                    `/wp-json/wp/v2/media`,
                     formData,
                     { headers }
                 );
@@ -136,8 +136,8 @@ export default function SettingsProfile() {
                 },
             };
 
-            const res = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`,
+            const res = await api.post(
+                `/wp-json/wp/v2/users/${userDetails.id}`,
                 payload,
                 { headers }
             );

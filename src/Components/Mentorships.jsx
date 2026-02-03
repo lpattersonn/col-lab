@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
@@ -142,20 +142,15 @@ export default function Mentorships({
         setMentorSubmitStatus({ loading: true, error: '', success: '' });
 
         try {
-            const headers = {
-                Authorization: `Bearer ${userDetails.token}`,
-            };
-
             const servicesValue = (mentorServices || []).join(', ');
 
-            const res = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`,
+            const res = await api.post(
+                `/wp-json/wp/v2/users/${userDetails.id}`,
                 {
                     acf: {
                         user_mentor_services_offered: servicesValue,
                     },
-                },
-                { headers }
+                }
             );
 
             const updatedUser = res?.data;
@@ -178,23 +173,19 @@ export default function Mentorships({
 
     useEffect(() => {
         if (!userDetails?.token) {
-            Navigate('/');
+            Navigate('/login');
             return;
         }
 
         let isMounted = true;
 
-        const headers = {
-            Authorization: `Bearer ${userDetails.token}`,
-        };
-
         Promise.all([
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`, { headers }),
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, { headers }),
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`, { headers }),
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests`, { headers }),
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`, { headers }),
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`, { headers }),
+            api.get(`/wp-json/wp/v2/questions`),
+            api.get(`/wp-json/wp/v2/users`),
+            api.get(`/wp-json/wp/v2/users/${userDetails.id}`),
+            api.get(`/wp-json/wp/v2/mentor-requests`),
+            api.get(`/wp-json/wp/v2/collaboration-chats`),
+            api.get(`/wp-json/wp/v2/mentor-chats`),
         ])
             .then(([ apiQuestion, apiUsers, currentUserApi, mentorRequest, allCollaborations, allMentorChats ]) => {
                 if (!isMounted) return;
@@ -270,10 +261,6 @@ export default function Mentorships({
 
         let isMounted = true;
 
-        const headers = {
-            Authorization: `Bearer ${userDetails.token}`,
-        };
-
         const fetchTotals = async () => {
             try {
                 const ids = getHelpQuestions
@@ -284,10 +271,9 @@ export default function Mentorships({
                 if (!missing.length) return;
 
                 const requests = missing.map((postId) =>
-                    axios.get(
-                        `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+                    api.get(
+                        `/wp-json/wp/v2/comments`,
                         {
-                            headers,
                             params: {
                                 post: postId,
                                 per_page: 1,
@@ -342,20 +328,18 @@ export default function Mentorships({
         const content = (commentInputs?.[postId] || '').trim();
         if (!content) return;
         if (!userDetails?.token || !userDetails?.id) {
-            Navigate('/');
+            Navigate('/login');
             return;
         }
 
         try {
-            const headers = { Authorization: `Bearer ${userDetails.token}` };
-            const res = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
+            const res = await api.post(
+                `/wp-json/wp/v2/comments`,
                 {
                     post: postId,
                     content,
                     author: userDetails.id,
-                },
-                { headers }
+                }
             );
 
             const displayName =
@@ -392,7 +376,7 @@ export default function Mentorships({
         setSuccessServerComment('');
 
         if (!userDetails?.token) {
-            Navigate('/');
+            Navigate('/login');
             return;
         }
 
@@ -403,10 +387,6 @@ export default function Mentorships({
         }
 
         try {
-            const headers = {
-                Authorization: `Bearer ${userDetails.token}`,
-            };
-
             let imageUrl = '';
 
             if (file) {
@@ -422,24 +402,22 @@ export default function Mentorships({
                 const formData = new FormData();
                 formData.append('file', finalFile);
 
-                const mediaRes = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
-                    formData,
-                    { headers }
+                const mediaRes = await api.post(
+                    `/wp-json/wp/v2/media`,
+                    formData
                 );
 
                 imageUrl = mediaRes?.data?.source_url || '';
             }
 
-            const created = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`,
+            const created = await api.post(
+                `/wp-json/wp/v2/questions`,
                 {
                     title: stripped.slice(0, 80) || 'New Question',
                     content: createComment,
                     status: 'publish',
                     acf: imageUrl ? { question_image: imageUrl } : undefined,
-                },
-                { headers }
+                }
             );
 
             setSuccessServerComment('Success! Your post has been published.');

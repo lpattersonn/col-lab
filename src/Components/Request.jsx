@@ -4,7 +4,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { TailSpin } from "react-loader-spinner";
 import { faSuitcase, faCoins, faMoneyBill, faHouse, faPen } from '@fortawesome/free-solid-svg-icons';
-import axios from "axios";
+import api from '../services/api';
 
 
 
@@ -18,8 +18,8 @@ export default function Request() {
 
     // Get menotr information
     useEffect(() => {
-      axios({
-        url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaborations/${param1}`,
+      api({
+        url: `/wp-json/wp/v2/collaborations/${param1}`,
         method: 'GET',
         headers: {
             Authorization: `Bearer ${userDetails.token}`
@@ -35,8 +35,8 @@ export default function Request() {
 
      // Get menotr information
      useEffect(() => {
-        axios({
-          url: `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${requestDetails?.author}`,
+        api({
+          url: `/wp-json/wp/v2/users/${requestDetails?.author}`,
           method: 'GET',
           headers: {
               Authorization: `Bearer ${userDetails.token}`

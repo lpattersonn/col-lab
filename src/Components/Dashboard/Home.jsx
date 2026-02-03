@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../services/api';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { Editor } from '@tinymce/tinymce-react';
@@ -151,44 +151,52 @@ export default function Home() {
 
     useEffect(() => {
         if (!userDetails?.token) {
-            Navigate('/');
+            Navigate('/login');
             return;
         }
 
         let isMounted = true;
 
-        const headers = {
-            Authorization: `Bearer ${userDetails.token}`,
-        };
-
-        Promise.all([
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`, { headers }),
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users`, { headers }),
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/users/${userDetails.id}`, { headers }),
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests`, { headers }),
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/collaboration-chats`, { headers }),
-            axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-chats`, { headers }),
+        // Use Promise.allSettled to allow some requests to fail without breaking the page
+        Promise.allSettled([
+            api.get('/wp-json/wp/v2/questions'),
+            api.get('/wp-json/wp/v2/users').catch(() => ({ data: [] })), // Users list may be restricted
+            api.get(`/wp-json/wp/v2/users/${userDetails.id}`).catch(() => ({ data: null })), // User details may fail
+            api.get('/wp-json/wp/v2/mentor-requests'),
+            api.get('/wp-json/wp/v2/collaboration-chats'),
+            api.get('/wp-json/wp/v2/mentor-chats'),
         ])
-            .then(([ apiQuestion, apiUsers, currentUserApi, mentorRequest, allCollaborations, allMentorChats ]) => {
+            .then((results) => {
                 if (!isMounted) return;
 
-                setGetHelpQuestions(apiQuestion?.data || []);
-                setGetUsers(apiUsers?.data || []);
+                // Extract data from settled promises (fulfilled or rejected)
+                const getValue = (result) => result.status === 'fulfilled' ? result.value?.data : [];
+                const getValueOrNull = (result) => result.status === 'fulfilled' ? result.value?.data : null;
 
-                const currentUser = currentUserApi?.data || null;
+                const apiQuestion = getValue(results[0]);
+                const apiUsers = getValue(results[1]);
+                const currentUserApi = getValueOrNull(results[2]);
+                const mentorRequest = getValue(results[3]);
+                const allCollaborations = getValue(results[4]);
+                const allMentorChats = getValue(results[5]);
+
+                setGetHelpQuestions(apiQuestion || []);
+                setGetUsers(apiUsers || []);
+
+                const currentUser = currentUserApi || null;
                 setUsersAccountDetails(currentUser);
 
                 const points = currentUser?.acf?.['user-points'] ?? 0;
                 localStorage.setItem('userPoints', JSON.stringify(points));
 
-                const relatedResponse = (mentorRequest?.data || [])
+                const relatedResponse = (mentorRequest || [])
                     .filter((item) => item?.acf?.mentor_id === userDetails?.id || item?.acf?.mentee_id === userDetails?.id)
                     .filter((item) => item?.acf?.mentor_agree === 'Agree');
 
                 setEvents(relatedResponse);
 
                 let userCollaborations = 0;
-                (allCollaborations?.data || []).forEach((chat) => {
+                (allCollaborations || []).forEach((chat) => {
                     if (chat?.acf?.participant_id === userDetails?.id || chat?.acf?.requestor_id === userDetails?.id) {
                         userCollaborations += 1;
                     }
@@ -196,7 +204,7 @@ export default function Home() {
                 setCollaborations(userCollaborations);
 
                 let userMentorships = 0;
-                (allMentorChats?.data || []).forEach((chat) => {
+                (allMentorChats || []).forEach((chat) => {
                     if (chat?.acf?.mentee_id === userDetails?.id || chat?.acf?.mentor_id === userDetails?.id) {
                         userMentorships += 1;
                     }
@@ -243,10 +251,6 @@ export default function Home() {
 
         let isMounted = true;
 
-        const headers = {
-            Authorization: `Bearer ${userDetails.token}`,
-        };
-
         const fetchTotals = async () => {
             try {
                 const ids = getHelpQuestions
@@ -257,16 +261,12 @@ export default function Home() {
                 if (!missing.length) return;
 
                 const requests = missing.map((postId) =>
-                    axios.get(
-                        `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
-                        {
-                            headers,
-                            params: {
-                                post: postId,
-                                per_page: 1,
-                            },
-                        }
-                    )
+                    api.get('/wp-json/wp/v2/comments', {
+                        params: {
+                            post: postId,
+                            per_page: 1,
+                        },
+                    })
                         .then((res) => {
                             const total = parseInt(res.headers?.['x-wp-total'] || '0', 10);
                             return [ postId, Number.isFinite(total) ? total : 0 ];
@@ -316,21 +316,16 @@ export default function Home() {
         const content = (commentInputs?.[postId] || '').trim();
         if (!content) return;
         if (!userDetails?.token || !userDetails?.id) {
-            Navigate('/');
+            Navigate('/login');
             return;
         }
 
         try {
-            const headers = { Authorization: `Bearer ${userDetails.token}` };
-            const res = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/comments`,
-                {
-                    post: postId,
-                    content,
-                    author: userDetails.id,
-                },
-                { headers }
-            );
+            const res = await api.post('/wp-json/wp/v2/comments', {
+                post: postId,
+                content,
+                author: userDetails.id,
+            });
 
             const displayName =
                 userDetails?.displayName ||
@@ -366,7 +361,7 @@ export default function Home() {
         setSuccessServerComment('');
 
         if (!userDetails?.token) {
-            Navigate('/');
+            Navigate('/login');
             return;
         }
 
@@ -377,10 +372,6 @@ export default function Home() {
         }
 
         try {
-            const headers = {
-                Authorization: `Bearer ${userDetails.token}`,
-            };
-
             let imageUrl = '';
 
             if (file) {
@@ -396,25 +387,17 @@ export default function Home() {
                 const formData = new FormData();
                 formData.append('file', finalFile);
 
-                const mediaRes = await axios.post(
-                    `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/media`,
-                    formData,
-                    { headers }
-                );
+                const mediaRes = await api.post('/wp-json/wp/v2/media', formData);
 
                 imageUrl = mediaRes?.data?.source_url || '';
             }
 
-            const created = await axios.post(
-                `${process.env.REACT_APP_API_URL}/wp-json/wp/v2/questions`,
-                {
-                    title: (postTitle || '').trim() || stripped.slice(0, 80) || 'New Question',
-                    content: createComment,
-                    status: 'publish',
-                    acf: imageUrl ? { question_image: imageUrl } : undefined,
-                },
-                { headers }
-            );
+            const created = await api.post('/wp-json/wp/v2/questions', {
+                title: (postTitle || '').trim() || stripped.slice(0, 80) || 'New Question',
+                content: createComment,
+                status: 'publish',
+                acf: imageUrl ? { question_image: imageUrl } : undefined,
+            });
 
             setSuccessServerComment('Success! Your post has been published.');
             setCommentStatus(created?.data?.status || 'approved');

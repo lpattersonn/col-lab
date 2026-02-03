@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import axios from "axios";
+import api from '../services/api';
 import { humanReadableDate,reducePoints } from "../helper.js";
 
 export default function BookAMentor(prop) {
@@ -18,7 +18,7 @@ const [existingRequest, setExistingRequest] = useState(0);
 
 // Get mentor requests
 useEffect(() => {
-    axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+    api.get(`/wp-json/wp/v2/mentor-requests/`,
         {
             headers: {
                 Authorization: `Bearer ${userDetails.token}`
@@ -48,7 +48,7 @@ const handleSubmit = async (e) => {
     const success = await reducePoints(userDetails, 5, 5); 
         
     if (success === true) {
-        axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`,
+        api.post(`/wp-json/wp/v2/mentor-requests/`,
             { 
             title: `Mentor chat between ${userDetails.firstName} and ${prop.prop2}`,
             content: `Mentor chat between ${userDetails.firstName} and ${prop.prop2}`,
@@ -89,7 +89,7 @@ function handleChange(e) {
 
 // Handle mentor request submit
 const mentorRequestSubmit = () => {
-    axios.post(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/${currentRequest?.id}`,
+    api.post(`/wp-json/wp/v2/mentor-requests/${currentRequest?.id}`,
         {
             "acf": {
                 "mentor_agree": mentorAgree,
@@ -109,7 +109,7 @@ const mentorRequestSubmit = () => {
 useEffect(() => {
     const fetchMentorRequests = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/wp-json/wp/v2/mentor-requests/`, {
+            const response = await api.get(`/wp-json/wp/v2/mentor-requests/`, {
                 headers: {
                     Authorization: `Bearer ${userDetails.token}`
                 }

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Brand from '../Images/colLAB-logo.svg';
 import defaultImage from '../Images/user-profile.svg';
+import authService from '../services/authService';
 
 export default function Navigation({ user }) {
     const navigate = useNavigate();
@@ -14,9 +15,9 @@ export default function Navigation({ user }) {
 
     const logout = useCallback(() => {
         setShowMenu(false);
-        localStorage.clear();
-        navigate('/login');
-    }, [navigate]);
+        // Use auth service to properly clear all tokens
+        authService.logout({ redirect: true, redirectPath: '/login' });
+    }, []);
 
     /* -------------------------------
        CLOSE DROPDOWN LOGIC
