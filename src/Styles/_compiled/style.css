@@ -792,6 +792,44 @@ a {
   padding: 10px 28px !important;
   border-radius: 18px !important;
 }
+.post-form .post-file-preview {
+  position: relative;
+  display: inline-block;
+  margin-top: 12px;
+}
+.post-form .post-file-preview img,
+.post-form .post-file-preview video {
+  max-height: 140px;
+  max-width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+.post-form .post-file-remove-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.post-card-media {
+  margin: 12px 0;
+}
+.post-card-media img,
+.post-card-media video {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+}
 
 .posts .create-posts form {
   padding: 16px 24px;

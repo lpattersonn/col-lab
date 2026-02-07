@@ -128,6 +128,11 @@ const refreshAccessToken = async () => {
  */
 api.interceptors.request.use(
   (config) => {
+    // Let the browser set Content-Type with boundary for file uploads
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
+
     // Skip token for public endpoints
     if (isPublicEndpoint(config.url, config.method)) {
       return config;

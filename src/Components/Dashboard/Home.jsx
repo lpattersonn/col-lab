@@ -23,6 +23,7 @@ import { dateFormat } from '../../helper';
 export default function Home() {
     const Navigate = useNavigate(); // keep your original naming
     const editorRef = useRef(null);
+    const fileInputRef = useRef(null);
 
     const userDetails = useMemo(() => {
         try {
@@ -85,6 +86,7 @@ export default function Home() {
     const [ newEventDate, setNewEventDate ] = useState('');
     const [ isPointsDrawerOpen, setIsPointsDrawerOpen ] = useState(false);
     const [ isEventsDrawerOpen, setIsEventsDrawerOpen ] = useState(false);
+    const [ resolvedMedia, setResolvedMedia ] = useState({});
 
     const pointsHistory = [
         {
@@ -298,6 +300,44 @@ export default function Home() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [getHelpQuestions, userDetails?.token]);
 
+    // Resolve numeric ACF file attachment IDs to URLs
+    useEffect(() => {
+        if (!getHelpQuestions?.length) return;
+
+        let isMounted = true;
+
+        const mediaIds = getHelpQuestions
+            .map((q) => q?.acf?.file)
+            .filter((f) => typeof f === 'number' && !resolvedMedia[f]);
+
+        if (!mediaIds.length) return;
+
+        const unique = [...new Set(mediaIds)];
+
+        Promise.all(
+            unique.map((id) =>
+                api.get(`/wp-json/wp/v2/media/${id}`)
+                    .then((res) => [id, {
+                        url: res?.data?.source_url || '',
+                        mime_type: res?.data?.mime_type || '',
+                    }])
+                    .catch(() => [id, null])
+            )
+        ).then((results) => {
+            if (!isMounted) return;
+            setResolvedMedia((prev) => {
+                const next = { ...prev };
+                results.forEach(([id, data]) => {
+                    if (data) next[id] = data;
+                });
+                return next;
+            });
+        });
+
+        return () => { isMounted = false; };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [getHelpQuestions]);
+
     const clearEditor = () => {
         setCreateComment('');
         setFile(null);
@@ -372,32 +412,47 @@ export default function Home() {
         }
 
         try {
-            let imageUrl = '';
+            let mediaId = null;
+            let mediaSourceUrl = '';
+            let mediaMimeType = '';
 
             if (file) {
-                const options = {
-                    maxSizeMB: 1,
-                    maxWidthOrHeight: 1280,
-                    useWebWorker: true,
-                };
-
-                const compressed = await imageCompression(file, options);
-                const finalFile = new File([compressed], file.name, { type: file.type });
-
                 const formData = new FormData();
-                formData.append('file', finalFile);
+
+                if (file.type.startsWith('image/')) {
+                    const compressed = await imageCompression(file, {
+                        maxSizeMB: 1,
+                        maxWidthOrHeight: 1280,
+                        useWebWorker: true,
+                    });
+                    formData.append('file', new File([compressed], file.name, { type: file.type }));
+                } else {
+                    formData.append('file', file);
+                }
 
                 const mediaRes = await api.post('/wp-json/wp/v2/media', formData);
-
-                imageUrl = mediaRes?.data?.source_url || '';
+                mediaId = mediaRes?.data?.id || null;
+                mediaSourceUrl = mediaRes?.data?.source_url || '';
+                mediaMimeType = mediaRes?.data?.mime_type || '';
             }
 
             const created = await api.post('/wp-json/wp/v2/home-post', {
                 title: (postTitle || '').trim() || stripped.slice(0, 80) || 'New Question',
                 content: createComment,
                 status: 'publish',
-                acf: imageUrl ? { question_image: imageUrl } : undefined,
             });
+
+            if (mediaId && created?.data?.id) {
+                await api.put(`/wp-json/wp/v2/home-post/${created.data.id}`, {
+                    acf: { file: mediaId },
+                });
+
+                // Cache the resolved media so the card renders immediately
+                setResolvedMedia((prev) => ({
+                    ...prev,
+                    [mediaId]: { url: mediaSourceUrl, mime_type: mediaMimeType },
+                }));
+            }
 
             setSuccessServerComment('Success! Your post has been published.');
             setCommentStatus(created?.data?.status || 'approved');
@@ -406,10 +461,14 @@ export default function Home() {
             setCreateComment('');
             setFile(null);
 
-            setGetHelpQuestions((prev) => [ created.data, ...(prev || []) ]);
+            // Include the ACF file ID so the card can look it up from resolvedMedia
+            const postData = { ...created.data, acf: { ...created.data?.acf, file: mediaId } };
+            setGetHelpQuestions((prev) => [ postData, ...(prev || []) ]);
         } catch (err) {
-            console.error(err);
-            setServerComment('Something went wrong. Please try again.');
+            console.error('Post submission error:', err?.response?.data || err.message);
+            setServerComment(
+                err?.response?.data?.message || 'Something went wrong. Please try again.'
+            );
         }
     };
 
@@ -441,6 +500,7 @@ export default function Home() {
         if (!getHelpQuestions?.length) return [];
 
         return getHelpQuestions.map((question, index) => {
+            console.log(question);
             if (!question) return null;
 
             const author = usersById[question.author];
@@ -508,6 +568,33 @@ export default function Home() {
                                 ) : null}
                             </div>
                         ) : null}
+
+                        {(() => {
+                            const acfFile = question?.acf?.file;
+                            if (!acfFile) return null;
+                            let fileUrl, mimeType;
+                            if (typeof acfFile === 'object') {
+                                fileUrl = acfFile.url;
+                                mimeType = acfFile.mime_type || '';
+                            } else if (typeof acfFile === 'string') {
+                                fileUrl = acfFile;
+                                mimeType = '';
+                            } else if (typeof acfFile === 'number' && resolvedMedia[acfFile]) {
+                                fileUrl = resolvedMedia[acfFile].url;
+                                mimeType = resolvedMedia[acfFile].mime_type || '';
+                            }
+                            if (!fileUrl) return null;
+                            const isVideo = mimeType?.startsWith('video/') || /\.(mp4|webm|mov|avi)$/i.test(fileUrl);
+                            return (
+                                <div className="post-card-media">
+                                    {isVideo ? (
+                                        <video src={fileUrl} controls />
+                                    ) : (
+                                        <img src={fileUrl} alt="" loading="lazy" />
+                                    )}
+                                </div>
+                            );
+                        })()}
 
                         <div className="question-actions">
                             <div className="question-actions-meta">
@@ -580,7 +667,7 @@ export default function Home() {
                 </div>
             );
         });
-    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads, expandedPosts]);
+    }, [getHelpQuestions, usersAccountDetails?.acf?.user_feild, usersById, commentTotalsByPostId, openComments, commentInputs, commentThreads, expandedPosts, resolvedMedia]);
 
     if (!localStorage.getItem('userDetails')) {
         window.location.replace('/login');
@@ -729,9 +816,53 @@ export default function Home() {
                                                 </span>
                                             </div>
 
+                                            {file ? (
+                                                <div className="post-file-preview">
+                                                    {file.type.startsWith('video/') ? (
+                                                        <video
+                                                            src={URL.createObjectURL(file)}
+                                                            controls
+                                                            className="post-file-preview-img"
+                                                        />
+                                                    ) : (
+                                                        <img
+                                                            src={URL.createObjectURL(file)}
+                                                            alt="Preview"
+                                                            className="post-file-preview-img"
+                                                        />
+                                                    )}
+                                                    <button
+                                                        type="button"
+                                                        className="post-file-remove-btn"
+                                                        aria-label="Remove file"
+                                                        onClick={() => {
+                                                            setFile(null);
+                                                            if (fileInputRef.current) fileInputRef.current.value = '';
+                                                        }}
+                                                    >
+                                                        <FontAwesomeIcon icon={faXmark} />
+                                                    </button>
+                                                </div>
+                                            ) : null}
+
                                             <div className="post-form-footer">
                                                 <div className="post-form-icons">
-                                                    <button type="button" className="post-icon-btn" aria-label="Add media">
+                                                    <input
+                                                        ref={fileInputRef}
+                                                        type="file"
+                                                        accept="image/*,video/*"
+                                                        hidden
+                                                        onChange={(e) => {
+                                                            const selected = e.target.files?.[0];
+                                                            if (selected) setFile(selected);
+                                                        }}
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        className="post-icon-btn"
+                                                        aria-label="Add media"
+                                                        onClick={() => fileInputRef.current?.click()}
+                                                    >
                                                         <img src={addPhotoIcon} alt="" className="post-icon-img" aria-hidden="true" />
                                                     </button>
                                                     <button type="button" className="post-icon-btn" aria-label="Add emoji">
