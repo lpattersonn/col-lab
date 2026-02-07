@@ -159,7 +159,7 @@ export default function Home() {
 
         // Use Promise.allSettled to allow some requests to fail without breaking the page
         Promise.allSettled([
-            api.get('/wp-json/wp/v2/questions'),
+            api.get('/wp-json/wp/v2/home-post'),
             api.get('/wp-json/wp/v2/users').catch(() => ({ data: [] })), // Users list may be restricted
             api.get(`/wp-json/wp/v2/users/${userDetails.id}`).catch(() => ({ data: null })), // User details may fail
             api.get('/wp-json/wp/v2/mentor-requests'),
@@ -392,7 +392,7 @@ export default function Home() {
                 imageUrl = mediaRes?.data?.source_url || '';
             }
 
-            const created = await api.post('/wp-json/wp/v2/questions', {
+            const created = await api.post('/wp-json/wp/v2/home-post', {
                 title: (postTitle || '').trim() || stripped.slice(0, 80) || 'New Question',
                 content: createComment,
                 status: 'publish',
