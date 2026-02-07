@@ -183,7 +183,7 @@ export default function Home() {
                 setGetHelpQuestions(apiQuestion || []);
                 setGetUsers(apiUsers || []);
 
-                const currentUser = currentUserApi || null;
+                const currentUser = currentUserApi;
                 setUsersAccountDetails(currentUser);
 
                 const points = currentUser?.acf?.['user-points'] ?? 0;
@@ -604,7 +604,7 @@ export default function Home() {
 
     return (
         <>
-            <Navigation user={userDetails} />
+            <Navigation user={usersAccountDetails} />
             <main>
                 <div className="page-body-container">
                     <div className="side-navigation-container" style={{ background: '#ffffff' }}>

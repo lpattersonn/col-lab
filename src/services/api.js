@@ -130,7 +130,6 @@ api.interceptors.request.use(
   (config) => {
     // Skip token for public endpoints
     if (isPublicEndpoint(config.url, config.method)) {
-      console.log('Request (public, no token):', config.url);
       return config;
     }
 
@@ -138,9 +137,6 @@ api.interceptors.request.use(
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      console.log('Request with token:', config.url, 'Token:', token.substring(0, 20) + '...');
-    } else {
-      console.warn('Request WITHOUT token:', config.url);
     }
 
     return config;
@@ -159,13 +155,6 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Debug logging
-    console.log('API Error:', {
-      url: originalRequest?.url,
-      status: error.response?.status,
-      code: error.response?.data?.code,
-      message: error.response?.data?.message,
-    });
 
     // Check if this is a 401 error
     const isUnauthorized =
@@ -187,12 +176,10 @@ api.interceptors.response.use(
 
     // Check if we have a refresh token
     const refreshToken = tokenService.getRefreshToken();
-    console.log('Refresh token available:', refreshToken ? 'Yes' : 'No');
 
     if (!refreshToken) {
       // No refresh token - don't logout automatically, just reject the error
       // This allows the app to handle 401 errors gracefully without forcing logout
-      console.warn('No refresh token available. Cannot refresh access token.');
       return Promise.reject(error);
     }
 

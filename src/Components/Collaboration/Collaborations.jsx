@@ -101,34 +101,45 @@ export default function Collaborations({
 
         let isMounted = true;
 
-        Promise.all([
-            api.get(`/wp-json/wp/v2/collaborations`),
-            api.get(`/wp-json/wp/v2/users`),
-            api.get(`/wp-json/wp/v2/users/${userDetails.id}`),
-            api.get(`/wp-json/wp/v2/mentor-requests`),
-            api.get(`/wp-json/wp/v2/collaboration-chats`),
-            api.get(`/wp-json/wp/v2/mentor-chats`),
+        // Use Promise.allSettled so individual failures don't break the page
+        Promise.allSettled([
+            api.get('/wp-json/wp/v2/collaborations'),
+            api.get('/wp-json/wp/v2/users').catch(() => ({ data: [] })),
+            api.get(`/wp-json/wp/v2/users/${userDetails.id}`).catch(() => ({ data: null })),
+            api.get('/wp-json/wp/v2/mentor-requests'),
+            api.get('/wp-json/wp/v2/collaboration-chats'),
+            api.get('/wp-json/wp/v2/mentor-chats'),
         ])
-            .then(([ apiQuestion, apiUsers, currentUserApi, mentorRequest, allCollaborations, allMentorChats ]) => {
+            .then((results) => {
                 if (!isMounted) return;
 
-                setGetHelpQuestions(apiQuestion?.data || []);
-                setGetUsers(apiUsers?.data || []);
+                const getValue = (result) => result.status === 'fulfilled' ? result.value?.data : [];
+                const getValueOrNull = (result) => result.status === 'fulfilled' ? result.value?.data : null;
 
-                const currentUser = currentUserApi?.data || null;
+                const apiQuestion = getValue(results[0]);
+                const apiUsers = getValue(results[1]);
+                const currentUserApi = getValueOrNull(results[2]);
+                const mentorRequest = getValue(results[3]);
+                const allCollaborations = getValue(results[4]);
+                const allMentorChats = getValue(results[5]);
+
+                setGetHelpQuestions(apiQuestion || []);
+                setGetUsers(apiUsers || []);
+
+                const currentUser = currentUserApi;
                 setUsersAccountDetails(currentUser);
 
                 const points = currentUser?.acf?.['user-points'] ?? 0;
                 localStorage.setItem('userPoints', JSON.stringify(points));
 
-                const relatedResponse = (mentorRequest?.data || [])
+                const relatedResponse = (mentorRequest || [])
                     .filter((item) => item?.acf?.mentor_id === userDetails?.id || item?.acf?.mentee_id === userDetails?.id)
                     .filter((item) => item?.acf?.mentor_agree === 'Agree');
 
                 setEvents(relatedResponse);
 
                 let userCollaborations = 0;
-                (allCollaborations?.data || []).forEach((chat) => {
+                (allCollaborations || []).forEach((chat) => {
                     if (chat?.acf?.participant_id === userDetails?.id || chat?.acf?.requestor_id === userDetails?.id) {
                         userCollaborations += 1;
                     }
@@ -136,7 +147,7 @@ export default function Collaborations({
                 setCollaborations(userCollaborations);
 
                 let userMentorships = 0;
-                (allMentorChats?.data || []).forEach((chat) => {
+                (allMentorChats || []).forEach((chat) => {
                     if (chat?.acf?.mentee_id === userDetails?.id || chat?.acf?.mentor_id === userDetails?.id) {
                         userMentorships += 1;
                     }
@@ -403,8 +414,6 @@ export default function Collaborations({
             const ellipsis = shouldTruncate ? '...' : '';
 
             const isCommentsOpen = Boolean(openComments[question.id]);
-
-            console.log(question);
 
             return (
                 <div className="card collaboration-card mb-4 share-card" key={question.id || index}>
