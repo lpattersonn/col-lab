@@ -84,6 +84,7 @@ export default function Home() {
     const [ commentStatus, setCommentStatus ] = useState('not approved');
     const [ serverComment, setServerComment ] = useState('');
     const [ successServerComment, setSuccessServerComment ] = useState('');
+    const [ isSubmitting, setIsSubmitting ] = useState(false);
     const [ postTitle, setPostTitle ] = useState('');
     const [ commentInputs, setCommentInputs ] = useState({});
     const [ commentThreads, setCommentThreads ] = useState({});
@@ -460,6 +461,8 @@ export default function Home() {
             return;
         }
 
+        setIsSubmitting(true);
+
         try {
             let mediaId = null;
             let mediaSourceUrl = '';
@@ -518,6 +521,8 @@ export default function Home() {
             setServerComment(
                 err?.response?.data?.message || 'Something went wrong. Please try again.'
             );
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -937,8 +942,8 @@ export default function Home() {
                                                         ) : null}
                                                     </div>
                                                 </div>
-                                                <button type="submit" className="btn btn-dark">
-                                                    Submit
+                                                <button type="submit" className="btn btn-dark" disabled={isSubmitting}>
+                                                    {isSubmitting ? 'Posting...' : 'Submit'}
                                                 </button>
                                             </div>
 
