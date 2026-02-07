@@ -808,6 +808,16 @@ a {
   }
 }
 
+.emoji-picker-wrapper {
+  position: relative;
+}
+.emoji-picker-popover {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  z-index: 10;
+}
+
 .posts {
     .create-posts {
       form {

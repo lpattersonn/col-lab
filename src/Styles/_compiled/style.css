@@ -830,6 +830,15 @@ a {
   object-fit: cover;
   border-radius: 12px;
 }
+.emoji-picker-wrapper {
+  position: relative;
+}
+.emoji-picker-popover {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  z-index: 10;
+}
 
 .posts .create-posts form {
   padding: 16px 24px;

@@ -14,6 +14,7 @@ import emojiSmileIcon from '../../Images/emoji-smile-svgrepo-com.svg';
 import coinsIcon from '../../Images/coins-hand-svgrepo-com.svg';
 import calendarEventIcon from '../../Images/calendar-circle-exclamation-svgrepo-com.svg';
 import { TailSpin } from 'react-loader-spinner';
+import EmojiPicker from 'emoji-picker-react';
 
 import Navigation from '../Navigation';
 import SideNavigation from '../Navigation/SideNavigation';
@@ -24,6 +25,7 @@ export default function Home() {
     const Navigate = useNavigate(); // keep your original naming
     const editorRef = useRef(null);
     const fileInputRef = useRef(null);
+    const emojiPickerRef = useRef(null);
 
     const userDetails = useMemo(() => {
         try {
@@ -63,7 +65,13 @@ export default function Home() {
     const [ getUsers, setGetUsers ] = useState([]);
     const [ usersAccountDetails, setUsersAccountDetails ] = useState(null);
 
-    const [ notifications, setNotifications ] = useState(0);
+    const [ notifications, setNotifications ] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem('userPoints')) || 0;
+        } catch {
+            return 0;
+        }
+    });
     const [ events, setEvents ] = useState([]);
     const [ collaborations, setCollaborations ] = useState(0);
     const [ mentorships, setMentorships ] = useState(0);
@@ -87,27 +95,36 @@ export default function Home() {
     const [ isPointsDrawerOpen, setIsPointsDrawerOpen ] = useState(false);
     const [ isEventsDrawerOpen, setIsEventsDrawerOpen ] = useState(false);
     const [ resolvedMedia, setResolvedMedia ] = useState({});
+    const [ showEmojiPicker, setShowEmojiPicker ] = useState(false);
+    const [ pointsHistory, setPointsHistory ] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem('pointsHistory')) || [];
+        } catch {
+            return [];
+        }
+    });
 
-    const pointsHistory = [
-        {
-            id: 'points-1',
-            title: "Earned 2 points for replying to Alex's question.",
-            detail: 'Insert breadcrumbs link to the question...',
-            date: 'Today',
-        },
-        {
-            id: 'points-2',
-            title: 'Earned 4 points for sharing a resource.',
-            detail: 'Insert breadcrumbs link to the resource...',
-            date: 'Yesterday',
-        },
-        {
-            id: 'points-3',
-            title: 'Earned 6 points for collaborating on a project.',
-            detail: 'Insert breadcrumbs link to the collaboration...',
-            date: 'Jan 20',
-        },
-    ];
+    useEffect(() => {
+        if (!showEmojiPicker) return;
+        const handleClickOutside = (e) => {
+            if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target)) {
+                setShowEmojiPicker(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showEmojiPicker]);
+
+    const formatHistoryDate = (isoDate) => {
+        if (!isoDate) return '';
+        const date = new Date(isoDate);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffDays = Math.floor(diffMs / (86400 * 1000));
+        if (diffDays === 0) return 'Today';
+        if (diffDays === 1) return 'Yesterday';
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    };
 
     const eventsHistory = useMemo(() => {
         const items = [];
@@ -190,6 +207,7 @@ export default function Home() {
 
                 const points = currentUser?.acf?.['user-points'] ?? 0;
                 localStorage.setItem('userPoints', JSON.stringify(points));
+                setNotifications(points);
 
                 const relatedResponse = (mentorRequest || [])
                     .filter((item) => item?.acf?.mentor_id === userDetails?.id || item?.acf?.mentee_id === userDetails?.id)
@@ -389,6 +407,37 @@ export default function Home() {
                 ...prev,
                 [postId]: (prev[postId] ?? 0) + 1,
             }));
+
+            // Award 2 points for replying
+            const currentPoints = JSON.parse(localStorage.getItem('userPoints')) || 0;
+            const updatedPoints = currentPoints + 2;
+
+            // Find post author name for history entry
+            const post = (getHelpQuestions || []).find((q) => q?.id === postId);
+            const postAuthor = post ? usersById[post.author] : null;
+            const postAuthorName = postAuthor?.name || 'a post';
+
+            // Update server
+            api.post(`/wp-json/wp/v2/users/${userDetails.id}`, {
+                acf: { 'user-points': updatedPoints },
+            }).catch((err) => console.error('Error updating points:', err));
+
+            // Update local state and storage
+            localStorage.setItem('userPoints', JSON.stringify(updatedPoints));
+            setNotifications(updatedPoints);
+
+            // Add to points history
+            const historyEntry = {
+                id: `points-${Date.now()}`,
+                title: `Earned 2 points for replying to ${postAuthorName}'s question.`,
+                detail: post?.title?.rendered || '',
+                date: new Date().toISOString(),
+            };
+            setPointsHistory((prev) => {
+                const updated = [historyEntry, ...prev];
+                localStorage.setItem('pointsHistory', JSON.stringify(updated));
+                return updated;
+            });
         } catch (error) {
             console.error('Error submitting comment:', error?.response?.data || error.message);
         }
@@ -865,9 +914,28 @@ export default function Home() {
                                                     >
                                                         <img src={addPhotoIcon} alt="" className="post-icon-img" aria-hidden="true" />
                                                     </button>
-                                                    <button type="button" className="post-icon-btn" aria-label="Add emoji">
-                                                        <img src={emojiSmileIcon} alt="" className="post-icon-img" aria-hidden="true" />
-                                                    </button>
+                                                    <div className="emoji-picker-wrapper" ref={emojiPickerRef}>
+                                                        <button
+                                                            type="button"
+                                                            className="post-icon-btn"
+                                                            aria-label="Add emoji"
+                                                            onClick={() => setShowEmojiPicker((prev) => !prev)}
+                                                        >
+                                                            <img src={emojiSmileIcon} alt="" className="post-icon-img" aria-hidden="true" />
+                                                        </button>
+                                                        {showEmojiPicker ? (
+                                                            <div className="emoji-picker-popover">
+                                                                <EmojiPicker
+                                                                    onEmojiClick={(emojiData) => {
+                                                                        editorRef.current?.insertContent(emojiData.emoji);
+                                                                        setShowEmojiPicker(false);
+                                                                    }}
+                                                                    width={300}
+                                                                    height={350}
+                                                                />
+                                                            </div>
+                                                        ) : null}
+                                                    </div>
                                                 </div>
                                                 <button type="submit" className="btn btn-dark">
                                                     Submit
